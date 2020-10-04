@@ -21,10 +21,11 @@ module.exports = {
     config.plugins.delete('preload')
     config.plugins.delete('prefetch')
     config.plugin('html')
-        .tap(args => {
-          args[0].title = "B2Tickets"
-          return args
-        })
+      .tap((args) => {
+        args[0].title = 'B2Tickets'
+
+        return args
+      })
   },
 
   // https://cli.vuejs.org/config/#transpiledependencies

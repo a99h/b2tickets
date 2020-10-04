@@ -1,5 +1,5 @@
-const routes = require('./backend-routes.json')
-const apiUrl = 'http://localhost'
+const routes = require('./routes.json')
+const apiUrl = process.env.VUE_APP_API_BASE_URL
 
 // eslint-disable-next-line
 module.exports = function (...args) {

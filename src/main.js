@@ -7,7 +7,7 @@ import store from './store'
 // VUE-ROUTER - https://router.vuejs.org/
 import router from './router'
 // ROUTES FROM BACKEND
-import route from './frombackend/backend-routes'
+import route from './backend/routes/provider'
 window.route = route
 
 // PLUGINS
