@@ -20,7 +20,7 @@ const signInSpa = ({ dispatch }) => {
 }
 
 const main = async ({ commit } ) => {
-  await axios.get(process.env.VUE_APP_BASE_URL + '/api/whoami').then((response) => {
+  await axios.get(process.env.VUE_APP_API_URL + '/whoami').then((response) => {
     commit('SET_USER', response.data)
   }).catch(() => {
     commit('SET_USER', null)
