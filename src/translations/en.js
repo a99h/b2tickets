@@ -239,6 +239,14 @@ export default {
     }
   },
   b2tickets: {
+    chat: {
+      title: 'Chat | Chats',
+      addChannel: 'New channel',
+      channel: 'Channel | Channels',
+      chatChannels: 'Chat channels',
+      online: 'Users Online ({count})',
+      message: 'Message'
+    },
     common: {
       description: 'Let\'s provide best client supporting.',
       loading: 'Loading...',

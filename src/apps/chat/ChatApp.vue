@@ -9,7 +9,7 @@
       width="240"
     >
       <div class="px-2 py-1">
-        <div class="title font-weight-bold primary--text">Chat channels</div>
+        <div class="title font-weight-bold primary--text">{{ $t('b2tickets.chat.chatChannels') }}</div>
       </div>
 
       <v-list dense>

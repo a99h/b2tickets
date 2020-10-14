@@ -237,6 +237,14 @@ export default {
     }
   },
   'b2tickets': {
+    'chat': {
+      'title': 'Bate-papo | Bate-papos',
+      'addChannel': 'Adicionar canal',
+      'channel': 'Canal | Canais',
+      'chatChannels': 'Canais de bate-papo',
+      'online': 'Usuários online ({count})',
+      'message': 'Mensagem'
+    },
     'common': {
       'description': 'Vamos fornecer o melhor suporte ao cliente.',
       'loading': 'Carregando...',

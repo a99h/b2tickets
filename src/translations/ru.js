@@ -238,6 +238,14 @@ export default {
     }
   },
   'b2tickets': {
+    'chat': {
+      'title': 'Чат | Чаты',
+      'addChannel': 'Новый канал',
+      'channel': 'Канал | Каналы',
+      'chatChannels': 'Каналы чата',
+      'online': 'Пользователи онлайн ({count})',
+      'message': 'Сообщение'
+    },
     'common': {
       'description': 'Предоставим лучшую клиентскую поддержку.',
       'loading': 'Идет загрузка...',

@@ -237,6 +237,14 @@ export default {
     }
   },
   'b2tickets': {
+    'chat': {
+      'title': 'Chat | Chats',
+      'addChannel': 'Ajouter une chaîne',
+      'channel': 'Channel | Canaux',
+      'chatChannels': 'Canaux de chat',
+      'online': 'Utilisateurs en ligne ({count})',
+      'message': 'Message'
+    },
     'common': {
       'description': 'Fournissons le meilleur support client.',
       'loading': 'Chargement...',
