@@ -6,7 +6,10 @@ import store from './store'
 
 // VUE-ROUTER - https://router.vuejs.org/
 import router from './router'
-// ROUTES FROM BACKEND
+
+/**
+ * Routes from backend. If empty or outdated please Run "php artisan route:json" from laravel folder
+ */
 import route from './backend/routes/provider'
 window.route = route
 
