@@ -101,14 +101,11 @@ export default {
       }
 
       this.isLoadingAdd = true
-
-      setTimeout(() => {
-        this.isLoadingAdd = false
-        this.channels.push(this.newChannel)
-        this.showCreateDialog = false
-        this.$router.push(`/apps/chat/channel/${this.newChannel}`)
-        this.newChannel = ''
-      }, 300)
+      this.isLoadingAdd = false
+      this.channels.push(this.newChannel)
+      this.showCreateDialog = false
+      this.$router.push(`/apps/chat/channel/${this.newChannel}`)
+      this.newChannel = ''
     }
   }
 }
