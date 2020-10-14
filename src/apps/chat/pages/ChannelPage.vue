@@ -37,7 +37,7 @@
     <v-navigation-drawer
       v-model="usersDrawer"
       width="180"
-      :right="!$vuetify.rtl"
+      right
       app
     >
       <v-list dense>
