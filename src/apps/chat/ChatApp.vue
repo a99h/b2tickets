@@ -69,6 +69,8 @@
 | Navigation drawer with channels for the chat application
 |
 */
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -91,7 +93,18 @@ export default {
       newChannel: ''
     }
   },
+  computed: {
+    ...mapGetters({
+      getUser: 'auth/getUser'
+    })
+  },
+  mounted() {
+    this.initialize()
+  },
   methods: {
+    initialize() {
+      this.user = this.getUser
+    },
     // Add and join the channel on creation
     addChannel() {
       if (!this.newChannel) {

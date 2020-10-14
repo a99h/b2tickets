@@ -173,6 +173,8 @@ export default {
           user: this.user,
           message: messageText
         }).then(() => {
+        console.log(this.users)
+        console.log(this.user)
         this.scrollToBottom()
       }).catch((err) => {
         console.log(err)
