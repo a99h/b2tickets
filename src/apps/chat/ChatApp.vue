@@ -83,7 +83,7 @@ export default {
       },
 
       // initial channels
-      channels: ['general', 'production', 'qa', 'staging', 'random'],
+      channels: ['general'],
 
       // create channel variables
       showCreateDialog: false,
