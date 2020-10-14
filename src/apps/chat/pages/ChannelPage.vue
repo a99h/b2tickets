@@ -42,7 +42,7 @@
     >
       <v-list dense>
         <v-subheader class="mx-1 overline">
-          {{ $t('chat.online', { count: users.length }) }}
+          {{ $t('b2tickets.chat.online', { count: users.length }) }}
         </v-subheader>
         <v-list-item v-for="item in users" :key="item.id" class="mb-1">
           <user-avatar :user="item" class="mx-1" />

@@ -13,11 +13,11 @@
       </div>
 
       <v-list dense>
-        <v-subheader class="ml-1 overline">{{ $tc('chat.channel', 2) }}</v-subheader>
+        <v-subheader class="ml-1 overline">{{ $tc('b2tickets.chat.channel', 2) }}</v-subheader>
         <div class="mx-2 mb-2">
           <v-btn outlined block @click="showCreateDialog = true">
             <v-icon small left>mdi-plus</v-icon>
-            {{ $t('chat.addChannel') }}
+            {{ $t('b2tickets.chat.addChannel') }}
           </v-btn>
         </div>
 
@@ -38,7 +38,7 @@
     <!-- create a new channel dialog -->
     <v-dialog v-model="showCreateDialog" max-width="400">
       <v-card>
-        <v-card-title class="title">{{ $t('chat.addChannel') }}</v-card-title>
+        <v-card-title class="title">{{ $t('b2tickets.chat.addChannel') }}</v-card-title>
         <div class="pa-3">
           <v-text-field
             ref="channel"
