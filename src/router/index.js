@@ -64,7 +64,9 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.middleware) {
     to = {
       ...to, meta: {
-        middleware: auth
+        middleware: [
+          auth
+        ]
       }
     }
   }
@@ -89,7 +91,9 @@ router.beforeResolve((to, from, next) => {
   if (!to.meta.middleware) {
     to = {
       ...to, meta: {
-        middleware: auth
+        middleware: [
+          auth
+        ]
       }
     }
   }
