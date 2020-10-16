@@ -12,6 +12,7 @@
       append-icon
       @click="$emit('input-focus')"
       @keyup.enter="sendMessage"
+      @keyup="sendTypingEvent"
     >
       <template v-slot:append>
         <emoji-picker @insert="insertEmoji"></emoji-picker>
@@ -66,6 +67,11 @@ export default {
       this.$emit('send-message', this.input)
       this.input = ''
       this.$refs.input.focus()
+    },
+    sendTypingEvent() {
+      if (!this.input) return
+
+      this.$emit('send-typing')
     }
   }
 }

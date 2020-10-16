@@ -29,14 +29,14 @@
       </div>
 
       <div class="input-box pa-2">
-        <input-box :channel="channel" @send-message="sendMessage" />
+        <input-box :channel="channel" @send-message="sendMessage" @send-typing="sendTypingEvent"/>
       </div>
     </div>
 
     <!-- online users drawer -->
     <v-navigation-drawer
       v-model="usersDrawer"
-      width="180"
+      width="240"
       right
       app
     >
@@ -47,7 +47,12 @@
         <v-list-item v-for="item in users" :key="item.id" class="mb-1">
           <user-avatar :user="item" class="mx-1" />
           <v-list-item-content>
-            <v-list-item-title :class="{ 'primary--text': item.id === user.id }">{{ item.name }}</v-list-item-title>
+            <v-list-item-title :class="{ 'primary--text': item.id === user.id }">
+              @{{ item.name }}
+            </v-list-item-title>
+            <v-list-item-action-text>
+              <v-chip v-if="item.typing" class="primary" x-small>печатает...</v-chip>
+            </v-list-item-action-text>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -175,6 +180,11 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+    },
+    sendTypingEvent() {
+      console.log('im typing')
+      Echo.join('chat')
+        .whisper('typing', this.user)
     },
     scrollToBottom() {
       this.$nextTick(() => {
