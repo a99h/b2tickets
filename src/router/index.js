@@ -62,7 +62,36 @@ const router = new Router({
  */
 router.beforeEach((to, from, next) => {
   if (!to.meta.middleware) {
-    return next()
+    to = {
+      ...to, meta: {
+        middleware: auth
+      }
+    }
+  }
+  const { middleware } = to.meta
+  const context = {
+    to,
+    from,
+    next,
+    store
+  }
+
+  return middleware[0]({
+    ...context,
+    next: middlewarePipeline(context, middleware, 1)
+  })
+})
+
+/**
+ * Before the navigation is confirmed,
+ */
+router.beforeResolve((to, from, next) => {
+  if (!to.meta.middleware) {
+    to = {
+      ...to, meta: {
+        middleware: auth
+      }
+    }
   }
   const { middleware } = to.meta
   const context = {

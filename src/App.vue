@@ -1,10 +1,9 @@
 <template>
-  <v-app>
+  <v-app v-if="user">
     <!-- Layout component -->
-    <component :is="currentLayout" v-if="isRouterLoaded">
+    <component :is="currentLayout" v-if="user && isRouterLoaded">
       <transition name="fade" mode="out-in">
-        <router-view v-if="user"></router-view>
-        <Login v-if="!user"></Login>
+        <router-view></router-view>
       </transition>
     </component>
 
@@ -48,7 +47,7 @@ export default {
   },
   data() {
     return {
-      user: null
+      user: {}
     }
   },
   computed: {
