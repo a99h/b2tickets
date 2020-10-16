@@ -3,7 +3,8 @@
     <!-- Layout component -->
     <component :is="currentLayout" v-if="isRouterLoaded">
       <transition name="fade" mode="out-in">
-        <router-view />
+        <router-view v-if="user"></router-view>
+        <Login v-if="!user"></Login>
       </transition>
     </component>
 
@@ -17,7 +18,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 import config from './configs'
 
@@ -45,6 +46,11 @@ export default {
     authLayout,
     errorLayout
   },
+  data() {
+    return {
+      user: null
+    }
+  },
   computed: {
     ...mapState('app', ['toast']),
     isRouterLoaded: function() {
@@ -60,6 +66,17 @@ export default {
   },
   created() {
     config.theme.globalTheme === 'dark' ? this.$vuetify.theme.dark = true : this.$vuetify.theme.dark = false
+    this.signInSpa().then(
+      this.user = this.getUser
+    )
+  },
+  methods: {
+    ...mapActions({
+      signInSpa: 'auth/signInSpa'
+    }),
+    ...mapGetters({
+      getUser: 'auth/getUser'
+    })
   },
   head: {
     link: [
