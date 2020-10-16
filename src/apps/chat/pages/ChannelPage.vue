@@ -147,7 +147,6 @@ export default {
           })
         })
         .listen('MessageSent', (event) => {
-          console.log(event)
           this.messages.push(event.message)
           this.scrollToBottom()
 
@@ -161,7 +160,6 @@ export default {
     },
     fetchMessages() {
       axios.get(route('api.ticketsystem.chat.index')).then((response) => {
-        console.log(response.data.data)
         this.messages = response.data.data
         this.scrollToBottom()
       })
@@ -173,8 +171,6 @@ export default {
           user: this.user,
           message: messageText
         }).then(() => {
-        console.log(this.users)
-        console.log(this.user)
         this.scrollToBottom()
       }).catch((err) => {
         console.log(err)
