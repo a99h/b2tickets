@@ -4,6 +4,7 @@ import axios from '@/plugins/axios'
 
 export default new Echo({
   broadcaster: 'pusher',
+  namespace: process.env.VUE_APP_WS_EVENT_NAMESPACE,
   key: process.env.VUE_APP_WS_KEY,
   forceTLS: false,
   wsHost: process.env.VUE_APP_WS_HOST,
