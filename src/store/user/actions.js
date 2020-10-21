@@ -7,7 +7,7 @@ const fetchOperators = ({ dispatch }) => {
   return dispatch('operators')
 }
 const clients = ({ commit }) => {
-  return axios.get(route('api.ticketsystem.admin.user.index'),{
+  return axios.get(route('api.ticketsystem.user.index'),{
     params: {
       role: 'client'
     }
@@ -18,7 +18,7 @@ const clients = ({ commit }) => {
   })
 }
 const operators = ({ commit }) => {
-  return axios.get(route('api.ticketsystem.admin.user.index'), {
+  return axios.get(route('api.ticketsystem.user.index'), {
     params: {
       role: 'operator'
     }
