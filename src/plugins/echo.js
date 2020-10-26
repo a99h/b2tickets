@@ -10,7 +10,7 @@ export default new Echo({
   wsHost: process.env.VUE_APP_WS_HOST,
   wsPort: process.env.VUE_APP_WS_PORT,
   wssPort: process.env.VUE_APP_WS_PORT,
-  disableStats: true,
+  disableStats: false,
   encrypted: true,
   authorizer: (channel, options) => {
     return {

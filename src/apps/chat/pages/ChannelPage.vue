@@ -133,16 +133,16 @@ export default {
       this.channel = channelId
     },
     joinEcho() {
-      Echo.join('chat')
-        .here((users) => {
-          this.users = users
-        })
-        .joining((user) => {
-          this.users.push(user)
-        })
-        .leaving((user) => {
-          this.users = this.users.filter((u) => u.id !== user.id)
-        })
+      Echo.private('App.User.6')
+        // .here((users) => {
+        //   this.users = users
+        // })
+        // .joining((user) => {
+        //   this.users.push(user)
+        // })
+        // .leaving((user) => {
+        //   this.users = this.users.filter((u) => u.id !== user.id)
+        // })
         .listenForWhisper('typing', ({ id, name }) => {
           this.users.forEach((user, index) => {
             if (user.id === id) {
@@ -174,7 +174,8 @@ export default {
       axios.post(route('api.ticketsystem.chat.store'),
         {
           user: this.user,
-          message: messageText
+          message: messageText,
+          channel: '6'
         }).then(() => {
         this.scrollToBottom()
       }).catch((err) => {
@@ -183,7 +184,7 @@ export default {
     },
     sendTypingEvent() {
       console.log('im typing')
-      Echo.join('chat')
+      Echo.private('App.User.6')
         .whisper('typing', this.user)
     },
     scrollToBottom() {
