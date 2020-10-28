@@ -133,7 +133,7 @@ export default {
       this.channel = channelId
     },
     joinEcho() {
-      Echo.private('App.User.6')
+      Echo.private('App.User.031f9aeb-ed7a-3286-beaa-6e89abca0545')
         // .here((users) => {
         //   this.users = users
         // })
@@ -175,7 +175,7 @@ export default {
         {
           user: this.user,
           message: messageText,
-          channel: '6'
+          chat_request_id: 1
         }).then(() => {
         this.scrollToBottom()
       }).catch((err) => {
