@@ -102,6 +102,7 @@
       <v-container class="fill-height" :fluid="!isContentBoxed">
         <v-layout>
           <slot></slot>
+          <customization-menu />
         </v-layout>
       </v-container>
 
@@ -123,9 +124,11 @@ import MainMenu from '../components/navigation/MainMenu'
 import ToolbarUser from '../components/toolbar/ToolbarUser'
 import ToolbarApps from '../components/toolbar/ToolbarApps'
 import ToolbarLanguage from '../components/toolbar/ToolbarLanguage'
+import CustomizationMenu from '../components/navigation/CustomizationMenu'
 
 export default {
   components: {
+    CustomizationMenu,
     MainMenu,
     ToolbarUser,
     ToolbarApps,

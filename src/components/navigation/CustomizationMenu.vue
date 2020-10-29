@@ -24,32 +24,32 @@
 
       <div class="pa-2">
         <div class="font-weight-bold my-1">Global Theme</div>
-        <v-btn-toggle v-model="theme" color="primary" mandatory class="mb-2">
+        <v-btn-toggle v-model="userSettings.theme" color="primary" mandatory class="mb-2">
           <v-btn x-large>Light</v-btn>
           <v-btn x-large>Dark</v-btn>
         </v-btn-toggle>
 
         <div class="font-weight-bold my-1">Toolbar Theme</div>
-        <v-btn-toggle v-model="toolbarTheme" color="primary" mandatory class="mb-2">
+        <v-btn-toggle v-model="userSettings.toolbarTheme" color="primary" mandatory class="mb-2">
           <v-btn x-large>Global</v-btn>
           <v-btn x-large>Light</v-btn>
           <v-btn x-large>Dark</v-btn>
         </v-btn-toggle>
 
         <div class="font-weight-bold my-1">Toolbar Style</div>
-        <v-btn-toggle v-model="toolbarStyle" color="primary" mandatory class="mb-2">
+        <v-btn-toggle v-model="userSettings.toolbarStyle" color="primary" mandatory class="mb-2">
           <v-btn x-large>Full</v-btn>
           <v-btn x-large>Solo</v-btn>
         </v-btn-toggle>
 
         <div class="font-weight-bold my-1">Content Layout</div>
-        <v-btn-toggle v-model="contentBoxed" color="primary" mandatory class="mb-2">
+        <v-btn-toggle v-model="userSettings.contentBoxed" color="primary" mandatory class="mb-2">
           <v-btn x-large>Fluid</v-btn>
           <v-btn x-large>Boxed</v-btn>
         </v-btn-toggle>
 
         <div class="font-weight-bold my-1">Menu Theme</div>
-        <v-btn-toggle v-model="menuTheme" color="primary" mandatory class="mb-2">
+        <v-btn-toggle v-model="userSettings.menuTheme" color="primary" mandatory class="mb-2">
           <v-btn x-large>Global</v-btn>
           <v-btn x-large>Light</v-btn>
           <v-btn x-large>Dark</v-btn>
@@ -58,7 +58,7 @@
         <div class="font-weight-bold my-1">Primary Color</div>
 
         <v-color-picker
-          v-model="color"
+          v-model="userSettings.color"
           class="primary"
           hide-mode-switch
           hide-inputs
@@ -94,19 +94,21 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   data() {
     return {
       right: false,
-      theme: 0,
-      toolbarTheme: 0,
-      toolbarStyle: 0,
-      contentBoxed: 0,
-      menuTheme: 0,
+      userSettings: {
+        theme: 0,
+        toolbarTheme: 0,
+        toolbarStyle: 0,
+        contentBoxed: 0,
+        menuTheme: 0,
+        color: this.getPrimaryColor()
+      },
       timeout: null,
-      color: this.getPrimaryColor(),
       swatches: [[
         this.$vuetify.theme.themes.dark.primary,
         this.$vuetify.theme.themes.light.primary
@@ -135,35 +137,51 @@ export default {
     }
   },
   computed: {
-    ...mapState('app', ['time', 'globalTheme'])
+    ...mapState('app', ['time', 'globalTheme']),
+    ...mapGetters({
+      whoAmI: 'auth/getUser'
+    })
   },
   watch: {
-    color(val) {
+    right(val) {
+      val || this.close()
+    },
+    'userSettings.color': function (val) {
       this.globalTheme === 'dark' ? this.$vuetify.theme.themes.dark.primary = val : this.$vuetify.theme.themes.light.primary = val
     },
-    theme(val) {
+    'userSettings.theme': function (val) {
       this.setGlobalTheme((val === 0 ? 'light' : 'dark'))
-      this.color = this.getPrimaryColor()
+      this.userSettings.color = this.getPrimaryColor()
     },
-    toolbarTheme(val) {
+    'userSettings.toolbarTheme': function (val) {
       const theme = val === 0 ? 'global' : (val === 1 ? 'light' : 'dark')
 
       this.setToolbarTheme(theme)
     },
-    toolbarStyle(val) {
+    'userSettings.toolbarStyle': function (val) {
       this.setToolbarDetached(val === 1)
     },
-    menuTheme(val) {
+    'userSettings.menuTheme': function (val) {
       const theme = val === 0 ? 'global' : (val === 1 ? 'light' : 'dark')
 
       this.setMenuTheme(theme)
     },
-    contentBoxed(val) {
+    'userSettings.contentBoxed': function (val) {
       this.setContentBoxed(val === 1)
     }
   },
   mounted() {
-    this.globalTheme === 'dark' ? this.theme = 1 : this.theme = 0
+    this.userSettings = {
+      id: this.whoAmI.userSettings.id,
+      theme: this.whoAmI.userSettings.global_theme,
+      toolbarTheme: this.whoAmI.userSettings.toolbar_theme,
+      toolbarStyle: this.whoAmI.userSettings.toolbar_style,
+      contentBoxed: this.whoAmI.userSettings.content_layout,
+      menuTheme: this.whoAmI.userSettings.menu_theme,
+      color: this.whoAmI.userSettings.primary_color
+    }
+    this.setSettings(this.userSettings)
+
     this.animate()
   },
   beforeDestroy() {
@@ -171,8 +189,34 @@ export default {
   },
   methods: {
     ...mapMutations('app', ['setMenuTheme', 'setGlobalTheme', 'setToolbarTheme', 'setContentBoxed', 'setTimeZone', 'setTimeFormat', 'setRTL', 'setToolbarDetached']),
+    ...mapActions({
+      updateSettings: 'user/updateSettings',
+      updateWhoAmIState: 'auth/signInSpa'
+    }),
+    setSettings(userSettings) {
+      this.setGlobalTheme((userSettings.theme === 0 ? 'light' : 'dark'))
+      this.setToolbarTheme((userSettings.toolbarTheme === 0 ? 'global' : (userSettings.toolbar_theme === 1 ? 'light' : 'dark')))
+      this.setToolbarDetached((userSettings.toolbarStyle !== 0))
+      this.setMenuTheme((userSettings.menuTheme === 0 ? 'global' : (userSettings.menu_theme === 1 ? 'light' : 'dark')))
+      this.setContentBoxed((userSettings.contentBoxed !== 0))
+    },
+    close() {
+      this.updateSettings({
+        id: this.userSettings.id,
+        global_theme: this.userSettings.theme,
+        toolbar_theme: this.userSettings.toolbarTheme,
+        toolbar_style: this.userSettings.toolbarStyle,
+        content_layout: this.userSettings.contentBoxed,
+        menu_theme: this.userSettings.menuTheme,
+        primary_color: this.userSettings.color
+      }).then(() => {
+        this.updateWhoAmIState()
+      }).catch((e) => {
+        console.log(e)
+      })
+    },
     setTheme() {
-      this.$vuetify.theme.dark = (this.theme === 'dark')
+      this.$vuetify.theme.dark = (this.userSettings.theme === 1)
     },
     animate() {
       if (this.timeout) clearTimeout(this.timeout)

@@ -11,8 +11,6 @@
       {{ toast.message }}
       <v-btn v-if="toast.timeout === 0" color="white" text @click="toast.show = false">{{ $t('common.close') }}</v-btn>
     </v-snackbar>
-
-    <customization-menu />
   </v-app>
 </template>
 
@@ -64,7 +62,7 @@ export default {
     }
   },
   created() {
-    config.theme.globalTheme === 'dark' ? this.$vuetify.theme.dark = true : this.$vuetify.theme.dark = false
+    //config.theme.globalTheme === 'dark' ? this.$vuetify.theme.dark = true : this.$vuetify.theme.dark = false
     this.signInSpa().then(
       this.user = this.getUser
     )

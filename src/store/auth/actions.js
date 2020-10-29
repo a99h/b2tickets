@@ -21,7 +21,7 @@ const signInSpa = ({ dispatch }) => {
 
 const main = async ({ commit } ) => {
   await axios.get(route('api.user.whoami')).then((response) => {
-    commit('SET_USER', response.data)
+    commit('SET_USER', response.data.data)
   }).catch(() => {
     commit('SET_USER', null)
   })
