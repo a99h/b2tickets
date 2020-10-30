@@ -245,13 +245,23 @@ export default {
       channel: 'Channel | Channels',
       chatChannels: 'Chat channels',
       online: 'Users Online ({count})',
-      message: 'Message'
+      message: 'Message',
+      request: {
+        title: 'Chat request | Chat requests',
+        fields: {
+          message: 'Message',
+          operators_online: 'Operators online',
+          user: 'User'
+        }
+      }
     },
     common: {
       description: 'Let\'s provide best client supporting.',
       loading: 'Loading...',
       select: 'Please select',
-      welcome: 'Become a member of our team'
+      welcome: 'Become a member of our team',
+      created_at: 'Created at',
+      updated_at: 'Updated at'
     },
     ticket: {
       ticket: 'ticket',

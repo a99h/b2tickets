@@ -7,6 +7,7 @@ import AuthModule from './auth'
 import TicketModule from './ticket'
 import UserModule from './user'
 import TicketStatusModule from './ticket/status'
+import chat from './chat'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ const store = new Vuex.Store({
     auth: AuthModule,
     ticket: TicketModule,
     ticketStatus: TicketStatusModule,
-    user: UserModule
+    user: UserModule,
+    chat
   }
 })
 

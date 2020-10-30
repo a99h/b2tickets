@@ -3,7 +3,7 @@
     <!-- channel toolbar -->
     <v-app-bar flat height="64">
       <v-app-bar-nav-icon class="hidden-lg-and-up" @click="$emit('toggle-menu')"></v-app-bar-nav-icon>
-      <div class="title font-weight-bold"># {{ $route.params.id }}</div>
+      <div v-if="ready" class="title font-weight-bold"># {{ $route.params.id }}</div>
 
       <v-spacer></v-spacer>
 
@@ -14,8 +14,10 @@
 
     <v-divider></v-divider>
 
+    <!-- Chat request list -->
+    <chat-request-table v-if="!ready"/>
     <!-- channel messages -->
-    <div class="channel-page">
+    <div v-if="ready" class="channel-page">
       <div id="messages" ref="messages" class="messages mx-2">
         <transition-group name="list">
           <channel-message
@@ -64,6 +66,7 @@
 import InputBox from '../components/InputBox'
 import UserAvatar from '../components/UserAvatar'
 import ChannelMessage from '../components/ChannelMessage'
+import ChatRequestTable from '../components/ChatRequestTable'
 
 // Demo messages and users
 import getMessage, { users } from '../content/messages'
@@ -84,7 +87,8 @@ export default {
   components: {
     InputBox,
     UserAvatar,
-    ChannelMessage
+    ChannelMessage,
+    ChatRequestTable
   },
   props: {
     // Current logged user
@@ -95,6 +99,8 @@ export default {
   },
   data() {
     return {
+      // Chat selected
+      ready: false,
       // users online drawer
       usersDrawer: true,
 
