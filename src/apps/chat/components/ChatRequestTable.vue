@@ -1,82 +1,68 @@
 <template>
-  <v-sheet min-height="100vh">
-    <v-row
-      dense
-      align-content="center"
-      justify="center"
+  <div class="d-flex flex-grow-1">
+    <v-alert
+      v-if="backendErrors"
+      dismissible
+      border="left"
+      color="error"
+      class="mt-2"
+      type="error"
     >
-      <v-col cols="11">
-        <v-hover v-slot:default="{ hover }">
-          <v-row :elevation="hover ? 24 : 2">
-            <v-col cols="12">
-              <v-alert
-                v-if="backendErrors"
-                dismissible
-                border="left"
-                color="error"
-                class="mt-2"
-                type="error"
-              >
-                {{ backendErrors }}
-              </v-alert>
-              <v-data-table
-                :headers="headers"
-                :items="chatRequests"
-                :loading="loading.dataTable"
-                :search="search"
-                fixed
-                sort-by="name"
-                class="elevation-1"
-                :class="$vuetify.theme.dark ? 'surface' : ''"
-                style="min-width: 100%"
-              >
-                <template v-slot:top>
-                  <v-toolbar flat class="primary--text">
-                    <v-toolbar-title>{{ $tc('b2tickets.chat.request.title', 0) }}</v-toolbar-title>
-                    <v-divider
-                      class="mx-4"
-                      inset
-                      vertical
-                    ></v-divider>
-                    <v-text-field
-                      v-model="search"
-                      append-icon="mdi-magnify"
-                      :label="$t('common.search')"
-                      single-line
-                      hide-details
-                    ></v-text-field>
-                    <v-spacer></v-spacer>
-                  </v-toolbar>
-                </template>
-                <template v-slot:item.created_at="{ item }">
-                  {{ new Date(item.created_at).toLocaleString() }}
-                </template>
-                <template v-slot:item.updated_at="{ item }">
-                  {{ new Date(item.updated_at).toLocaleString() }}
-                </template>
-                <template v-slot:item.actions="{ item }">
-                  <v-chip
-                    class="ma-2"
-                    color="success"
-                    outlined
-                    @click="showItem(item)"
-                  >
-                    <v-icon left>
-                      mdi-wechat
-                    </v-icon>
-                    {{ $tc('b2tickets.chat.title', 1) }}
-                  </v-chip>
-                </template>
-                <template v-slot:no-data>
-                  <v-btn color="warning" @click="dataTableInitialize">Обновить</v-btn>
-                </template>
-              </v-data-table>
-            </v-col>
-          </v-row>
-        </v-hover>
-      </v-col>
-    </v-row>
-  </v-sheet>
+      {{ backendErrors }}
+    </v-alert>
+    <v-data-table
+      :headers="headers"
+      :items="chatRequests"
+      :loading="loading.dataTable"
+      :search="search"
+      fixed
+      sort-by="name"
+      class="elevation-1"
+      :class="$vuetify.theme.dark ? 'surface' : ''"
+      style="min-width: 100%"
+    >
+      <template v-slot:top>
+        <v-toolbar flat class="primary--text">
+          <v-toolbar-title>{{ $tc('b2tickets.chat.request.title', 0) }}</v-toolbar-title>
+          <v-divider
+            class="mx-4"
+            inset
+            vertical
+          ></v-divider>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            :label="$t('common.search')"
+            single-line
+            hide-details
+          ></v-text-field>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.created_at="{ item }">
+        {{ new Date(item.created_at).toLocaleString() }}
+      </template>
+      <template v-slot:item.updated_at="{ item }">
+        {{ new Date(item.updated_at).toLocaleString() }}
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-chip
+          class="ma-2"
+          color="success"
+          outlined
+          @click="addChannel({ name: item.channel_name, user: item.user.email, chatRequest: item.id })"
+        >
+          <v-icon left>
+            mdi-wechat
+          </v-icon>
+          {{ $tc('b2tickets.chat.title', 1) }}
+        </v-chip>
+      </template>
+      <template v-slot:no-data>
+        <v-btn color="warning" @click="dataTableInitialize">Обновить</v-btn>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -115,7 +101,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchTickets: 'ticket/fetchTickets',
       fetchChatRequests: 'chatRequest/fetchChatRequests'
     }),
     async dataTableInitialize() {
@@ -125,18 +110,11 @@ export default {
         this.chatRequests = this.getChatRequests
       })
 
-      await this.fetchTickets().then(() => {
-        this.tickets = this.getTickets
-      })
-
       this.loading.dataTable = false
       this.backendErrors = null
     },
-    onCloseDialog() {
-      this.backendErrors = null
-    },
-    showItem(item) {
-      this.$refs.dialog.show(item)
+    addChannel(channel_name) {
+      this.$emit('addChannel', channel_name)
     }
   }
 }

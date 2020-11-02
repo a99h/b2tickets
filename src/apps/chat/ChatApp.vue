@@ -13,18 +13,15 @@
       </div>
 
       <v-list dense>
-        <v-subheader class="ml-1 overline">{{ $tc('b2tickets.chat.channel', 2) }}</v-subheader>
-        <div class="mx-2 mb-2">
-          <v-btn outlined block @click="showCreateDialog = true">
-            <v-icon small left>mdi-plus</v-icon>
-            {{ $t('b2tickets.chat.addChannel') }}
-          </v-btn>
-        </div>
-
         <!-- channels list -->
-        <v-list-item v-for="channelItem in channels" :key="channelItem" :to="`/apps/chat/channel/${channelItem}`" exact>
+        <v-list-item
+          v-for="channelItem in channels"
+          :key="channelItem.name"
+          exact
+          @click="changeChannel(channelItem)"
+        >
           <v-list-item-content>
-            <v-list-item-title># {{ channelItem }}</v-list-item-title>
+            <v-list-item-title># {{ channelItem.user }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -32,31 +29,14 @@
 
     <!-- channel view -->
     <v-card class="flex-grow-1">
-      <router-view :key="$route.fullPath" :user="user" @toggle-menu="drawer = !drawer"></router-view>
+      <router-view
+        :key="$route.fullPath"
+        :user="user"
+        :channelobj="currentChannel"
+        @toggle-menu="drawer = !drawer"
+        @addChannel="addChannel"
+      ></router-view>
     </v-card>
-
-    <!-- create a new channel dialog -->
-    <v-dialog v-model="showCreateDialog" max-width="400">
-      <v-card>
-        <v-card-title class="title">{{ $t('b2tickets.chat.addChannel') }}</v-card-title>
-        <div class="pa-3">
-          <v-text-field
-            ref="channel"
-            v-model="newChannel"
-            :label="$tc('chat.channel', 1)"
-            maxlength="20"
-            counter="20"
-            autofocus
-            @keyup.enter="addChannel()"
-          ></v-text-field>
-        </div>
-        <v-card-actions class="pa-2">
-          <v-spacer></v-spacer>
-          <v-btn @click="showCreateDialog = false">{{ $t('common.cancel') }}</v-btn>
-          <v-btn :loading="isLoadingAdd" color="success" @click="addChannel()">{{ $t('common.add') }}</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
@@ -78,19 +58,19 @@ export default {
       drawer: null,
 
       // logged user
-      user: {
-        id: 12,
-        name: 'John Cena',
-        avatar: '/images/avatars/avatar1.svg'
-      },
+      user: null,
 
       // initial channels
-      channels: ['general'],
+      channels: [],
 
       // create channel variables
       showCreateDialog: false,
-      isLoadingAdd: false,
-      newChannel: ''
+      newChannel: {
+        name: '',
+        user: '',
+        chatRequest: -1
+      },
+      currentChannel: {}
     }
   },
   computed: {
@@ -98,7 +78,7 @@ export default {
       getUser: 'auth/getUser'
     })
   },
-  mounted() {
+  created() {
     this.initialize()
   },
   methods: {
@@ -106,19 +86,25 @@ export default {
       this.user = this.getUser
     },
     // Add and join the channel on creation
-    addChannel() {
+    addChannel(channel) {
+      this.newChannel = channel
+      this.currentChannel = channel
+      console.log(this.newChannel)
+
       if (!this.newChannel) {
         this.$refs.channel.focus()
 
         return
       }
 
-      this.isLoadingAdd = true
-      this.isLoadingAdd = false
       this.channels.push(this.newChannel)
-      this.showCreateDialog = false
-      this.$router.push(`/apps/chat/channel/${this.newChannel}`)
+      console.log(this.channels)
+      this.$router.push(`/apps/chat/channel/${this.newChannel.name}`)
       this.newChannel = ''
+    },
+    changeChannel(channel) {
+      this.currentChannel = channel
+      this.$router.push(`/apps/chat/channel/${channel.name}`)
     }
   }
 }

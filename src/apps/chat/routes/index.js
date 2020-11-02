@@ -1,6 +1,10 @@
 export default [{
   path: '',
-  redirect: 'channel/general'
+  redirect: 'request'
+},{
+  path: 'request',
+  name: 'apps-chat-request',
+  component: () => import(/* webpackChunkName: "apps-chat-channel" */ '@/apps/chat/pages/ChatRequestPage.vue')
 }, {
   path: 'channel/:id',
   name: 'apps-chat-channel',

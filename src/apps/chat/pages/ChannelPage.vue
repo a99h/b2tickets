@@ -3,21 +3,21 @@
     <!-- channel toolbar -->
     <v-app-bar flat height="64">
       <v-app-bar-nav-icon class="hidden-lg-and-up" @click="$emit('toggle-menu')"></v-app-bar-nav-icon>
-      <div v-if="ready" class="title font-weight-bold"># {{ $route.params.id }}</div>
+      <div class="title font-weight-bold">
+        <v-btn class="primary" :to="{ name: 'apps-chat-request'}">Chat request</v-btn>
+      </div>
 
       <v-spacer></v-spacer>
 
-      <v-btn class="mx-1" icon @click.stop="usersDrawer = !usersDrawer">
+      <v-btn class="mx-1" icon @click.stop="toggleUsersDrawer">
         <v-icon>mdi-account-group-outline</v-icon>
       </v-btn>
     </v-app-bar>
 
     <v-divider></v-divider>
 
-    <!-- Chat request list -->
-    <chat-request-table v-if="!ready"/>
     <!-- channel messages -->
-    <div v-if="ready" class="channel-page">
+    <div class="channel-page">
       <div id="messages" ref="messages" class="messages mx-2">
         <transition-group name="list">
           <channel-message
@@ -35,41 +35,14 @@
       </div>
     </div>
 
-    <!-- online users drawer -->
-    <v-navigation-drawer
-      v-model="usersDrawer"
-      width="240"
-      right
-      app
-    >
-      <v-list dense>
-        <v-subheader class="mx-1 overline">
-          {{ $t('b2tickets.chat.online', { count: users.length }) }}
-        </v-subheader>
-        <v-list-item v-for="item in users" :key="item.id" class="mb-1">
-          <user-avatar :user="item" class="mx-1" />
-          <v-list-item-content>
-            <v-list-item-title :class="{ 'primary--text': item.id === user.id }">
-              @{{ item.name }}
-            </v-list-item-title>
-            <v-list-item-action-text>
-              <v-chip v-if="item.typing" class="primary" x-small>печатает...</v-chip>
-            </v-list-item-action-text>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    <online-users-drawer ref="onlineUsersDrawer" :user="user" :channel="channel"></online-users-drawer>
   </div>
 </template>
 
 <script>
 import InputBox from '../components/InputBox'
-import UserAvatar from '../components/UserAvatar'
 import ChannelMessage from '../components/ChannelMessage'
-import ChatRequestTable from '../components/ChatRequestTable'
-
-// Demo messages and users
-import getMessage, { users } from '../content/messages'
+import OnlineUsersDrawer from '../components/OnlineUsersDrawer'
 
 import Echo from '@/plugins/echo'
 
@@ -86,32 +59,31 @@ import axios from '@/plugins/axios'
 export default {
   components: {
     InputBox,
-    UserAvatar,
     ChannelMessage,
-    ChatRequestTable
+    OnlineUsersDrawer
   },
   props: {
     // Current logged user
     user: {
       type: Object,
       default: () => ({})
+    },
+    channelobj: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
     return {
-      // Chat selected
-      ready: false,
       // users online drawer
-      usersDrawer: true,
+      usersDrawer: false,
 
       // channel information and messages
       channel: '',
       messages: [],
-
       // online users
       users: [
-        this.user,
-        ...users
+        this.user
       ]
     }
   },
@@ -124,31 +96,19 @@ export default {
     this.initialize()
   },
   mounted() {
-    this.startChannel(this.$route.params.id)
+
   },
   methods: {
     initialize() {
+      this.startChannel(this.$route.params.id)
       this.joinEcho()
-      this.fetchMessages()
     },
     startChannel(channelId) {
-      clearTimeout(this.timeoutGenerator)
-
-      this.messages = []
-
       this.channel = channelId
+      this.fetchMessages()
     },
     joinEcho() {
-      Echo.private('App.User.031f9aeb-ed7a-3286-beaa-6e89abca0545')
-        // .here((users) => {
-        //   this.users = users
-        // })
-        // .joining((user) => {
-        //   this.users.push(user)
-        // })
-        // .leaving((user) => {
-        //   this.users = this.users.filter((u) => u.id !== user.id)
-        // })
+      Echo.private('App.User.' + this.channel)
         .listenForWhisper('typing', ({ id, name }) => {
           this.users.forEach((user, index) => {
             if (user.id === id) {
@@ -177,11 +137,13 @@ export default {
     },
     // Send message to channel
     sendMessage(messageText) {
+      console.log(this.channelobj)
+      console.log(this.user)
       axios.post(route('api.ticketsystem.chat.store'),
         {
           user: this.user,
           message: messageText,
-          chat_request_id: 1
+          chat_request_id: this.channelobj.chatRequest
         }).then(() => {
         this.scrollToBottom()
       }).catch((err) => {
@@ -189,14 +151,20 @@ export default {
       })
     },
     sendTypingEvent() {
-      console.log('im typing')
-      Echo.private('App.User.6')
+      Echo.private('App.User.' + this.channel)
         .whisper('typing', this.user)
     },
     scrollToBottom() {
       this.$nextTick(() => {
         this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight
       })
+    },
+    addChannel(channel) {
+      this.channel = channel.name
+      this.$emit('addChannel', channel)
+    },
+    toggleUsersDrawer() {
+      this.$refs.onlineUsersDrawer.usersDrawer = !this.$refs.onlineUsersDrawer.usersDrawer
     }
   }
 }
