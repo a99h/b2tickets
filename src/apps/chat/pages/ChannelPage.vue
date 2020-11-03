@@ -130,7 +130,7 @@ export default {
         })
     },
     fetchMessages() {
-      axios.get(route('api.ticketsystem.chat.index')).then((response) => {
+      axios.get(route('api.ticketsystem.chat.index',this.channelobj.chatRequest)).then((response) => {
         this.messages = response.data.data
         this.scrollToBottom()
       })
