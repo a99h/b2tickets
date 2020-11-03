@@ -137,8 +137,6 @@ export default {
     },
     // Send message to channel
     sendMessage(messageText) {
-      console.log(this.channelobj)
-      console.log(this.user)
       axios.post(route('api.ticketsystem.chat.store'),
         {
           user: this.user,

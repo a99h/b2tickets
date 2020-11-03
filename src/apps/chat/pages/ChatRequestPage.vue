@@ -60,13 +60,7 @@ export default {
       users: []
     }
   },
-  mounted() {
-    this.initialize()
-  },
   methods: {
-    initialize() {
-      console.log('chat request page init')
-    },
     addChannel(channel) {
       this.channel = channel.name
       this.$emit('addChannel', channel)

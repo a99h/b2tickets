@@ -113,8 +113,8 @@ export default {
       this.loading.dataTable = false
       this.backendErrors = null
     },
-    addChannel(channel_name) {
-      this.$emit('addChannel', channel_name)
+    addChannel(channel) {
+      this.$emit('addChannel', channel)
     }
   }
 }

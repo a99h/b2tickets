@@ -68,7 +68,7 @@ export default {
       newChannel: {
         name: '',
         user: '',
-        chatRequest: -1
+        chatRequest: null
       },
       currentChannel: {}
     }
@@ -89,7 +89,6 @@ export default {
     addChannel(channel) {
       this.newChannel = channel
       this.currentChannel = channel
-      console.log(this.newChannel)
 
       if (!this.newChannel) {
         this.$refs.channel.focus()
@@ -97,8 +96,11 @@ export default {
         return
       }
 
-      this.channels.push(this.newChannel)
-      console.log(this.channels)
+      const channelInList = this.channels.some((ch) => {
+        return channel.name === ch.name
+      })
+
+      if (!channelInList) this.channels.push(this.newChannel)
       this.$router.push(`/apps/chat/channel/${this.newChannel.name}`)
       this.newChannel = ''
     },
