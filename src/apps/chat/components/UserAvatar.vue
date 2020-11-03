@@ -1,6 +1,6 @@
 <template>
   <v-avatar size="40" class="elevation-1 grey lighten-3">
-    <v-img v-if="user.userSettings.avatar" :src="user.userSettings.avatar" />
+    <v-img v-if="user.userSettings && user.userSettings.avatar" :src="user.userSettings.avatar" />
     <span v-else class="primary--text">{{ initials }}</span>
   </v-avatar>
 </template>
