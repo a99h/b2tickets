@@ -24,7 +24,7 @@ const updateSettings = ({ commit }, settings) => {
   })
 }
 const clients = ({ commit }) => {
-  return axios.get(route('api.user.index'),{
+  return axios.get(route('api.ticketsystem.chat.user.index'),{
     params: {
       role: 'client'
     }

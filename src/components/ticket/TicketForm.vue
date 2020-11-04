@@ -46,7 +46,7 @@
               </v-input>
             </section>
             <section v-if="(dialogMode === 'create') || (dialogMode === 'edit')">
-              <v-select
+              <v-autocomplete
                 v-model="editedItem.ticketClients"
                 :label="loadingLabel"
                 :items="clients"
@@ -60,12 +60,12 @@
                 return-object
                 small-chips
                 item-color="success"
-                item-text="name"
+                item-text="email"
                 @input="$v.editedItem.ticketClients.$touch()"
                 @blur="$v.editedItem.ticketClients.$touch()"
               >
-              </v-select>
-              <v-select
+              </v-autocomplete>
+              <v-autocomplete
                 v-model="editedItem.ticketOperators"
                 :label="loadingLabel"
                 :items="operators"
@@ -79,7 +79,7 @@
                 small-chips
                 item-color="error"
                 item-text="name"
-              ></v-select>
+              ></v-autocomplete>
               <section v-if="dialogMode === 'edit'">
                 <v-select
                   v-model="editedItem.ticketStatus"
