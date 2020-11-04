@@ -54,7 +54,22 @@
           </div>
         </v-form>
       </v-card-text>
+
     </v-card>
+    <div v-if="backendErrors">
+
+    </div>
+    <v-alert
+      v-for="backendError in backendErrors"
+      :key="backendError"
+      border="left"
+      color="error"
+      dark
+      class="mt-2"
+      dismissible
+      outlined
+      type="error"
+    >{{ backendError }}</v-alert>
 
     <div class="text-center mt-6">
       {{ $t('login.noaccount') }}
@@ -149,17 +164,18 @@ export default {
         this.backendErrors = []
         this.isLoading = true
         this.isSignInDisabled = true
-        this.signIn()
+        this.signIn().then(() => {
+          this.isLoading = false
+          this.isSignInDisabled = false
+        })
       }
     },
     async signIn() {
       await this.login(this.credentials).then(() => {
-        this.isLoading = false
         this.isSignInDisabled = false
         // Redirect home.
         this.$router.push({ name: 'home' })
       }).catch ((err) => {
-        console.log(err)
         const errorMessages = Object.values(err.response.data.errors)
 
         for (const key in errorMessages) {
