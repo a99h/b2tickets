@@ -47,7 +47,7 @@
             @click="submit"
           >{{ $t('login.button') }}</v-btn>
 
-          <div class="mt-5">
+          <div class="mt-5 d-none">
             <router-link to="/auth/forgot-password">
               {{ $t('login.forgot') }}
             </router-link>
@@ -70,13 +70,6 @@
       outlined
       type="error"
     >{{ backendError }}</v-alert>
-
-    <div class="text-center mt-6">
-      {{ $t('login.noaccount') }}
-      <router-link to="/auth/signup" class="font-weight-bold">
-        {{ $t('login.create') }}
-      </router-link>
-    </div>
   </div>
 </template>
 

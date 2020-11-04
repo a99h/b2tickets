@@ -251,6 +251,9 @@ export default {
       'select': 'Por favor selecione',
       'welcome': 'Torne-se um membro de nossa equipe'
     },
+    'menu': {
+      'apps': 'Formulários'
+    },
     'ticket': {
       'ticket': 'tíquete',
       'tickets': 'Tíquetes',

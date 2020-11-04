@@ -263,6 +263,9 @@ export default {
       created_at: 'Created at',
       updated_at: 'Updated at'
     },
+    menu: {
+      apps: 'Applications'
+    },
     ticket: {
       ticket: 'ticket',
       tickets: 'Tickets',

@@ -251,6 +251,9 @@ export default {
       'select': 'Bitte auswählen',
       'welcome': 'Werden Sie Mitglied unseres Teams'
     },
+    'menu': {
+      'apps': 'Anwendungen'
+    },
     'ticket': {
       'ticket': 'ticket',
       'tickets': 'Tickets',

@@ -262,6 +262,9 @@ export default {
       'created_at': 'Создано',
       'updated_at': 'Обновлено'
     },
+    'menu': {
+      'apps': 'Приложения'
+    },
     'ticket': {
       'ticket': 'тикет',
       'tickets': 'Тикеты',

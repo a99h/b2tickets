@@ -11,6 +11,7 @@ export default {
     ]
   }, {
     text: 'Apps',
+    key: 'b2tickets.menu.apps',
     items: menuApps
   }, {
     text: 'Pages',
