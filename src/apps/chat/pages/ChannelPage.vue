@@ -4,7 +4,7 @@
     <v-app-bar flat height="64">
       <v-app-bar-nav-icon class="hidden-lg-and-up" @click="$emit('toggle-menu')"></v-app-bar-nav-icon>
       <div class="title font-weight-bold">
-        <v-btn class="primary" :to="{ name: 'apps-chat-request'}">Chat request</v-btn>
+        <v-btn class="primary" :to="{ name: 'apps-chat-request'}">{{ $tc('b2tickets.chat.request.title', 0) }}</v-btn>
       </div>
 
       <v-spacer></v-spacer>
