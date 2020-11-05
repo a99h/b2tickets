@@ -20,24 +20,38 @@
                 {{ backendErrors }}
               </v-alert>
               <v-data-table
+                v-model="users"
                 :headers="headers"
-                :items="tickets"
+                :items="users"
                 :loading="loading.dataTable"
                 :search="search"
                 fixed
-                sort-by="name"
+                sort-by="email"
                 class="elevation-1"
                 :class="$vuetify.theme.dark ? 'surface' : ''"
                 style="min-width: 100%"
               >
                 <template v-slot:top>
                   <v-toolbar flat class="primary--text">
-                    <v-toolbar-title>{{ $t('b2tickets.ticket.tickets') }}</v-toolbar-title>
+                    <v-toolbar-title>{{ $tc('b2tickets.user.title', 0) }}</v-toolbar-title>
                     <v-divider
                       class="mx-4"
                       inset
                       vertical
                     ></v-divider>
+                    <v-select
+                      v-model="filterBy"
+                      background-color="surface"
+                      dense
+                      flat
+                      solo-inverted
+                      hide-details
+                      :items="userTypes"
+                      value="email"
+                      :label="$t('b2tickets.user.actions.selectType')"
+                      @input="dataTableInitialize"
+                    ></v-select>
+                    <v-spacer></v-spacer>
                     <v-text-field
                       v-model="search"
                       append-icon="mdi-magnify"
@@ -46,43 +60,30 @@
                       hide-details
                     ></v-text-field>
                     <v-spacer></v-spacer>
-                    <TicketForm
+                    <UserForm
+                      v-if="filterBy === 'operators'"
                       ref="dialog"
-                      :tickets="tickets"
+                      :users="users"
                       @closeDialog="onCloseDialog"
-                      @ticketFormBackendErrors="(err) => backendErrors = err"
+                      @userFormBackendErrors="(err) => backendErrors = err"
                       @refreshState="dataTableInitialize"
-                    ></TicketForm>
+                    ></UserForm>
                   </v-toolbar>
                 </template>
                 <template v-slot:item.created_at="{ item }">
                   {{ new Date(item.created_at).toLocaleString() }}
                 </template>
-                <template v-slot:item.ticketClients="{ item }">
+                <template v-slot:item.updated_at="{ item }">
+                  {{ new Date(item.updated_at).toLocaleString() }}
+                </template>
+                <template v-slot:item.userRoles="{ item }">
                   <v-chip
-                    v-for="client in item.ticketClients"
-                    :key="client.id"
+                    v-for="role in item.userRoles"
+                    :key="role.id"
                     small
                     color="success"
-                  >{{ client.email }}
+                  >{{ role.name }}
                   </v-chip>
-                </template>
-                <template v-slot:item.ticketOperators="{ item }">
-                  <v-chip
-                    v-for="operator in item.ticketOperators"
-                    :key="operator.id"
-                    small
-                    color="error"
-                  >{{ operator.name }}
-                  </v-chip>
-                </template>
-                <template v-slot:item.ticketStatus="{ item }">
-                  <div class="font-weight-bold d-flex align-center">
-                    <div :class="item.ticketStatus.color + '--text'">
-                      <v-icon small :color="item.ticketStatus.color">mdi-circle-medium</v-icon>
-                      <span>{{ $t('b2tickets.ticketStatus.' + item.ticketStatus.title) }}</span>
-                    </div>
-                  </div>
                 </template>
                 <template v-slot:item.actions="{ item }">
                   <v-icon
@@ -93,17 +94,12 @@
                     mdi-eye
                   </v-icon>
                   <v-icon
+                    v-if="filterBy === 'operators'"
                     small
                     class="mr-2"
                     @click="editItem(item)"
                   >
                     mdi-pencil
-                  </v-icon>
-                  <v-icon
-                    small
-                    @click="deleteItem(item)"
-                  >
-                    mdi-delete
                   </v-icon>
                 </template>
                 <template v-slot:no-data>
@@ -120,22 +116,28 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import TicketForm from './TicketForm'
+import UserForm from './UserForm'
 
 export default {
-  name: 'Tickets',
-  components: { TicketForm },
+  name: 'UsersTable',
+  components: { UserForm },
   data: () => ({
     loading: {
       dataTable: 'info'
     },
     backendErrors: null,
     search: '',
-    tickets: []
+    users: [],
+    userTypes: [
+      'clients',
+      'operators'
+    ],
+    filterBy: 'operators'
   }),
   computed: {
     ...mapGetters({
-      getTickets: 'ticket/getTickets'
+      getOperators: 'user/getOperators',
+      getClients: 'user/getClients'
     }),
     headers() { return [
       {
@@ -143,30 +145,39 @@ export default {
         align: 'start',
         value: 'id'
       },
-      { text: this.$t('b2tickets.ticket.fields.issue'), value: 'issue' },
-      { text: this.$t('b2tickets.ticket.fields.ticketClients'), value: 'ticketClients' },
-      { text: this.$t('b2tickets.ticket.fields.ticketOperators'), value: 'ticketOperators' },
-      { text: this.$t('b2tickets.ticketStatus.status'), value: 'ticketStatus' },
-      { text: this.$t('b2tickets.ticket.fields.createdAt'), value: 'created_at' },
+      { text: this.$t('b2tickets.user.fields.name'), value: 'name' },
+      { text: this.$t('b2tickets.user.fields.email'), value: 'email' },
+      { text: this.$t('b2tickets.user.fields.userRoles'), value: 'userRoles' },
+      { text: this.$t('b2tickets.common.created_at'), value: 'created_at' },
+      { text: this.$t('b2tickets.common.updated_at'), value: 'updated_at' },
       { text: '', value: 'actions', sortable: false }
     ]}
   },
   mounted() {
-    this.dataTableInitialize()
+    this.dataTableInitialize(this.filterBy)
   },
   methods: {
     ...mapActions({
-      fetchTickets: 'ticket/fetchTickets'
+      fetchOperators: 'user/fetchOperators',
+      fetchClients: 'user/fetchClients'
     }),
-    async dataTableInitialize() {
+    async dataTableInitialize(type) {
       this.loading.dataTable = 'info'
 
-      await this.fetchTickets().then(() => {
-        this.tickets = this.getTickets
+      await this.loadUsers(type).then(() => {
+        this.loading.dataTable = false
+        this.backendErrors = null
       })
-
-      this.loading.dataTable = false
-      this.backendErrors = null
+    },
+    async loadUsers(type) {
+      switch (type) {
+      case 'clients': await this.fetchClients().then(() => {
+        this.users = this.getClients
+      }); break
+      case 'operators': await this.fetchOperators().then(() => {
+        this.users = this.getOperators
+      }); break
+      }
     },
     onCloseDialog() {
       this.backendErrors = null
@@ -176,9 +187,6 @@ export default {
     },
     editItem(item) {
       this.$refs.dialog.edit(item)
-    },
-    deleteItem(item) {
-      confirm('Are you sure you want to delete this item?') && this.$refs.dialog.delete(item)
     }
   }
 }

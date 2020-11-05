@@ -46,11 +46,38 @@ const operators = ({ commit }) => {
   })
 }
 
+const storeUser = ({ commit }, user) => {
+  return new Promise((resolve, reject) => {
+    axios.post(route('api.user.store'), user)
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err))
+  })
+}
+const updateUser = ({ commit }, user) => {
+  user._method = 'put'
+
+  return new Promise((resolve, reject) => {
+    axios.post(route('api.user.update',user.id), user)
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err))
+  })
+}
+const showUser = ({ commit }, user) => {
+  return new Promise((resolve, reject) => {
+    axios.get(route('api.user.show',user.id))
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err))
+  })
+}
+
 export default {
   fetchClients,
   fetchOperators,
   showSettings,
   updateSettings,
   clients,
-  operators
+  operators,
+  storeUser,
+  updateUser,
+  showUser
 }

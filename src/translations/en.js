@@ -292,6 +292,21 @@ export default {
       active: 'Active',
       open: 'Open',
       closed: 'Closed'
+    },
+    user: {
+      actions: {
+        createUser: 'New user',
+        editUser: 'Edit user',
+        selectType: 'Select user type',
+        showUser: 'User\'s information'
+      },
+      fields: {
+        name: 'name',
+        email: 'email',
+        password: 'password',
+        userRoles: 'roles'
+      },
+      title: 'User | Users'
     }
   }
 }

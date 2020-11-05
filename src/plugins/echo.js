@@ -6,11 +6,11 @@ export default new Echo({
   broadcaster: 'pusher',
   namespace: process.env.VUE_APP_WS_EVENT_NAMESPACE,
   key: process.env.VUE_APP_WS_KEY,
-  forceTLS: false,
+  forceTLS: process.env.VUE_APP_WS_TLS !== 'false',
   wsHost: process.env.VUE_APP_WS_HOST,
   wsPort: process.env.VUE_APP_WS_PORT,
   wssPort: process.env.VUE_APP_WS_PORT,
-  disableStats: false,
+  disableStats: true,
   encrypted: true,
   authorizer: (channel, options) => {
     return {

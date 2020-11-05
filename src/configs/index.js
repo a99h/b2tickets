@@ -11,7 +11,7 @@ export default {
   // product display information
   product: {
     name: 'B2Tickets',
-    version: '0.0.1'
+    version: '0.1.0'
   },
 
   // google maps

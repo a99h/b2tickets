@@ -56,9 +56,6 @@
       </v-card-text>
 
     </v-card>
-    <div v-if="backendErrors">
-
-    </div>
     <v-alert
       v-for="backendError in backendErrors"
       :key="backendError"
