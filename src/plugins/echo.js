@@ -9,7 +9,6 @@ export default new Echo({
   forceTLS: process.env.VUE_APP_WS_TLS !== 'false',
   wsHost: process.env.VUE_APP_WS_HOST,
   wsPort: process.env.VUE_APP_WS_PORT,
-  wssPort: process.env.VUE_APP_WS_PORT,
   disableStats: true,
   encrypted: true,
   authorizer: (channel, options) => {
