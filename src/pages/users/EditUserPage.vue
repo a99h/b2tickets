@@ -36,7 +36,6 @@
 
     <v-tabs v-model="tab" :show-arrows="false" background-color="transparent">
       <v-tab to="#tabs-account">Account</v-tab>
-      <v-tab to="#tabs-information">Information</v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab">
@@ -54,13 +53,11 @@
 <script>
 import CopyLabel from '../../components/common/CopyLabel'
 import AccountTab from './EditUser/AccountTab'
-import InformationTab from './EditUser/InformationTab'
 
 export default {
   components: {
     CopyLabel,
-    AccountTab,
-    InformationTab
+    AccountTab
   },
   data() {
     return {
@@ -70,7 +67,7 @@ export default {
         'name':'Bartel Fitchew',
         'verified':false,
         'created':'2019-08-09T03:14:12Z',
-        'lastSignIn':'2019-08-14T20:00:53Z',
+        'updated':'2019-08-09T03:14:12Z',
         'disabled':true,
         'role':'ADMIN',
         'avatar':'/images/avatars/avatar1.svg'
