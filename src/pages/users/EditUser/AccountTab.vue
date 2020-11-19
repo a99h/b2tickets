@@ -1,45 +1,32 @@
 <template>
   <div class="my-2">
     <div>
-      <v-card v-if="user.disabled" class="warning mb-4" light>
+      <v-card v-if="getUser.disabled" class="warning mb-4" light>
         <v-card-title>User Disabled</v-card-title>
         <v-card-subtitle>This user has been disabled! Login accesss has been revoked.</v-card-subtitle>
         <v-card-text>
-          <v-btn dark @click="user.disabled = false">
+          <v-btn dark @click="getUser.disabled = false">
             <v-icon left small>mdi-account-check</v-icon>Enable User
           </v-btn>
         </v-card-text>
       </v-card>
-
       <v-card>
         <v-card-title>Basic Information</v-card-title>
         <v-card-text>
           <div class="d-flex flex-column flex-sm-row">
             <div>
               <v-img
-                :src="user.avatar"
+                :src="getUser.userSettings.avatar"
                 aspect-ratio="1"
                 class="blue-grey lighten-4 rounded elevation-3"
                 max-width="90"
                 max-height="90"
-              ></v-img>
-              <v-btn class="mt-1" small>Edit Avatar</v-btn>
+              ></v-img> 
+              <v-btn class="mt-1" small @click="Avatar = true">Edit Avatar</v-btn>
             </div>
             <div class="flex-grow-1 pt-2 pa-sm-2">
-              <v-text-field v-model="user.name" label="Display name" placeholder="name"></v-text-field>
-              <v-text-field v-model="user.email" label="Email" hide-details></v-text-field>
-
-              <div class="d-flex flex-column">
-                <v-checkbox v-model="user.verified" dense label="Email Verified"></v-checkbox>
-                <div>
-                  <v-btn
-                    v-if="!user.verified"
-                  >
-                    <v-icon left small>mdi-email</v-icon>Send Verification Email
-                  </v-btn>
-                </div>
-              </div>
-
+              <v-text-field v-model="getUser.name" label="Display name" placeholder="Name"></v-text-field>
+              <v-text-field v-model="getUser.email" label="Email" hide-details></v-text-field>
               <div class="mt-2">
                 <v-btn color="primary" @click>Save</v-btn>
               </div>
@@ -53,41 +40,39 @@
           <v-expansion-panel-header class="title">Actions</v-expansion-panel-header>
           <v-expansion-panel-content>
             <div class="mb-2">
-              <div class="title">Reset User Password</div>
-              <div class="subtitle mb-2">Sends a reset password email to the user.</div>
-              <v-btn
-                class="mb-2"
-                @click
-              >
-                <v-icon left small>mdi-email</v-icon>Send Reset Password Email
-              </v-btn>
+              <div class="title">Change Password</div>
+              <div class="flex-grow-1 pt-2 pa-sm-2">
+              <v-text-field v-model="getUser.password" label="Old password" hide-details></v-text-field>
+              <v-text-field  label="New password" hide-details></v-text-field>
+              <v-text-field label="Password confirmation" hide-details></v-text-field>
+              </div>
+              <div class="subtitle mb-2">
+              </div>
+              <div>
+                <v-btn color="primary" class="mb-2" @click>
+                  Change password
+                </v-btn>
+              </div>
             </div>
 
             <v-divider></v-divider>
-
-            <div class="my-2">
-              <div class="title">Export Account Data</div>
-              <div class="subtitle mb-2">Export all the platform metadata for this user.</div>
-              <v-btn class="mb-2">
-                <v-icon left small>mdi-clipboard-account</v-icon>Export User Data
-              </v-btn>
-            </div>
-
             <v-divider></v-divider>
 
             <div class="my-2">
-              <div class="error--text title">Danger Zone</div>
-              <div class="subtitle mb-2">Full administrator with access to this dashboard.</div>
+              <div id="wrapper">
+                <div v-if="false" class="error--text title">Danger Zone</div>
+                <div class="subtitle mb-2">Full administrator with access to this dashboard.</div>
+              </div>
 
               <div class="my-2">
                 <v-btn
-                  v-if="user.role === 'ADMIN'"
+                  v-if="getUser.role === 'ADMIN'"
                   color="primary"
-                  @click="user.role = 'USER'"
+                  @click="getUser.role = 'USER'"
                 >
                   <v-icon left small>mdi-security</v-icon>Remove admin access
                 </v-btn>
-                <v-btn v-else color="primary" @click="user.role = 'ADMIN'">
+                <v-btn v-else color="primary" @click="getUser.role = 'ADMIN'">
                   <v-icon left small>mdi-security</v-icon>Set User as Admin
                 </v-btn>
               </div>
@@ -97,9 +82,9 @@
               <div class="subtitle mt-3 mb-2">Prevent the user from signing in on the platform.</div>
               <div class="my-2">
                 <v-btn
-                  v-if="user.disabled"
+                  v-if="getUser.disabled"
                   color="warning"
-                  @click="user.disabled = false"
+                  @click="getUser.disabled = false"
                 >
                   <v-icon left small>mdi-account-check</v-icon>Enable User
                 </v-btn>
@@ -111,14 +96,6 @@
                   <v-icon left small>mdi-cancel</v-icon>Disable User
                 </v-btn>
               </div>
-
-              <v-divider></v-divider>
-              <div
-                class="subtitle mt-3 mb-2"
-              >To delete the user please transfer ownership or delete user's subscriptions.</div>
-              <v-btn color="error" @click="deleteDialog = true">
-                <v-icon left small>mdi-delete</v-icon>Delete User
-              </v-btn>
             </div>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -126,16 +103,10 @@
           <v-expansion-panel-header class="title">Metadata</v-expansion-panel-header>
           <v-expansion-panel-content class="body-2">
             <span class="font-weight-bold">Created</span>
-            {{ user.created | formatDate('lll') }}
+            {{ getUser.created_at | formatDate('lll') }}
             <br />
-            <span class="font-weight-bold">Last Sign In</span>
-            {{ user.lastSignIn | formatDate('lll') }}
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header class="title">Raw Data</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <pre class="body-2">{{ user }}</pre>
+            <span class="font-weight-bold">Updated</span>
+            {{ getUser.updated_at | formatDate('lll') }}
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -149,7 +120,35 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="disableDialog = false">Cancel</v-btn>
-          <v-btn color="warning" @click="user.disabled = true; disableDialog = false">Disable</v-btn>
+          <v-btn color="warning" @click="getUser.disabled = true; disableDialog = false">Disable</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- avatar modal -->
+    <v-dialog v-model="Avatar" max-width="500">
+      <v-card >
+          <v-card-title class="headline">Avatar</v-card-title>
+          <v-item-group
+        v-model="selected"
+        multiple
+      >
+        <v-row no-gutters >
+        <v-col v-for="(item,inx) in items" :key="inx" cols="3">
+            <v-item v-slot="{ toggle }">
+              <v-img
+                :src="item"
+                height="130"
+                class="text-right pa-4"
+                @click="toggle"
+              >
+              </v-img>
+            </v-item>
+        </v-col>
+        </v-row>
+        </v-item-group>
+        <v-card-actions>
+          <v-spacer></v-spacer><v-btn @click="Avatar = false ">Cancel</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -170,18 +169,64 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex'
+import { parseZone } from 'moment'
+import { computed } from 'vue'
+import { avatars } from './avatars.js'
 export default {
-  props: {
-    user: {
-      type: Object,
-      default: () => ({})
-    }
-  },
   data() {
     return {
-      panel: [1],
+      user: '',
+      panel: [2],
+      avatarPicker: false,
       deleteDialog: false,
-      disableDialog: false
+      disableDialog: false,
+      Avatar: false,
+      password: {
+        old_password: '',
+        new_password: '',
+        repeat_password: ''
+      },
+      items: [
+        { src: '/images/avatars/avatar1.svg' },
+        { src: '/images/avatars/avatar2.svg' },
+        { src: '/images/avatars/avatar4.svg' },
+        { src: '/images/avatars/avatar5.svg' },
+        { src: '/images/avatars/avatar6.svg' },
+        { src: '/images/avatars/avatar7.svg' },
+        { src: '/images/avatars/avatar8.svg' },
+        { src: '/images/avatars/avatar9.svg' },
+        { src: '/images/avatars/avatar10.svg' },
+        { src: '/images/avatars/avatar11.svg' },
+        { src: '/images/avatars/avatar12.svg' },
+        { src: '/images/avatars/avatar13.svg' },
+        { src: '/images/avatars/avatar14.svg' },
+        { src: '/images/avatars/avatar15.svg' },
+        { src: '/images/avatars/avatar16.svg' },
+        { src: '/images/avatars/avatar17.svg' },
+        { src: '/images/avatars/avatar18.svg' },
+        { src: '/images/avatars/avatar19.svg' },
+        { src: '/images/avatars/avatar20.svg' },
+        { src: '/images/avatars/avatar3.svg' }
+      ]
+    }
+  },
+  computed: {
+    ...mapGetters ({ getUser: 'auth/getUser' })
+  },
+  watch: {
+    repeatedPassword: 'checkPasswordsEquality',
+    createPassword: 'checkPasswordsEquality'
+  },
+  mounted () {
+    this.colMethod()
+  },
+  methods: {
+    colMethod () {
+      console.log (this.getUser)
+    },
+    picker() {
+      console.log('click')
     }
   }
 }
