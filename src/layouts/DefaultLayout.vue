@@ -92,6 +92,10 @@
 
             <toolbar-apps />
 
+            <div :class="[$vuetify.rtl ? 'ml-1' : 'mr-1']">
+              <toolbar-notifications />
+            </div>
+
             <toolbar-user />
           </div>
         </div>
@@ -125,6 +129,7 @@ import ToolbarUser from '../components/toolbar/ToolbarUser'
 import ToolbarApps from '../components/toolbar/ToolbarApps'
 import ToolbarLanguage from '../components/toolbar/ToolbarLanguage'
 import CustomizationMenu from '../components/navigation/CustomizationMenu'
+import ToolbarNotifications from '../components/toolbar/ToolbarNotifications'
 
 export default {
   components: {
@@ -132,7 +137,8 @@ export default {
     MainMenu,
     ToolbarUser,
     ToolbarApps,
-    ToolbarLanguage
+    ToolbarLanguage,
+    ToolbarNotifications
   },
   data() {
     return {

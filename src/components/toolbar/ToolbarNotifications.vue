@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import Echo from '@/plugins/echo'
+
 /*
 |---------------------------------------------------------------------
 | Toolbar Notifications Component
@@ -57,41 +59,42 @@ export default {
     return {
       items: [
         {
-          title: 'Brunch this weekend?',
+          title: 'New chat request',
           color: 'primary',
-          icon: 'mdi-account-circle',
-          subtitle: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint, repudiandae?',
+          icon: 'mdi-forum-outline',
+          subtitle: 'User: client@example.com is waiting for operator',
           time: '3 min'
-        },
-        {
-          title: 'Summer BBQ',
-          color: 'success',
-          icon: 'mdi-email-outline',
-          subtitle: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint, repudiandae?',
-          time: '3 min'
-        },
-        {
-          title: 'Oui oui',
-          color: 'teal lighten-1',
-          icon: 'mdi-airplane-landing',
-          subtitle: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint, repudiandae?',
-          time: '4 min'
-        },
-        {
-          title: 'Disk capacity is at maximum',
-          color: 'teal accent-3',
-          icon: 'mdi-server',
-          subtitle: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint, repudiandae?',
-          time: '3 hr'
-        },
-        {
-          title: 'Recipe to try',
-          color: 'blue-grey lighten-2',
-          icon: 'mdi-noodles',
-          subtitle: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint, repudiandae?',
-          time: '8 hr'
         }
-      ]
+      ],
+      defaultItem: {
+        title: 'New chat request',
+        color: 'primary',
+        icon: 'mdi-forum-outline',
+        subtitle: '',
+        time: '3 min'
+      }
+    }
+  },
+  methods: {
+    initialize() {
+      this.startChannel('operators-main')
+      this.joinEcho()
+    },
+    startChannel(channelId) {
+      this.channel = channelId
+      this.fetchMessages()
+    },
+    joinEcho() {
+      Echo.join(this.channel)
+        .listen('NewChatRequest', (event) => {
+          this.items.push({
+            title: this.defaultItem.title,
+            color: this.defaultItem.color,
+            icon: this.defaultItem.icon,
+            subtitle: 'User: ' + event.user.email + ' is waiting for operator',
+            time: event.timestamp - Date.now()
+          })
+        })
     }
   }
 }
