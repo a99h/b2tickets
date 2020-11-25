@@ -75,6 +75,9 @@ export default {
       }
     }
   },
+  created() {
+    this.initialize()
+  },
   methods: {
     initialize() {
       this.startChannel('operators-main')
@@ -82,18 +85,19 @@ export default {
     },
     startChannel(channelId) {
       this.channel = channelId
-      this.fetchMessages()
+      // this.fetchMessages()
     },
     joinEcho() {
       Echo.join(this.channel)
-        .listen('NewChatRequest', (event) => {
-          this.items.push({
-            title: this.defaultItem.title,
-            color: this.defaultItem.color,
-            icon: this.defaultItem.icon,
-            subtitle: 'User: ' + event.user.email + ' is waiting for operator',
-            time: event.timestamp - Date.now()
-          })
+        .listen('ChatRequestCreated', (event) => {
+          console.log(event)
+          // this.items.push({
+          //   title: this.defaultItem.title,
+          //   color: this.defaultItem.color,
+          //   icon: this.defaultItem.icon,
+          //   subtitle: 'User: ' + event.user.email + ' is waiting for operator',
+          //   time: event.timestamp - Date.now()
+          // })
         })
     }
   }

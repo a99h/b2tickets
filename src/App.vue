@@ -51,9 +51,7 @@ export default {
   computed: {
     ...mapState('app', ['toast']),
     isRouterLoaded: function() {
-      if (this.$route.name !== null) return true
-
-      return false
+      return this.$route.name !== null
     },
     currentLayout: function() {
       const layout = this.$route.meta.layout || 'default'
@@ -62,6 +60,12 @@ export default {
     }
   },
   created() {
+    //config.theme.globalTheme === 'dark' ? this.$vuetify.theme.dark = true : this.$vuetify.theme.dark = false
+    this.signInSpa().then(
+      this.user = this.getUser
+    )
+  },
+  mounted() {
     //config.theme.globalTheme === 'dark' ? this.$vuetify.theme.dark = true : this.$vuetify.theme.dark = false
     this.signInSpa().then(
       this.user = this.getUser
