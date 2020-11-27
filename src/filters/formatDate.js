@@ -11,3 +11,13 @@ Vue.filter('formatDate', (value, filterFormat) => {
 
   return ''
 })
+
+Vue.filter('fromNow', (value) => {
+  const { zone } = store.state.app.time
+
+  if (value) {
+    return moment(value).tz(zone).fromNow()
+  }
+
+  return ''
+})
