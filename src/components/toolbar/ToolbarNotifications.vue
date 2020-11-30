@@ -9,7 +9,7 @@
         offset-y="22"
       >
         <v-btn icon v-on="on">
-          <v-icon>{{ sound === false ? 'mdi-volume-mute' : 'mdi-bell-outline' }}</v-icon>
+          <v-icon>{{ muted === true ? 'mdi-volume-mute' : 'mdi-bell-outline' }}</v-icon>
         </v-btn>
       </v-badge>
     </template>
@@ -18,18 +18,19 @@
     <v-card>
       <v-tooltip>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" v-on="on" @click="sound = !sound">
-            <v-icon>{{ sound === true ? 'mdi-volume-mute' : 'mdi-volume-medium' }}</v-icon>
+          <v-btn icon v-bind="attrs" v-on="on" @click="muted = !muted">
+            <v-icon>{{ muted === true ? 'mdi-volume-mute' : 'mdi-volume-medium' }}</v-icon>
           </v-btn>
         </template>
-        <span>{{ sound ? 'Click to turn sound OFF' : 'Click to turn sound ON' }}</span>
+        <span>{{ muted ? 'Click to turn sound OFF' : 'Click to turn sound ON' }}</span>
       </v-tooltip>
       <v-list
         three-line
         dense
         max-width="400"
         max-height="400"
-        class="overflow-y-auto">
+        class="overflow-y-auto"
+      >
         <v-subheader class="pa-2 font-weight-bold">Notifications</v-subheader>
         <div v-for="(item, index) in items" :key="index">
           <v-divider v-if="index > 0 && index < items.length" inset></v-divider>
@@ -72,9 +73,10 @@ import Echo from '@/plugins/echo'
 export default {
   data() {
     return {
+      audio: null,
       interval: null,
       items: [],
-      sound: false,
+      muted: true,
       defaultItem: {
         title: 'New chat request',
         color: 'primary',
@@ -93,6 +95,7 @@ export default {
   },
   methods: {
     initialize() {
+      this.audio = new Audio('/audio/new-chat-request.ogg')
       this.startChannel('operators-main')
       this.joinEcho()
     },
@@ -110,13 +113,11 @@ export default {
             subtitle: 'User: ' + event.chat_request.user.email + ' is waiting for operator',
             time: event.chat_request.created_at
           })
-          if (this.sound) this.playSound()
+          if (!this.muted) this.playSound()
         })
     },
     playSound () {
-      const audio = new Audio('/audio/new-chat-request.ogg')
-
-      audio.play()
+      this.audio.play()
     }
   }
 }
