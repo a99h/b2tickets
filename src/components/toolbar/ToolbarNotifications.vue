@@ -36,16 +36,23 @@
           <v-divider v-if="index > 0 && index < items.length" inset></v-divider>
 
           <v-list-item @click="">
-            <v-list-item-avatar size="32" :color="item.color">
-              <v-icon dark small>{{ item.icon }}</v-icon>
+            <v-list-item-avatar size="32" :color="chatRequestNotificationsSettings.color">
+              <v-icon dark small>{{ chatRequestNotificationsSettings.icon }}</v-icon>
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
-              <v-list-item-subtitle class="caption" v-text="item.subtitle"></v-list-item-subtitle>
+              <v-list-item-title v-text="chatRequestNotificationsSettings.title"></v-list-item-title>
+              <v-list-item-subtitle class="caption">{{ 'User: ' + item.chat_request.user.email + ' is waiting for operator!' }}</v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action class="align-self-center">
-              <v-list-item-action-text>{{ new Date(item.time) | fromNow() }}</v-list-item-action-text>
+              <v-chip
+                v-if="chipTempVar"
+                small
+                color="success"
+                class="mb-2"
+                @click="softDeleteNotification"
+              >Mark Read</v-chip>
+              <v-list-item-action-text>{{ new Date(item.chat_request.created_at) | fromNow() }}</v-list-item-action-text>
             </v-list-item-action>
           </v-list-item>
         </div>
@@ -60,7 +67,8 @@
 
 <script>
 import Echo from '@/plugins/echo'
-// import moment from '@/plugins/moment'
+import axios from '@/plugins/axios'
+import { mapGetters } from 'vuex'
 
 /*
 |---------------------------------------------------------------------
@@ -73,18 +81,23 @@ import Echo from '@/plugins/echo'
 export default {
   data() {
     return {
+      chipTempVar: false,
       audio: null,
+      dialog2: false,
       interval: null,
       items: [],
       muted: true,
-      defaultItem: {
+      chatRequestNotificationsSettings: {
         title: 'New chat request',
         color: 'primary',
-        icon: 'mdi-forum-outline',
-        subtitle: '',
-        time: '3 min'
+        icon: 'mdi-forum-outline'
       }
     }
+  },
+  computed: {
+    ...mapGetters({
+      user: 'auth/getUser'
+    })
   },
   created() {
     this.initialize()
@@ -96,24 +109,30 @@ export default {
   methods: {
     initialize() {
       this.audio = new Audio('/audio/new-chat-request.ogg')
-      this.startChannel('operators-main')
-      this.joinEcho()
+      this.startChannel('App.Modules.User.Models.User.' + this.user.id)
+    },
+    getNotifications() {
+      axios.get(route('api.ticketsystem.chat.notifications.index')).then((response) => {
+        this.items = response.data.data
+      }).catch((e) => {
+        console.log(e)
+      })
+    },
+    softDeleteNotification() {
+      console.log('notifications marked as read')
     },
     startChannel(channelId) {
       this.channel = channelId
-      // this.fetchMessages()
+      this.getNotifications()
+      this.joinEcho()
     },
     joinEcho() {
-      Echo.join(this.channel)
-        .listen('ChatRequestCreated', (event) => {
-          this.items.unshift({
-            title: this.defaultItem.title,
-            color: this.defaultItem.color,
-            icon: this.defaultItem.icon,
-            subtitle: 'User: ' + event.chat_request.user.email + ' is waiting for operator',
-            time: event.chat_request.created_at
-          })
-          if (!this.muted) this.playSound()
+      Echo.private(this.channel)
+        .notification((event) => {
+          if (event.chat_request) {
+            this.items.unshift(event)
+            if (!this.muted) this.playSound()
+          }
         })
     },
     playSound () {
