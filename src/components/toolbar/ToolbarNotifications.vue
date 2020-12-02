@@ -46,11 +46,10 @@
             </v-list-item-content>
             <v-list-item-action class="align-self-center">
               <v-chip
-                v-if="chipTempVar"
                 small
                 color="success"
                 class="mb-2"
-                @click="softDeleteNotification"
+                @click="softDeleteNotification(item)"
               >Mark Read</v-chip>
               <v-list-item-action-text>{{ new Date(item.chat_request.created_at) | fromNow() }}</v-list-item-action-text>
             </v-list-item-action>
@@ -58,7 +57,7 @@
         </div>
       </v-list>
 
-      <div class="text-center py-2">
+      <div v-if="tempVar" class="text-center py-2">
         <v-btn small>See all</v-btn>
       </div>
     </v-card>
@@ -81,7 +80,7 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      chipTempVar: false,
+      tempVar: false,
       audio: null,
       dialog2: false,
       interval: null,
@@ -118,8 +117,10 @@ export default {
         console.log(e)
       })
     },
-    softDeleteNotification() {
-      console.log('notifications marked as read')
+    softDeleteNotification(notification) {
+      axios.post(route('api.ticketsystem.chat.notifications.softdelete',notification.id), { _method: 'delete' }).then((
+        this.items.splice(this.items.indexOf(notification), 1)
+      ))
     },
     startChannel(channelId) {
       this.channel = channelId
