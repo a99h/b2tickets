@@ -12,11 +12,13 @@
     </div>
 
     <div
-      v-if="user.role === 'ADMIN'"
+      v-for="(role, inx) in user.userRoles" 
+      :key="inx"
       class="d-flex align-center font-weight-bold primary--text my-2"
     >
-      <v-icon small color="primary">mdi-security</v-icon>
-      <span class="ma-1">Administrator</span>
+
+      <v-icon color="primary">{{ getIconByRoleName(role.name) }}</v-icon>
+      <span class="ma-1">{{ role.name }}</span>
     </div>
 
     <div class="mb-4">
@@ -51,6 +53,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex'
 import CopyLabel from '../../components/common/CopyLabel'
 import AccountTab from './EditUser/AccountTab'
 
@@ -61,18 +64,10 @@ export default {
   },
   data() {
     return {
-      user: {
-        'id':32,
-        'email':'bfitchew0@ezinearticles.com',
-        'name':'Bartel Fitchew',
-        'verified':false,
-        'created':'2019-08-09T03:14:12Z',
-        'updated':'2019-08-09T03:14:12Z',
-        'disabled':true,
-        'role':'ADMIN',
-        'avatar':'/images/avatars/avatar1.svg'
-      },
+      user: '',
+      userRoles: true,
       tab: null,
+      getIconFromRoleName: true,
       breadcrumbs: [
         {
           text: 'Users',
@@ -83,6 +78,27 @@ export default {
           text: 'Edit User'
         }
       ]
+    }
+  },
+  computed: {
+    ...mapGetters ({ getUser: 'auth/getUser' })
+  },
+  mounted() {
+    this.user = this.getUser
+    this.user.role = this.role
+  },
+  methods: {
+    getIconByRoleName (role) {
+      switch (role) {
+      case 'operator':
+        return 'mdi-account'
+
+      case 'ADMIN':
+        return 'mdi-security'
+          
+      default:
+        return ''
+      }
     }
   }
 }

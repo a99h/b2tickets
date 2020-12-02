@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import UserAvatar from '../components/UserAvatar'
+import UserAvatar from './UserAvatar'
 import Echo from '@/plugins/echo'
 
 /*
