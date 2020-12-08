@@ -13,7 +13,8 @@ export default {
     'takeMeBack': 'Вернуться назад',
     'tos': 'Условия использования',
     'title': 'Название',
-    'welcome': 'Добро пожаловать!'
+    'welcome': 'Добро пожаловать!',
+    'disable': 'Отключить'
   },
   'board': {
     'titlePlaceholder': 'Введите название',
@@ -70,7 +71,24 @@ export default {
     'profile': 'Профайл',
     'signin': 'Войти',
     'dashboard': 'Домашняя',
-    'signout': 'Выйти'
+    'signout': 'Выйти',
+    'changePassword': 'Сменить пароль',
+    'userDisable': 'Отключить пользователя',
+    'userDisabled': 'Пользователь отключен',
+    'userEnable': 'Включить пользователя',
+    'info': 'Информация',
+    'editAvatar': 'Изменить аватар',
+    'Avatar': 'Аватар',
+    'thisUserDisable': 'Этот пользоветель отключен! Вход недоступен.',
+    'disableUserText': 'Запретить пользователю вход на платформу.',
+    'setUser': 'Отключить права администратора',
+    'setUserAdmn': 'Назначить Администратором',
+    'setUserText': 'Администратор с доступом к этой панели.',
+    'userDisableSure':'Вы уверены что хотите отключить этого пользователя?',
+    'metadata': 'Метаданные',
+    'name': 'Имя',
+    'email': 'Email'
+
   },
   'error': {
     'notfound': 'Такой страницы нет',
@@ -83,6 +101,8 @@ export default {
     'title': 'Новый пароль',
     'backtosign': 'Вернуться ко входу',
     'newpassword': 'Новый пароль',
+    'confpassword': 'Подтвердите пароль',
+    'oldPassword': 'Старый пароль',
     'button': 'Поменять пароль и войти',
     'error': 'Действие запрещено',
     'verifylink': 'Ссылка на подтверждение...',
@@ -143,6 +163,7 @@ export default {
     'dashboard': 'Домашняя',
     'logout': 'Выйти',
     'profile': 'Личный каб',
+    'account': 'Аккаунт',
     'blank': 'Пустая страница',
     'pages': 'Страницы',
     'others': 'Другие',
@@ -260,7 +281,8 @@ export default {
       'select': 'Пожалуйста выберите',
       'welcome': 'Станьте участником нашей команды',
       'created_at': 'Создано',
-      'updated_at': 'Обновлено'
+      'updated_at': 'Обновлено',
+      'actions': 'Действия'
     },
     'menu': {
       'apps': 'Приложения'
@@ -274,6 +296,7 @@ export default {
         'showTicket': 'Информация о тикете'
       },
       'fields': {
+        'name': 'Имя',
         'createdAt': 'Создан',
         'description': 'Описание',
         'issue': 'Проблема',
@@ -291,6 +314,15 @@ export default {
       'active': 'Активный',
       'open': 'Открытый',
       'closed': 'Закрытый'
+    },
+    'user': {
+      'actions': {
+        'editUser': 'Редактировать пользователя'
+      },
+      'role': {
+        'operator': 'Оператор',
+        'admin': 'Админисратор'
+      }
     }
   }
 }

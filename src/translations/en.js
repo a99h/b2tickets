@@ -13,7 +13,8 @@ export default {
     takeMeBack: 'Take me back',
     title: 'Title',
     tos: 'Terms of Service',
-    welcome: 'Welcome!'
+    welcome: 'Welcome!',
+    disable: 'Disable'
   },
   board: {
     titlePlaceholder: 'Enter a title for this card',
@@ -70,7 +71,23 @@ export default {
     profile: 'Profile',
     signin: 'Sign In',
     dashboard: 'Dashboard',
-    signout: 'Sign Out'
+    signout: 'Sign Out',
+    changePassword : 'Change password',
+    userDisable: 'Disable User',
+    userDisabled: 'User Disabled',
+    userEnable: 'Enable user',
+    info: 'Basic Information',
+    editAvatar: 'Edit Avatar',
+    Avatar: 'Avatar',
+    thisUserDisable: 'This user has been disabled! Login accesss has been revoked.',
+    disableUserText: 'Prevent the user from signing in on the platform.',
+    setUser: 'Remove admin access',
+    setUserAdmn: 'Set User as Admin',
+    setUserText: 'Full administrator with access to this dashboard.',
+    userDisableSure:'Are you sure you want to disable this user?',
+    metadata: 'Metadata',
+    name: 'Name',
+    email: 'Email'
   },
   error: {
     notfound: 'Page Not Found',
@@ -83,6 +100,8 @@ export default {
     title: 'Set New Password',
     backtosign: 'Back to Sign In',
     newpassword: 'New Password',
+    oldPassword: 'Old Passwrod',
+    confpassword: 'Passowrd confirmation',
     button: 'Set new password and Sign in',
     error: 'The action link is invalid',
     verifylink: 'Verifying link...',
@@ -144,6 +163,7 @@ export default {
     search: 'Search (press \'ctrl + /\' to focus)',
     logout: 'Logout',
     profile: 'Profile',
+    account: 'account',
     blank: 'Blank Page',
     pages: 'Pages',
     others: 'Others',
@@ -260,6 +280,7 @@ export default {
       loading: 'Loading...',
       select: 'Please select',
       welcome: 'Become a member of our team',
+      actions: 'Actions',
       created_at: 'Created at',
       updated_at: 'Updated at'
     },
@@ -300,8 +321,12 @@ export default {
         selectType: 'Select user type',
         showUser: 'User\'s information'
       },
+      role: {
+        operator: 'Operator',
+        admin: 'Administrator'
+      },
       fields: {
-        name: 'name',
+        name: 'Name',
         email: 'email',
         password: 'password',
         userRoles: 'roles'

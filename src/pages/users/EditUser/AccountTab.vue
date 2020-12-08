@@ -6,19 +6,18 @@
         class="warning mb-4" 
         light
       >
-        <v-card-title>User Disabled</v-card-title>
+        <v-card-title>{{ $t('usermenu.userDisabled') }}</v-card-title>
         <v-card-subtitle>
-          This user has been disabled! Login accesss has been
-          revoked.
+          {{ $t('usermenu.thisUserDisable') }}
         </v-card-subtitle>
         <v-card-text>
           <v-btn dark @click="userEnabled = true">
-            <v-icon left small>mdi-account-check</v-icon>Enable User
+            <v-icon left small>mdi-account-check</v-icon>{{ $t('usermenu.userEnable') }}
           </v-btn>
         </v-card-text>
       </v-card>
       <v-card>
-        <v-card-title>Basic Information</v-card-title>
+        <v-card-title>{{ $t('usermenu.info') }}</v-card-title>
         <v-card-text>
           <div class="d-flex flex-column flex-sm-row">
             <div>
@@ -26,29 +25,30 @@
                 :src="getUser.userSettings.avatar"
                 aspect-ratio="1"
                 class="blue-grey lighten-4 rounded elevation-3"
-                max-width="90"
-                max-height="90"
+                max-width="100"
+                max-height="100"
               ></v-img>
               <v-btn 
                 class="mt-1" 
-                small 
+                small
+                max-width="100" 
                 @click="Avatar = true"
-              >Edit Avatar
+              >{{ $t('usermenu.editAvatar') }}
               </v-btn>
             </div>
             <div class="flex-grow-1 pt-2 pa-sm-2">
               <v-text-field
                 v-model="user.name"
-                label="Display name"
+                :label=" $t('usermenu.name') "
                 placeholder="Name"
               ></v-text-field>
               <v-text-field
                 v-model="user.email"
-                label="Email"
+                :label=" $t('usermenu.email') "
                 hide-details
               ></v-text-field>
               <div class="mt-2">
-                <v-btn color="primary" @click>Save</v-btn>
+                <v-btn color="primary" @click>{{ $t('common.save') }}</v-btn>
               </div>
             </div>
           </div>
@@ -59,17 +59,17 @@
         <v-expansion-panel>
           <v-expansion-panel-header 
             class="title"
-          >Actions
+          >{{ $t('b2tickets.common.actions') }}
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <div class="mb-2">
-              <div class="title">Change Password</div>
+              <div class="title"> {{ $t('usermenu.changePassword') }} </div>
               <div class="flex-grow-1 pt-2 pa-sm-2">
                 <v-text-field 
                   v-model="user.password"
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPassword ? 'text' : 'password'"
-                  label="Old password" 
+                  :label="$t('check.oldPassword')" 
                   hide-details
                   @click:append="showPassword = !showPassword" 
                 ></v-text-field>
@@ -78,8 +78,8 @@
                   :rules="[rules.required]"
                   :error="errorNewPassword"
                   :error-messages="errorNewPasswordMessage"
-                  name="password"
-                  label="New password" 
+                  name="newPassword"
+                  :label="$t('check.newpassword')"  
                   hide-details
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPassword ? 'text' : 'password'" 
@@ -91,8 +91,8 @@
                   :rules="[rules.required]"
                   :error="errorNewPassword"
                   :error-messages="errorNewPasswordMessage"
-                  name="password"
-                  label="Password confirmation" 
+                  name="newPassword"
+                  :label="$t('check.confpassword')" 
                   hide-details
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPassword ? 'text' : 'password'" 
@@ -104,7 +104,7 @@
               <div class="subtitle mb-2"></div>
               <div>
                 <v-btn color="primary" class="mb-2" @click>
-                  Change password
+                  {{ $t('usermenu.changePassword') }}
                 </v-btn>
               </div>
             </div>
@@ -116,7 +116,7 @@
               <div id="wrapper">
                 <div v-if="false" class="error--text title">Danger Zone</div>
                 <div class="subtitle mb-2">
-                  Full administrator with access to this dashboard.
+                  {{ $t('usermenu.setUserText') }}
                 </div>
               </div>
 
@@ -126,17 +126,17 @@
                   color="primary"
                   @click="user.role = 'USER'"
                 >
-                  <v-icon left small>mdi-security</v-icon>Remove admin access
+                  <v-icon left small>mdi-security</v-icon>{{ $t('usermenu.setUser') }}
                 </v-btn>
                 <v-btn v-else color="primary" @click="user.role = 'ADMIN'">
-                  <v-icon left small>mdi-security</v-icon>Set User as Admin
+                  <v-icon left small>mdi-security</v-icon>{{ $t('usermenu.setUserAdmn') }}
                 </v-btn>
               </div>
 
               <v-divider></v-divider>
 
               <div class="subtitle mt-3 mb-2">
-                Prevent the user from signing in on the platform.
+                {{ $t('usermenu.disableUserText') }}
               </div>
               <div class="my-2">
                 <v-btn
@@ -144,10 +144,10 @@
                   color="warning"
                   @click="userEnabled = true"
                 >
-                  <v-icon left small>mdi-account-check</v-icon>Enable User
+                  <v-icon left small>mdi-account-check</v-icon> {{ $t('usermenu.userEnable') }}
                 </v-btn>
                 <v-btn v-else color="warning" @click="disableDialog = true">
-                  <v-icon left small>mdi-cancel</v-icon>Disable User
+                  <v-icon left small>mdi-cancel</v-icon>{{ $t('usermenu.userDisable') }}
                 </v-btn>
               </div>
             </div>
@@ -156,13 +156,13 @@
         <v-expansion-panel>
           <v-expansion-panel-header 
             class="title"
-          >Metadata
+          >{{ $t('usermenu.metadata') }}
           </v-expansion-panel-header>
           <v-expansion-panel-content class="body-2">
-            <span class="font-weight-bold">Created</span>
+            <span class="font-weight-bold">{{ $t('b2tickets.common.created_at') }}</span>
             {{ user.created_at | formatDate("lll") }}
             <br />
-            <span class="font-weight-bold">Updated</span>
+            <span class="font-weight-bold">{{ $t('b2tickets.common.updated_at') }}</span>
             {{ user.updated_at | formatDate("lll") }}
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -170,14 +170,14 @@
     </div>
 
     <!-- disable modal -->
-    <v-dialog v-model="disableDialog" max-width="290">
+    <v-dialog v-model="disableDialog" max-width="400">
       <v-card>
-        <v-card-title class="headline">Disable User</v-card-title>
-        <v-card-text>Are you sure you want to disable this user?</v-card-text>
+        <v-card-title class="headline">{{ $t('usermenu.userDisable') }}</v-card-title>
+        <v-card-text>{{ $t('usermenu.userDisableSure') }}</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="disableDialog = false ">Cancel</v-btn>
-          <v-btn color="warning" @click="userEnabled = false; disableDialog = false;">Disable
+          <v-btn @click="disableDialog = false ">{{ $t('common.cancel') }}</v-btn>
+          <v-btn color="warning" @click="userEnabled = false; disableDialog = false;">{{ $t('common.disable') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -186,7 +186,7 @@
     <!-- avatar modal -->
     <v-dialog v-model="Avatar" max-width="500">
       <v-card>
-        <v-card-title class="headline">Avatar</v-card-title>
+        <v-card-title class="headline">{{ $t('usermenu.Avatar') }}</v-card-title>
         <v-item-group>
           <v-row no-gutters>
             <v-col v-for="(item, inx) in items" :key="inx" cols="3">
@@ -204,7 +204,7 @@
         </v-item-group>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="Avatar = false">Cancel</v-btn>
+          <v-btn @click="Avatar = false">{{ $t('common.cancel') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -216,7 +216,7 @@
         <v-card-text>Are you sure you want to delete this user?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="deleteDialog = false">Cancel</v-btn>
+          <v-btn @click="deleteDialog = false">{{ $t('common.cancel') }}</v-btn>
           <v-btn color="error" @click="deleteDialog = false">Delete</v-btn>
         </v-card-actions>
       </v-card>
@@ -228,7 +228,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { parseZone } from 'moment'
 import { computed } from 'vue'
-import { avatars } from './avatars.js'
+import  avatars  from './avatars'
 export default {
   data() {
     return {
@@ -241,7 +241,7 @@ export default {
       Avatar: false,
       isLoading: false,
 
-      showNewPassword: true,
+      showNewPassword: false,
       newPassword: '',
       confPassword: '',
 
@@ -287,7 +287,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({ getUser: 'auth/getUser' })
+    ...mapGetters({ getUser: 'auth/getUser' }),
+    currentLocale() {
+      return this.$i18n.locales.find((i) => i.code === this.$i18n.locale)
+    },
+    availableLocales () {
+      return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
+    }
   },
   watch: {
     repeatedPassword: 'checkPasswordsEquality',
@@ -295,6 +301,7 @@ export default {
   },
   mounted() {
     this.user = this.getUser
+    this.avatars = this.items
   },
   methods: {
     confirmPasswordReset() {
@@ -307,6 +314,17 @@ export default {
     resetErrors() {
       this.errorNewPassword = false
       this.errorNewPasswordMessage = ''
+    },
+    setLocale(locale) {
+      this.$i18n.locale = locale
+      this.$vuetify.lang.current = locale
+
+      // example on how certain languages can be RTL
+      if (locale === 'ar') {
+        this.$vuetify.rtl = true
+      } else {
+        this.$vuetify.rtl = false
+      }
     }
   }
 }

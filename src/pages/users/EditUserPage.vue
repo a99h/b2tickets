@@ -2,7 +2,7 @@
   <div class="flex-grow-1">
     <div class="d-flex align-center py-3">
       <div>
-        <div class="display-1">Edit User {{ user.name && `- ${user.name}` }}</div>
+        <div class="display-1">{{ $t('b2tickets.user.actions.editUser') }} {{ user.name && `- ${user.name}` }}</div>
         <v-breadcrumbs :items="breadcrumbs" class="pa-0 py-2"></v-breadcrumbs>
       </div>
       <v-spacer></v-spacer>
@@ -18,12 +18,12 @@
     >
 
       <v-icon color="primary">{{ getIconByRoleName(role.name) }}</v-icon>
-      <span class="ma-1">{{ role.name }}</span>
+      <span class="ma-1"> {{ $t('b2tickets.user.role.' + role.name) }} </span>
     </div>
 
     <div class="mb-4">
       <div class="d-flex">
-        <span class="font-weight-bold">Email</span>
+        <span class="font-weight-bold">{{ $t('usermenu.email') }}</span>
         <span class="mx-1">
           <copy-label :text="user.email" />
         </span>
@@ -37,7 +37,7 @@
     </div>
 
     <v-tabs v-model="tab" :show-arrows="false" background-color="transparent">
-      <v-tab to="#tabs-account">Account</v-tab>
+      <v-tab to="#tabs-account">{{ $t('menu.account') }}</v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab">
