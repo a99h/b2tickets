@@ -228,7 +228,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { parseZone } from 'moment'
 import { computed } from 'vue'
-import  avatars  from './avatars'
+import { avatars }  from './avatars'
 export default {
   data() {
     return {
@@ -240,6 +240,7 @@ export default {
       disableDialog: false,
       Avatar: false,
       isLoading: false,
+      items: false,
 
       showNewPassword: false,
       newPassword: '',
@@ -261,29 +262,7 @@ export default {
         old_password: '',
         new_password: '',
         repeat_password: ''
-      },
-      items: [
-        { src: '/images/avatars/avatar1.svg' },
-        { src: '/images/avatars/avatar2.svg' },
-        { src: '/images/avatars/avatar4.svg' },
-        { src: '/images/avatars/avatar5.svg' },
-        { src: '/images/avatars/avatar6.svg' },
-        { src: '/images/avatars/avatar7.svg' },
-        { src: '/images/avatars/avatar8.svg' },
-        { src: '/images/avatars/avatar9.svg' },
-        { src: '/images/avatars/avatar10.svg' },
-        { src: '/images/avatars/avatar11.svg' },
-        { src: '/images/avatars/avatar12.svg' },
-        { src: '/images/avatars/avatar13.svg' },
-        { src: '/images/avatars/avatar14.svg' },
-        { src: '/images/avatars/avatar15.svg' },
-        { src: '/images/avatars/avatar16.svg' },
-        { src: '/images/avatars/avatar17.svg' },
-        { src: '/images/avatars/avatar18.svg' },
-        { src: '/images/avatars/avatar19.svg' },
-        { src: '/images/avatars/avatar20.svg' },
-        { src: '/images/avatars/avatar3.svg' }
-      ]
+      }
     }
   },
   computed: {
@@ -301,7 +280,7 @@ export default {
   },
   mounted() {
     this.user = this.getUser
-    this.avatars = this.items
+    this.items = avatars
   },
   methods: {
     confirmPasswordReset() {
