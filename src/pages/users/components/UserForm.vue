@@ -168,8 +168,7 @@ export default {
   methods: {
     ...mapActions({
       createUser: 'user/storeUser',
-      updateUser: 'user/updateUser',
-      showUser: 'user/showUser'
+      updateUser: 'user/updateUser'
     }),
     async dialogInitialize() {
       this.loading.dialogForm = 'accent'
@@ -205,6 +204,7 @@ export default {
           this.closeDialog()
         }).catch((err) => {
           this.$emit('userFormBackendErrors', err.response.data.message)
+          this.$emit('refreshState')
         })
       } else {
         await this.createUser(this.editedItem).then((response) => {
@@ -212,28 +212,17 @@ export default {
           this.closeDialog()
         }).catch((err) => {
           this.$emit('userFormBackendErrors', err.response.data.message)
+          this.$emit('refreshState')
         })
       }
     },
-    async edit(user) {
+    edit(user) {
       this.dialogMode = 'edit'
-      await this.showUser(user).then(() => {
-        this.openDialog(user)
-      }).catch((err) => {
-        this.$emit('userFormBackendErrors', err.response.data.message)
-        this.$emit('refreshState')
-        this.dialogInitialize()
-      })
+      this.openDialog(user)
     },
-    async show(user) {
+    show(user) {
       this.dialogMode = 'show'
-      await this.showUser(user).then((response) => {
-        this.openDialog(response.data)
-      }).catch((err) => {
-        this.$emit('userFormBackendErrors', err.response.data.message)
-        this.$emit('refreshState')
-        this.dialogInitialize()
-      })
+      this.openDialog(user)
     },
     resetErrors() {
       this.error = false

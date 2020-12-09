@@ -3,16 +3,12 @@ import mutations from './mutations'
 
 // state initial values
 const state = {
-  operators: [],
-  settings: {}
+  clients: []
 }
 
 const getters = {
-  getOperators(state) {
-    return state.operators
-  },
-  getSettings(state) {
-    return state.settings
+  getClients(state) {
+    return state.clients
   }
 }
 

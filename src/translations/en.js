@@ -327,9 +327,9 @@ export default {
       },
       fields: {
         name: 'Name',
-        email: 'email',
-        password: 'password',
-        userRoles: 'roles'
+        email: 'Email',
+        password: 'Password',
+        userRoles: 'Roles'
       },
       title: 'User | Users'
     }

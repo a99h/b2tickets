@@ -61,7 +61,6 @@
                     ></v-text-field>
                     <v-spacer></v-spacer>
                     <UserForm
-                      v-if="filterBy === 'operators'"
                       ref="dialog"
                       :users="users"
                       @closeDialog="onCloseDialog"
@@ -137,7 +136,7 @@ export default {
   computed: {
     ...mapGetters({
       getOperators: 'user/getOperators',
-      getClients: 'user/getClients'
+      getClients: 'client/getClients'
     }),
     headers() { return [
       {
@@ -153,13 +152,20 @@ export default {
       { text: '', value: 'actions', sortable: false }
     ]}
   },
+  watch: {
+    filterBy(val) {
+      this.loadUsers(val)
+    }
+  },
   mounted() {
     this.dataTableInitialize(this.filterBy)
   },
   methods: {
     ...mapActions({
       fetchOperators: 'user/fetchOperators',
-      fetchClients: 'user/fetchClients'
+      fetchClients: 'client/fetchClients',
+      showClient: 'client/showClient',
+      showUser: 'user/showUser'
     }),
     async dataTableInitialize(type) {
       this.loading.dataTable = 'info'
@@ -182,11 +188,39 @@ export default {
     onCloseDialog() {
       this.backendErrors = null
     },
-    showItem(item) {
-      this.$refs.dialog.show(item)
+    async showItem(item) {
+      switch (this.filterBy) {
+      case 'clients':
+        await this.showClient(item).then((response) => {
+          this.$refs.dialog.show(response.data)
+        }).catch(() => {
+          this.$refs.dialog.dialogInitialize()
+        }); break
+      case 'operators':
+        await this.showUser(item).then((response) => {
+          this.$refs.dialog.show(response.data)
+        }).catch(() => {
+          this.$refs.dialog.dialogInitialize()
+        }); break
+      }
     },
-    editItem(item) {
-      this.$refs.dialog.edit(item)
+    async editItem(item) {
+      switch (this.filterBy) {
+      case 'clients':
+        await this.showClient(item).then((response) => {
+          Object.assign(this.users[this.users.indexOf(item)], response.data)
+          this.$refs.dialog.edit(this.users[this.users.indexOf(item)])
+        }).catch(() => {
+          this.$refs.dialog.dialogInitialize()
+        }); break
+      case 'operators':
+        await this.showUser(item).then((response) => {
+          Object.assign(this.users[this.users.indexOf(item)], response.data)
+          this.$refs.dialog.edit(this.users[this.users.indexOf(item)])
+        }).catch(() => {
+          this.$refs.dialog.dialogInitialize()
+        }); break
+      }
     }
   }
 }
