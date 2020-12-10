@@ -71,23 +71,7 @@ export default {
     profile: 'Profile',
     signin: 'Sign In',
     dashboard: 'Dashboard',
-    signout: 'Sign Out',
-    changePassword : 'Change password',
-    userDisable: 'Disable User',
-    userDisabled: 'User Disabled',
-    userEnable: 'Enable user',
-    info: 'Basic Information',
-    editAvatar: 'Edit Avatar',
-    Avatar: 'Avatar',
-    thisUserDisable: 'This user has been disabled! Login accesss has been revoked.',
-    disableUserText: 'Prevent the user from signing in on the platform.',
-    setUser: 'Remove admin access',
-    setUserAdmn: 'Set User as Admin',
-    setUserText: 'Full administrator with access to this dashboard.',
-    userDisableSure:'Are you sure you want to disable this user?',
-    metadata: 'Metadata',
-    name: 'Name',
-    email: 'Email'
+    signout: 'Sign Out'
   },
   error: {
     notfound: 'Page Not Found',
@@ -286,6 +270,34 @@ export default {
     },
     menu: {
       apps: 'Applications'
+    },
+    notifications: {
+      chatRequest:{
+        myKey: 'My value',
+        changePassword : 'Change password',
+        userDisable: 'Disable User',
+        userDisabled: 'User Disabled',
+        userEnable: 'Enable user',
+        info: 'Basic Information',
+        editAvatar: 'Edit Avatar',
+        Avatar: 'Avatar',
+        thisUserDisable: 'This user has been disabled! Login accesss has been revoked.',
+        disableUserText: 'Prevent the user from signing in on the platform.',
+        setUser: 'Remove admin access',
+        setUserAdmn: 'Set User as Admin',
+        setUserText: 'Full administrator with access to this dashboard.',
+        userDisableSure:'Are you sure you want to disable this user?',
+        metadata: 'Metadata',
+        name: 'Name',
+        email: 'Email',
+        muted: 'Click to turn sound OFF',
+        unmuted: 'Click to turn sound ON',
+        notification: 'Notifications',
+        markRead: 'Mark Read',
+        markSelected: 'Mark selected as read',
+        waitOperator: 'is waiting for operator!'
+
+      }
     },
     ticket: {
       ticket: 'ticket',

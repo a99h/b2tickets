@@ -6,18 +6,18 @@
         class="warning mb-4" 
         light
       >
-        <v-card-title>{{ $t('usermenu.userDisabled') }}</v-card-title>
+        <v-card-title>{{ $t('b2tickets.notifications.chatRequest.userDisabled') }}</v-card-title>
         <v-card-subtitle>
-          {{ $t('usermenu.thisUserDisable') }}
+          {{ $t('b2tickets.notifications.chatRequest.thisUserDisable') }}
         </v-card-subtitle>
         <v-card-text>
           <v-btn dark @click="userEnabled = true">
-            <v-icon left small>mdi-account-check</v-icon>{{ $t('usermenu.userEnable') }}
+            <v-icon left small>mdi-account-check</v-icon>{{ $t('b2tickets.notifications.chatRequest.userEnable') }}
           </v-btn>
         </v-card-text>
       </v-card>
       <v-card>
-        <v-card-title>{{ $t('usermenu.info') }}</v-card-title>
+        <v-card-title>{{ $t('b2tickets.notifications.chatRequest.info') }}</v-card-title>
         <v-card-text>
           <div class="d-flex flex-column flex-sm-row">
             <div>
@@ -33,18 +33,18 @@
                 small
                 max-width="100" 
                 @click="Avatar = true"
-              >{{ $t('usermenu.editAvatar') }}
+              >{{ $t('b2tickets.notifications.chatRequest.editAvatar') }}
               </v-btn>
             </div>
             <div class="flex-grow-1 pt-2 pa-sm-2">
               <v-text-field
                 v-model="user.name"
-                :label=" $t('usermenu.name') "
+                :label=" $t('b2tickets.notifications.chatRequest.name') "
                 placeholder="Name"
               ></v-text-field>
               <v-text-field
                 v-model="user.email"
-                :label=" $t('usermenu.email') "
+                :label=" $t('b2tickets.notifications.chatRequest.email') "
                 hide-details
               ></v-text-field>
               <div class="mt-2">
@@ -63,7 +63,7 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <div class="mb-2">
-              <div class="title"> {{ $t('usermenu.changePassword') }} </div>
+              <div class="title"> {{ $t('b2tickets.notifications.chatRequest.changePassword') }} </div>
               <div class="flex-grow-1 pt-2 pa-sm-2">
                 <v-text-field 
                   v-model="user.password"
@@ -104,7 +104,7 @@
               <div class="subtitle mb-2"></div>
               <div>
                 <v-btn color="primary" class="mb-2" @click>
-                  {{ $t('usermenu.changePassword') }}
+                  {{ $t('b2tickets.notifications.chatRequest.changePassword') }}
                 </v-btn>
               </div>
             </div>
@@ -116,7 +116,7 @@
               <div id="wrapper">
                 <div v-if="false" class="error--text title">Danger Zone</div>
                 <div class="subtitle mb-2">
-                  {{ $t('usermenu.setUserText') }}
+                  {{ $t('b2tickets.notifications.chatRequest.setUserText') }}
                 </div>
               </div>
 
@@ -126,17 +126,17 @@
                   color="primary"
                   @click="user.role = 'USER'"
                 >
-                  <v-icon left small>mdi-security</v-icon>{{ $t('usermenu.setUser') }}
+                  <v-icon left small>mdi-security</v-icon>{{ $t('b2tickets.notifications.chatRequest.setUser') }}
                 </v-btn>
                 <v-btn v-else color="primary" @click="user.role = 'ADMIN'">
-                  <v-icon left small>mdi-security</v-icon>{{ $t('usermenu.setUserAdmn') }}
+                  <v-icon left small>mdi-security</v-icon>{{ $t('b2tickets.notifications.chatRequest.setUserAdmn') }}
                 </v-btn>
               </div>
 
               <v-divider></v-divider>
 
               <div class="subtitle mt-3 mb-2">
-                {{ $t('usermenu.disableUserText') }}
+                {{ $t('b2tickets.notifications.chatRequest.disableUserText') }}
               </div>
               <div class="my-2">
                 <v-btn
@@ -144,10 +144,10 @@
                   color="warning"
                   @click="userEnabled = true"
                 >
-                  <v-icon left small>mdi-account-check</v-icon> {{ $t('usermenu.userEnable') }}
+                  <v-icon left small>mdi-account-check</v-icon> {{ $t('b2tickets.notifications.chatRequest.userEnable') }}
                 </v-btn>
                 <v-btn v-else color="warning" @click="disableDialog = true">
-                  <v-icon left small>mdi-cancel</v-icon>{{ $t('usermenu.userDisable') }}
+                  <v-icon left small>mdi-cancel</v-icon>{{ $t('b2tickets.notifications.chatRequest.userDisable') }}
                 </v-btn>
               </div>
             </div>
@@ -156,7 +156,7 @@
         <v-expansion-panel>
           <v-expansion-panel-header 
             class="title"
-          >{{ $t('usermenu.metadata') }}
+          >{{ $t('b2tickets.notifications.chatRequest.metadata') }}
           </v-expansion-panel-header>
           <v-expansion-panel-content class="body-2">
             <span class="font-weight-bold">{{ $t('b2tickets.common.created_at') }}</span>
@@ -172,8 +172,8 @@
     <!-- disable modal -->
     <v-dialog v-model="disableDialog" max-width="400">
       <v-card>
-        <v-card-title class="headline">{{ $t('usermenu.userDisable') }}</v-card-title>
-        <v-card-text>{{ $t('usermenu.userDisableSure') }}</v-card-text>
+        <v-card-title class="headline">{{ $t('b2tickets.notifications.chatRequest.userDisable') }}</v-card-title>
+        <v-card-text>{{ $t('b2tickets.notifications.chatRequest.userDisableSure') }}</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="disableDialog = false ">{{ $t('common.cancel') }}</v-btn>
@@ -186,7 +186,7 @@
     <!-- avatar modal -->
     <v-dialog v-model="Avatar" max-width="500">
       <v-card>
-        <v-card-title class="headline">{{ $t('usermenu.Avatar') }}</v-card-title>
+        <v-card-title class="headline">{{ $t('b2tickets.notifications.chatRequest.Avatar') }}</v-card-title>
         <v-item-group>
           <v-row no-gutters>
             <v-col v-for="(item, inx) in items" :key="inx" cols="3">

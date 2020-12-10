@@ -34,11 +34,11 @@
               <v-icon>{{ muted === true ? 'mdi-volume-mute' : 'mdi-volume-medium' }}</v-icon>
             </v-btn>
           </template>
-          <span>{{ muted ? 'Click to turn sound OFF' : 'Click to turn sound ON' }}</span>
+          <span>{{ muted ? $t('b2tickets.notifications.chatRequest.unmuted') : $t('b2tickets.notifications.chatRequest.muted') }}</span>
         </v-tooltip>
-        <v-subheader class="pa-2 font-weight-bold">Notifications</v-subheader>
+        <v-subheader class="pa-2 font-weight-bold">{{ $t('b2tickets.notifications.chatRequest.notification') }}</v-subheader>
         <v-spacer></v-spacer>
-        <v-btn text color="primary" @click="menu = false">Close
+        <v-btn text color="primary" @click="menu = false">{{ $t('$vuetify.close') }}
           <v-icon color="primary">mdi-close-outline</v-icon>
         </v-btn>
       </v-system-bar>
@@ -67,7 +67,7 @@
 
             <v-list-item-content>
               <v-list-item-title v-text="chatRequestNotificationsSettings.title"></v-list-item-title>
-              <v-list-item-subtitle class="caption">{{ 'User: ' + item.chat_request.user.email + ' is waiting for operator!' }}</v-list-item-subtitle>
+              <v-list-item-subtitle class="caption">{{ $t('b2tickets.chat.request.user') + item.chat_request.user.email +  $t('b2tickets.chat.request.waitOperator') }}</v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action class="align-self-center">
               <v-chip
@@ -75,7 +75,7 @@
                 color="error"
                 class="mb-2"
                 @click="softDeleteNotification(item)"
-              >Mark Read</v-chip>
+              >{{ $t('b2tickets.notifications.chatRequest.markRead') }}</v-chip>
               <v-list-item-action-text>{{ new Date(item.chat_request.created_at) | fromNow() }}</v-list-item-action-text>
             </v-list-item-action>
           </v-list-item>
@@ -83,7 +83,7 @@
       </v-list>
 
       <div class="text-center py-2">
-        <v-btn color="error" small @click="softDeleteAllNotifications(checkedItems)">Mark selected as read</v-btn>
+        <v-btn color="error" small @click="softDeleteAllNotifications(checkedItems)">{{ $t('b2tickets.notifications.chatRequest.markSelected') }} </v-btn>
       </div>
     </v-card>
   </v-menu>
@@ -122,7 +122,13 @@ export default {
   computed: {
     ...mapGetters({
       user: 'auth/getUser'
-    })
+    }),
+    currentLocale() {
+      return this.$i18n.locales.find((i) => i.code === this.$i18n.locale)
+    },
+    availableLocales () {
+      return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
+    }
   },
   created() {
     this.initialize()
@@ -175,6 +181,16 @@ export default {
     },
     playSound () {
       this.audio.play()
+    },
+    setLocale(locale) {
+      this.$i18n.locale = locale
+      this.$vuetify.lang.current = locale
+
+      if (locale === 'ar') {
+        this.$vuetify.rtl = true
+      } else {
+        this.$vuetify.rtl = false
+      }
     }
   }
 }

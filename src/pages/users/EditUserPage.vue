@@ -23,7 +23,7 @@
 
     <div class="mb-4">
       <div class="d-flex">
-        <span class="font-weight-bold">{{ $t('usermenu.email') }}</span>
+        <span class="font-weight-bold">{{ $t('b2tickets.notifications.chatRequest.email') }}</span>
         <span class="mx-1">
           <copy-label :text="user.email" />
         </span>
