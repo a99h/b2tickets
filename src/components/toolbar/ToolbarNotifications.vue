@@ -67,7 +67,7 @@
 
             <v-list-item-content>
               <v-list-item-title v-text="chatRequestNotificationsSettings.title"></v-list-item-title>
-              <v-list-item-subtitle class="caption">{{ $t('b2tickets.chat.request.user') + item.chat_request.user.email +  $t('b2tickets.chat.request.waitOperator') }}</v-list-item-subtitle>
+              <v-list-item-subtitle class="caption">{{ $t('b2tickets.chat.request.user') + item.chat_request.user.email + $t('b2tickets.chat.request.waitOperator') }}</v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action class="align-self-center">
               <v-chip
