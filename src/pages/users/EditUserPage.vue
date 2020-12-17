@@ -12,7 +12,7 @@
     </div>
 
     <div
-      v-for="(role, inx) in user.userRoles" 
+      v-for="(role, inx) in user.userRoles"
       :key="inx"
       class="d-flex align-center font-weight-bold primary--text my-2"
     >
@@ -23,7 +23,7 @@
 
     <div class="mb-4">
       <div class="d-flex">
-        <span class="font-weight-bold">{{ $t('b2tickets.notifications.chatRequest.email') }}</span>
+        <span class="font-weight-bold">{{ $t('b2tickets.user.fields.email') }}</span>
         <span class="mx-1">
           <copy-label :text="user.email" />
         </span>
@@ -95,7 +95,7 @@ export default {
 
       case 'ADMIN':
         return 'mdi-security'
-          
+
       default:
         return ''
       }

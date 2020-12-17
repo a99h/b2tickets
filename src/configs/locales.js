@@ -1,8 +1,4 @@
 import en from '../translations/en'
-import es from '../translations/es'
-import pt from '../translations/pt'
-import de from '../translations/de'
-import fr from '../translations/fr'
 import ru from '../translations/ru'
 
 export default {
@@ -18,27 +14,29 @@ export default {
     flag: 'us',
     label: 'English',
     messages: en
-  }, {
-    code: 'es',
-    flag: 'es',
-    label: 'Español',
-    messages: es
-  }, {
-    code: 'pt',
-    flag: 'pt',
-    label: 'Português',
-    messages: pt
-  }, {
-    code: 'de',
-    flag: 'de',
-    label: 'Deutsche',
-    messages: de
-  }, {
-    code: 'fr',
-    flag: 'fr',
-    label: 'Français',
-    messages: fr
-  }, {
+  },
+  //   {
+  //   code: 'es',
+  //   flag: 'es',
+  //   label: 'Español',
+  //   messages: es
+  // }, {
+  //   code: 'pt',
+  //   flag: 'pt',
+  //   label: 'Português',
+  //   messages: pt
+  // }, {
+  //   code: 'de',
+  //   flag: 'de',
+  //   label: 'Deutsche',
+  //   messages: de
+  // }, {
+  //   code: 'fr',
+  //   flag: 'fr',
+  //   label: 'Français',
+  //   messages: fr
+  // },
+  {
     code: 'ru',
     flag: 'ru',
     label: 'Русский',

@@ -34,9 +34,9 @@
               <v-icon>{{ muted === true ? 'mdi-volume-mute' : 'mdi-volume-medium' }}</v-icon>
             </v-btn>
           </template>
-          <span>{{ muted ? $t('b2tickets.notifications.chatRequest.unmuted') : $t('b2tickets.notifications.chatRequest.muted') }}</span>
+          <span>{{ muted ? $t('b2tickets.notifications.chatRequest.unmuteTooltip') : $t('b2tickets.notifications.chatRequest.muteTooltip') }}</span>
         </v-tooltip>
-        <v-subheader class="pa-2 font-weight-bold">{{ $t('b2tickets.notifications.chatRequest.notification') }}</v-subheader>
+        <v-subheader class="pa-2 font-weight-bold">{{ $tc('b2tickets.notifications.title', 0) }}</v-subheader>
         <v-spacer></v-spacer>
         <v-btn text color="primary" @click="menu = false">{{ $t('$vuetify.close') }}
           <v-icon color="primary">mdi-close-outline</v-icon>
@@ -45,7 +45,6 @@
       <v-list
         three-line
         dense
-        max-width="400"
         max-height="400"
         class="overflow-y-auto"
       >
@@ -66,8 +65,10 @@
             ></v-checkbox>
 
             <v-list-item-content>
-              <v-list-item-title v-text="chatRequestNotificationsSettings.title"></v-list-item-title>
-              <v-list-item-subtitle class="caption">{{ $t('b2tickets.chat.request.user') + item.chat_request.user.email + $t('b2tickets.chat.request.waitOperator') }}</v-list-item-subtitle>
+              <v-list-item-title v-text="$t('b2tickets.notifications.chatRequest.title')"></v-list-item-title>
+              <v-list-item-subtitle class="caption">
+                {{ $tc('b2tickets.user.title', 1) + ' ' + item.chat_request.user.email + ' ' + $t('b2tickets.notifications.chatRequest.waitingOperator') }}
+              </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action class="align-self-center">
               <v-chip
@@ -83,7 +84,7 @@
       </v-list>
 
       <div class="text-center py-2">
-        <v-btn color="error" small @click="softDeleteAllNotifications(checkedItems)">{{ $t('b2tickets.notifications.chatRequest.markSelected') }} </v-btn>
+        <v-btn color="error" small @click="softDeleteAllNotifications(checkedItems)">{{ $t('b2tickets.notifications.chatRequest.markAll') }} </v-btn>
       </div>
     </v-card>
   </v-menu>
