@@ -216,13 +216,13 @@ export default {
         })
       }
     },
-    edit(user) {
+    edit(item) {
       this.dialogMode = 'edit'
-      this.openDialog(user)
+      this.openDialog(item)
     },
-    show(user) {
+    show(item) {
       this.dialogMode = 'show'
-      this.openDialog(user)
+      this.openDialog(item)
     },
     resetErrors() {
       this.error = false

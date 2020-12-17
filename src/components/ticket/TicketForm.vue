@@ -13,6 +13,16 @@
         <span class="headline">{{ formTitle }}</span>
       </v-card-title>
       <v-card-text>
+        <v-alert
+          v-if="backendErrors"
+          dismissible
+          border="left"
+          color="error"
+          class="mt-2"
+          type="error"
+        >
+          {{ backendErrors.message }}
+        </v-alert>
         <v-container>
           <v-form
             id="form"
@@ -69,6 +79,7 @@
                 v-model="editedItem.ticketOperators"
                 :label="loadingLabel"
                 :items="operators"
+                :error-messages="ticketOperatorsErrors"
                 :hint="$t('b2tickets.ticket.select.ticketOperators')"
                 clearable
                 deletable-chips
@@ -85,6 +96,7 @@
                   v-model="editedItem.ticketStatus"
                   :label="loadingLabel"
                   :items="statuses"
+                  :error-messages="ticketStatusErrors"
                   :hint="$t('b2tickets.ticket.select.ticketStatus')"
                   eager
                   persistent-hint
@@ -142,6 +154,7 @@ export default {
     }
   },
   data: () => ({
+    backendErrors: null,
     dialog: false,
     dialogMode: 'create',
     loading: {
@@ -168,7 +181,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      getClients: 'user/getClients',
+      getClients: 'client/getClients',
       getOperators: 'user/getOperators',
       getStatuses: 'ticketStatus/getStatuses'
     }),
@@ -192,6 +205,10 @@ export default {
       if (!this.$v.editedItem.issue.$dirty) return errors
       !this.$v.editedItem.issue.required && errors.push('Необходимо обозначить проблему')
 
+      if (this.backendErrors && this.backendErrors.errors.issue) this.backendErrors.errors.issue.forEach((error) => {
+        errors.push(error)
+      })
+
       return errors
     },
     descriptionErrors () {
@@ -202,6 +219,10 @@ export default {
         + this.$v.editedItem.description.$params.maxLength.max
         + ' символов')
 
+      if (this.backendErrors && this.backendErrors.errors.description) this.backendErrors.errors.description.forEach((error) => {
+        errors.push(error)
+      })
+
       return errors
     },
     ticketClientsErrors () {
@@ -209,6 +230,28 @@ export default {
 
       if (!this.$v.editedItem.ticketClients.$dirty) return errors
       !this.$v.editedItem.ticketClients.required && errors.push('Необходимо добавить хотя бы одного пользователя')
+
+      if (this.backendErrors && this.backendErrors.errors.ticketClients) this.backendErrors.errors.ticketClients.forEach((error) => {
+        errors.push(error)
+      })
+
+      return errors
+    },
+    ticketOperatorsErrors () {
+      const errors = []
+
+      if (this.backendErrors && this.backendErrors.errors.ticketOperators) this.backendErrors.errors.ticketOperators.forEach((error) => {
+        errors.push(error)
+      })
+
+      return errors
+    },
+    ticketStatusErrors () {
+      const errors = []
+
+      if (this.backendErrors && this.backendErrors.errors.ticketStatus) this.backendErrors.errors.ticketStatus.forEach((error) => {
+        errors.push(error)
+      })
 
       return errors
     }
@@ -223,30 +266,28 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchClients: 'user/fetchClients',
+      fetchClients: 'client/fetchClients',
       fetchOperators: 'user/fetchOperators',
       fetchStatuses: 'ticketStatus/fetchStatuses',
       createTicket: 'ticket/storeTicket',
-      updateTicket: 'ticket/updateTicket',
-      deleteTicket: 'ticket/deleteTicket',
-      showTicket: 'ticket/showTicket'
+      updateTicket: 'ticket/updateTicket'
     }),
     async dialogInitialize() {
       this.loading.dialogForm = 'accent'
       await this.fetchClients().then(() => {
         this.clients = this.getClients
       }).catch((err) => {
-        this.$emit('ticketFormBackendErrors', err.response.data.message)
+        this.$emit('ticketFormBackendErrors', err.response.data)
       })
       await this.fetchOperators().then(() => {
         this.operators = this.getOperators
       }).catch((err) => {
-        this.$emit('ticketFormBackendErrors', err.response.data.message)
+        this.$emit('ticketFormBackendErrors', err.response.data)
       })
       await this.fetchStatuses().then(() => {
         this.statuses = this.getStatuses
       }).catch((err) => {
-        this.$emit('ticketFormBackendErrors', err.response.data.message)
+        this.$emit('ticketFormBackendErrors', err.response.data)
       })
 
       this.loading.dialogForm = false
@@ -272,49 +313,33 @@ export default {
       }
     },
     async saveTicket() {
+      this.backendErrors = null
+
       if (this.editedIndex > -1) {
-        //Object.assign(this.tickets[this.editedIndex], this.editedItem)
         await this.updateTicket(this.filteredItem(this.editedItem)).then((response) => {
           Object.assign(this.tickets[this.editedIndex], response.data)
           this.closeDialog()
         }).catch((err) => {
-          this.$emit('ticketFormBackendErrors', err.response.data.message)
+          this.backendErrors = err.response.data
+          this.dialogInitialize()
         })
       } else {
         await this.createTicket(this.filteredItem(this.editedItem)).then((response) => {
           this.tickets.unshift(response.data)
           this.closeDialog()
         }).catch((err) => {
-          this.$emit('ticketFormBackendErrors', err.response.data.message)
+          this.backendErrors = err.response.data
+          this.dialogInitialize()
         })
       }
     },
-    async edit(ticket) {
+    edit(item) {
       this.dialogMode = 'edit'
-      await this.showTicket(ticket).then(() => {
-        this.openDialog(ticket)
-      }).catch((err) => {
-        this.$emit('ticketFormBackendErrors', err.response.data.message)
-        this.$emit('refreshState')
-        this.dialogInitialize()
-      })
+      this.openDialog(item)
     },
-    async show(ticket) {
+    show(item) {
       this.dialogMode = 'show'
-      await this.showTicket(ticket).then((response) => {
-        this.openDialog(response.data)
-      }).catch((err) => {
-        this.$emit('ticketFormBackendErrors', err.response.data.message)
-        this.$emit('refreshState')
-        this.dialogInitialize()
-      })
-    },
-    async delete(ticket) {
-      await this.deleteTicket(ticket).then(() => {
-        this.tickets.splice(this.tickets.indexOf(ticket), 1)
-      }).catch((err) => {
-        this.$emit('ticketFormBackendErrors', err.response.data.message)
-      })
+      this.openDialog(item)
     },
     filteredItem(data) {
       return {

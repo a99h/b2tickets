@@ -17,7 +17,7 @@
                 class="mt-2"
                 type="error"
               >
-                {{ backendErrors }}
+                {{ backendErrors.message }}
               </v-alert>
               <v-data-table
                 :headers="headers"
@@ -156,7 +156,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchTickets: 'ticket/fetchTickets'
+      fetchTickets: 'ticket/fetchTickets',
+      showTicket: 'ticket/showTicket',
+      deleteTicket: 'ticket/deleteTicket'
     }),
     async dataTableInitialize() {
       this.loading.dataTable = 'info'
@@ -171,14 +173,33 @@ export default {
     onCloseDialog() {
       this.backendErrors = null
     },
-    showItem(item) {
-      this.$refs.dialog.show(item)
+    async showItem(item) {
+      this.backendErrors = null
+      await this.showTicket(item).then((response) => {
+        this.$refs.dialog.show(response.data)
+      }).catch((err) => {
+        this.$refs.dialog.dialogInitialize()
+        this.backendErrors = err.response.data.message
+      })
     },
-    editItem(item) {
-      this.$refs.dialog.edit(item)
+    async editItem(item) {
+      this.backendErrors = null
+      await this.showTicket(item).then((response) => {
+        Object.assign(this.tickets[this.tickets.indexOf(item)], response.data)
+        this.$refs.dialog.edit(this.tickets[this.tickets.indexOf(item)])
+      }).catch((err) => {
+        this.$refs.dialog.dialogInitialize()
+        this.backendErrors = err.response.data.message
+      })
     },
-    deleteItem(item) {
-      confirm('Are you sure you want to delete this item?') && this.$refs.dialog.delete(item)
+    async deleteItem(item) {
+      this.backendErrors = null
+      confirm('Are you sure you want to delete this item?') &&
+      await this.deleteTicket(item).then(() => {
+        this.tickets.splice(this.tickets.indexOf(item), 1)
+      }).catch((err) => {
+        this.backendErrors = err.response.data.message
+      })
     }
   }
 }

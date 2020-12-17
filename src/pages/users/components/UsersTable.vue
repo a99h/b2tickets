@@ -189,36 +189,42 @@ export default {
       this.backendErrors = null
     },
     async showItem(item) {
+      this.backendErrors = null
       switch (this.filterBy) {
       case 'clients':
         await this.showClient(item).then((response) => {
           this.$refs.dialog.show(response.data)
-        }).catch(() => {
+        }).catch((err) => {
           this.$refs.dialog.dialogInitialize()
+          this.backendErrors = err.response.data.message
         }); break
       case 'operators':
         await this.showUser(item).then((response) => {
           this.$refs.dialog.show(response.data)
-        }).catch(() => {
+        }).catch((err) => {
           this.$refs.dialog.dialogInitialize()
+          this.backendErrors = err.response.data.message
         }); break
       }
     },
     async editItem(item) {
+      this.backendErrors = null
       switch (this.filterBy) {
       case 'clients':
         await this.showClient(item).then((response) => {
           Object.assign(this.users[this.users.indexOf(item)], response.data)
           this.$refs.dialog.edit(this.users[this.users.indexOf(item)])
-        }).catch(() => {
+        }).catch((err) => {
           this.$refs.dialog.dialogInitialize()
+          this.backendErrors = err.response.data.message
         }); break
       case 'operators':
         await this.showUser(item).then((response) => {
           Object.assign(this.users[this.users.indexOf(item)], response.data)
           this.$refs.dialog.edit(this.users[this.users.indexOf(item)])
-        }).catch(() => {
+        }).catch((err) => {
           this.$refs.dialog.dialogInitialize()
+          this.backendErrors = err.response.data.message
         }); break
       }
     }
