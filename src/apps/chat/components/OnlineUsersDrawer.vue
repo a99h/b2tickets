@@ -80,7 +80,7 @@ export default {
           })
 
         Echo.private('App.User.' + this.channel)
-          .listenForWhisper('typing', ({ id, name }) => {
+          .listenForWhisper('typing', ({ id }) => {
             this.users.forEach((user, index) => {
               if (user.id === id) {
                 user.typing = true

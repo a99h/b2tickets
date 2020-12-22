@@ -1,8 +1,10 @@
 import ChatRequestModule from './request'
+import MessageModule from './message'
 
 const chat = {
   modules: {
-    chatRequest: ChatRequestModule
+    chatRequest: ChatRequestModule,
+    message: MessageModule
   }
 }
 

@@ -47,6 +47,7 @@ import OnlineUsersDrawer from '../components/OnlineUsersDrawer'
 import Echo from '@/plugins/echo'
 
 import axios from '@/plugins/axios'
+import { mapActions } from 'vuex'
 
 /*
 |---------------------------------------------------------------------
@@ -99,6 +100,10 @@ export default {
 
   },
   methods: {
+    ...mapActions({
+      getMessages: 'message/fetchMessages',
+      storeMessage: 'message/storeMessage'
+    }),
     initialize() {
       this.startChannel(this.$route.params.id)
       this.joinEcho()
@@ -109,14 +114,6 @@ export default {
     },
     joinEcho() {
       Echo.private('App.User.' + this.channel)
-        .listenForWhisper('typing', ({ id, name }) => {
-          this.users.forEach((user, index) => {
-            if (user.id === id) {
-              user.typing = true
-              this.$set(this.users, index, user)
-            }
-          })
-        })
         .listen('MessageSent', (event) => {
           this.messages.push(event.message)
           this.scrollToBottom()
@@ -130,19 +127,19 @@ export default {
         })
     },
     fetchMessages() {
-      axios.get(route('api.ticketsystem.chat.index',this.channelobj.chatRequest)).then((response) => {
-        this.messages = response.data.data
+      this.getMessages(this.channelobj.chatRequest).then((response) => {
+        this.messages = response.data
         this.scrollToBottom()
       })
     },
     // Send message to channel
     sendMessage(messageText) {
-      axios.post(route('api.ticketsystem.chat.store'),
-        {
-          user: this.user,
-          message: messageText,
-          chat_request_id: this.channelobj.chatRequest
-        }).then(() => {
+      this.storeMessage({
+        user: this.user,
+        message: messageText,
+        chat_request_id: this.channelobj.chatRequest
+      }).then((response) => {
+        console.log(response)
         this.scrollToBottom()
       }).catch((err) => {
         console.log(err)
@@ -150,7 +147,7 @@ export default {
     },
     sendTypingEvent() {
       Echo.private('App.User.' + this.channel)
-        .whisper('typing', this.user)
+        .whisper('typing', this.user.name)
     },
     scrollToBottom() {
       this.$nextTick(() => {
