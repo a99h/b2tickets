@@ -31,11 +31,16 @@
       </div>
 
       <div class="input-box pa-2">
-        <input-box :channel="channel" @send-message="sendMessage" @send-typing="sendTypingEvent"/>
+        <input-box :chat-request="chatRequest" @send-message="sendMessage" @send-typing="sendTypingEvent"/>
       </div>
     </div>
 
-    <online-users-drawer ref="onlineUsersDrawer" :user="user" :channel="channel"></online-users-drawer>
+    <online-users-drawer
+      ref="onlineUsersDrawer"
+      :user="user"
+      :online-users="onlineUsers"
+      :chat-request="chatRequest"
+    ></online-users-drawer>
   </div>
 </template>
 
@@ -46,7 +51,6 @@ import OnlineUsersDrawer from '../components/OnlineUsersDrawer'
 
 import Echo from '@/plugins/echo'
 
-import axios from '@/plugins/axios'
 import { mapActions } from 'vuex'
 
 /*
@@ -69,8 +73,13 @@ export default {
       type: Object,
       default: () => ({})
     },
-    channelobj: {
+    chatRequest: {
       type: Object,
+      default: () => ({})
+    },
+    onlineUsers: {
+      // eslint-disable-next-line vue/require-prop-type-constructor
+      type: Array | Object,
       default: () => ({})
     }
   },
@@ -79,13 +88,8 @@ export default {
       // users online drawer
       usersDrawer: false,
 
-      // channel information and messages
-      channel: '',
-      messages: [],
-      // online users
-      users: [
-        this.user
-      ]
+      chat: {},
+      messages: []
     }
   },
   watch: {
@@ -101,19 +105,25 @@ export default {
   },
   methods: {
     ...mapActions({
+      getChat: 'chat/showChat',
       getMessages: 'message/fetchMessages',
       storeMessage: 'message/storeMessage'
     }),
     initialize() {
-      this.startChannel(this.$route.params.id)
-      this.joinEcho()
+      this.startChannel(this.chatRequest)
     },
-    startChannel(channelId) {
-      this.channel = channelId
-      this.fetchMessages()
+    startChannel(chatRequest) {
+      this.getChat(chatRequest.chat.id).then((response) => {
+        this.chat = response.data
+        this.fetchMessages(chatRequest.id).then(() => {
+          this.joinEcho()
+        })
+      }).catch((e) => {
+        console.log(e)
+      })
     },
     joinEcho() {
-      Echo.private('App.User.' + this.channel)
+      Echo.private('App.User.' + this.chatRequest.channel_name)
         .listen('MessageSent', (event) => {
           this.messages.push(event.message)
           this.scrollToBottom()
@@ -126,8 +136,8 @@ export default {
           })
         })
     },
-    fetchMessages() {
-      this.getMessages(this.channelobj.chatRequest).then((response) => {
+    async fetchMessages(chatRequestId) {
+      await this.getMessages(chatRequestId).then((response) => {
         this.messages = response.data
         this.scrollToBottom()
       })
@@ -137,7 +147,7 @@ export default {
       this.storeMessage({
         user: this.user,
         message: messageText,
-        chat_request_id: this.channelobj.chatRequest
+        chat_request_id: this.chatRequest.id
       }).then((response) => {
         console.log(response)
         this.scrollToBottom()
@@ -154,9 +164,9 @@ export default {
         this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight
       })
     },
-    addChannel(channel) {
-      this.channel = channel.name
-      this.$emit('addChannel', channel)
+    addChannel(chatRequest) {
+      this.channel = chatRequest.channel_name
+      this.$emit('addChannel', chatRequest)
     },
     toggleUsersDrawer() {
       this.$refs.onlineUsersDrawer.usersDrawer = !this.$refs.onlineUsersDrawer.usersDrawer

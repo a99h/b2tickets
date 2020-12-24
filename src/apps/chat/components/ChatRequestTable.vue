@@ -50,7 +50,7 @@
           class="ma-2"
           color="success"
           outlined
-          @click="addChannel({ name: item.channel_name, user: item.user.email, chatRequest: item.id })"
+          @click="addChannel(item)"
         >
           <v-icon left>
             mdi-wechat
@@ -113,8 +113,8 @@ export default {
       this.loading.dataTable = false
       this.backendErrors = null
     },
-    addChannel(channel) {
-      this.$emit('addChannel', channel)
+    addChannel(chatRequest) {
+      this.$emit('addChannel', chatRequest)
     }
   }
 }

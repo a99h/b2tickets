@@ -8,12 +8,12 @@
   >
     <v-list dense>
       <v-subheader class="mx-1 overline">
-        {{ $t('b2tickets.chat.online', { count: users.length }) }}
+        {{ $t('b2tickets.chat.online', { count: onlineUsers.length }) }}
       </v-subheader>
-      <v-list-item v-for="item in users" :key="item.id" class="mb-1">
+      <v-list-item v-for="item in onlineUsers[chatRequest.channel_name]" :key="item.email" class="mb-1">
         <user-avatar :user="item" class="mx-1" />
         <v-list-item-content>
-          <v-list-item-title :class="{ 'primary--text': item.id === user.id }">
+          <v-list-item-title :class="{ 'primary--text': item.email === user.email }">
             @{{ item.name }}
           </v-list-item-title>
           <v-list-item-action-text>
@@ -27,7 +27,6 @@
 
 <script>
 import UserAvatar from './UserAvatar'
-import Echo from '@/plugins/echo'
 
 /*
 |---------------------------------------------------------------------
@@ -49,46 +48,21 @@ export default {
       default: () => ({})
     },
     // channel information
-    channel: {
-      type: String,
-      default: ''
+    chatRequest: {
+      type: Object,
+      default: () => ({})
+    },
+    // Channel online users
+    onlineUsers: {
+      // eslint-disable-next-line vue/require-prop-type-constructor
+      type: Array | Object,
+      default: () => ({})
     }
   },
   data() {
     return {
       // users online drawer
-      usersDrawer: false,
-      // online users
-      users: []
-    }
-  },
-  mounted() {
-    this.addOnlineUsers()
-  },
-  methods: {
-    addOnlineUsers() {
-      if (this.channel !== '') {
-        Echo.join('App.User.' + this.channel)
-          .here((users) => {
-            this.users = users
-          })
-          .joining((user) => {
-            this.users.push(user)
-          })
-          .leaving((user) => {
-            this.users = this.users.filter((u) => u.id !== user.id)
-          })
-
-        Echo.private('App.User.' + this.channel)
-          .listenForWhisper('typing', ({ id }) => {
-            this.users.forEach((user, index) => {
-              if (user.id === id) {
-                user.typing = true
-                this.$set(this.users, index, user)
-              }
-            })
-          })
-      }
+      usersDrawer: false
     }
   }
 }

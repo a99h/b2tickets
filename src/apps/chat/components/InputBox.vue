@@ -6,7 +6,7 @@
       dense
       outlined
       maxlength="150"
-      :placeholder="`${$t('chat.message')} #${channel}`"
+      :placeholder="`${$t('chat.message')} #${chatRequest.channel_name}`"
       class="font-weight-bold position-relative"
       hide-details
       append-icon
@@ -44,10 +44,9 @@ export default {
     EmojiPicker
   },
   props: {
-    // Current channel name
-    channel: {
-      type: String,
-      default: ''
+    chatRequest: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {

@@ -19,7 +19,8 @@
     <online-users-drawer
       ref="onlineUsersDrawer"
       :user="user"
-      :channel="channel"
+      :online-users="onlineUsers"
+      :chat-request="chatRequest"
     ></online-users-drawer>
   </div>
 </template>
@@ -27,7 +28,6 @@
 <script>
 import ChatRequestTable from '../components/ChatRequestTable'
 import OnlineUsersDrawer from '../components/OnlineUsersDrawer'
-import Echo from '@/plugins/echo'
 
 /*
 |---------------------------------------------------------------------
@@ -48,22 +48,26 @@ export default {
     user: {
       type: Object,
       default: () => ({})
+    },
+    chatRequest: {
+      type: Object,
+      default: () => ({})
+    },
+    onlineUsers: {
+      // eslint-disable-next-line vue/require-prop-type-constructor
+      type: Array | Object,
+      default: () => ({})
     }
   },
   data() {
     return {
       // users online drawer
-      usersDrawer: false,
-
-      // channel information
-      channel: '',
-      users: []
+      usersDrawer: false
     }
   },
   methods: {
-    addChannel(channel) {
-      this.channel = channel.name
-      this.$emit('addChannel', channel)
+    addChannel(chatRequest) {
+      this.$emit('addChannel', chatRequest)
     },
     toggleUsersDrawer() {
       this.$refs.onlineUsersDrawer.usersDrawer = !this.$refs.onlineUsersDrawer.usersDrawer

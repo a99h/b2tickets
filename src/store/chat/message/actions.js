@@ -6,7 +6,7 @@ const fetchMessages = ({ dispatch }, chatRequest) => {
 
 const main = ({ commit }, chatRequest) => {
   return new Promise((resolve, reject) => {
-    axios.get(route('api.ticketsystem.chat.message.index') + chatRequest)
+    axios.get(route('api.ticketsystem.chat.message.index', chatRequest))
       .then((response) => resolve(response.data))
       .catch((err) => reject(err))
   })
