@@ -4,6 +4,10 @@ const fetchChats = ({ dispatch }) => {
   return dispatch('main')
 }
 
+const storeChattingUsers = ({ dispatch }, value) => {
+  return dispatch('setChattingUsers', value)
+}
+
 const main = ({ commit }) => {
   return new Promise((resolve, reject) => {
     axios.get(route('api.ticketsystem.chat.chat.index'))
@@ -30,9 +34,15 @@ const updateChat = ({ commit }, chat) => {
   })
 }
 
+const setChattingUsers = ({ commit }, value) => {
+  commit('SET_CHATTING_USERS', value)
+}
+
 export default {
   main,
   fetchChats,
   showChat,
-  updateChat
+  updateChat,
+  setChattingUsers,
+  storeChattingUsers
 }

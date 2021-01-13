@@ -1,23 +1,23 @@
 <template>
   <!-- online users drawer -->
   <v-navigation-drawer
-    v-model="usersDrawer"
+    v-model="drawer"
     width="240"
     right
     app
   >
     <v-list dense>
       <v-subheader class="mx-1 overline">
-        {{ $t('b2tickets.chat.online', { count: onlineUsers.length }) }}
+        {{ $t('b2tickets.chat.online', { count: chattingUsers.length }) }}
       </v-subheader>
-      <v-list-item v-for="item in onlineUsers[chatRequest.channel_name]" :key="item.email" class="mb-1">
+      <v-list-item v-for="item in chattingUsers[chatRequest.channel_name]" :key="item.email" class="mb-1">
         <user-avatar :user="item" class="mx-1" />
         <v-list-item-content>
           <v-list-item-title :class="{ 'primary--text': item.email === user.email }">
             @{{ item.name }}
           </v-list-item-title>
           <v-list-item-action-text>
-            <v-chip v-if="item.typing" class="primary" x-small>печатает...</v-chip>
+            <v-chip v-if="item.typing" v-model="item.typing" class="primary" x-small>печатает...</v-chip>
           </v-list-item-action-text>
         </v-list-item-content>
       </v-list-item>
@@ -27,6 +27,7 @@
 
 <script>
 import UserAvatar from './UserAvatar'
+import { mapGetters } from 'vuex'
 
 /*
 |---------------------------------------------------------------------
@@ -51,19 +52,18 @@ export default {
     chatRequest: {
       type: Object,
       default: () => ({})
-    },
-    // Channel online users
-    onlineUsers: {
-      // eslint-disable-next-line vue/require-prop-type-constructor
-      type: Array | Object,
-      default: () => ({})
     }
   },
   data() {
     return {
       // users online drawer
-      usersDrawer: false
+      drawer: false
     }
+  },
+  computed: {
+    ...mapGetters({
+      chattingUsers: 'chat/getChattingUsers'
+    })
   }
 }
 </script>

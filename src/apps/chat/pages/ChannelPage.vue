@@ -1,53 +1,63 @@
 <template>
-  <div>
+  <!-- channel messages -->
+  <div class="channel-page">
     <!-- channel toolbar -->
     <v-app-bar flat height="64">
-      <v-app-bar-nav-icon class="hidden-lg-and-up" @click="$emit('toggle-menu')"></v-app-bar-nav-icon>
-      <div class="title font-weight-bold">
-        <v-btn class="primary" :to="{ name: 'apps-chat-request'}">{{ $tc('b2tickets.chat.request.title', 0) }}</v-btn>
+
+      <v-app-bar-nav-icon
+        class="hidden-lg-and-up"
+        @click.stop="$emit('toggleChannelsDrawer')"
+      ></v-app-bar-nav-icon>
+
+      <div v-if="$route.name !== 'apps-chat-request'" class="title font-weight-bold">
+        <v-btn
+          class="primary"
+          :to="{ name: 'apps-chat-request'}"
+        >{{ $tc('b2tickets.chat.request.title', 0) }}</v-btn>
       </div>
 
       <v-spacer></v-spacer>
 
-      <v-btn class="mx-1" icon @click.stop="toggleUsersDrawer">
+      <v-btn
+        v-if="$route.name === 'apps-chat-channel'"
+        class="mx-1"
+        icon
+        @click.stop="leaveChannel(chatRequest)"
+      >
+        <v-icon color="error">mdi-exit-run</v-icon>
+      </v-btn>
+      <v-btn
+        v-if="$route.name === 'apps-chat-channel'"
+        class="mx-1"
+        icon
+        @click.stop="$emit('toggleUsersDrawer')"
+      >
         <v-icon>mdi-account-group-outline</v-icon>
       </v-btn>
+
     </v-app-bar>
 
-    <v-divider></v-divider>
-
-    <!-- channel messages -->
-    <div class="channel-page">
-      <div id="messages" ref="messages" class="messages mx-2">
-        <transition-group name="list">
-          <channel-message
-            v-for="message in messages"
-            :key="message.id"
-            :message="message"
-            :user="user"
-            class="my-4 d-flex"
-          />
-        </transition-group>
-      </div>
-
-      <div class="input-box pa-2">
-        <input-box :chat-request="chatRequest" @send-message="sendMessage" @send-typing="sendTypingEvent"/>
-      </div>
+    <div id="messages" ref="messages" class="messages mx-2">
+      <transition-group name="list">
+        <channel-message
+          v-for="message in messages"
+          :key="message.id"
+          :message="message"
+          :user="user"
+          class="my-4 d-flex"
+        />
+      </transition-group>
     </div>
 
-    <online-users-drawer
-      ref="onlineUsersDrawer"
-      :user="user"
-      :online-users="onlineUsers"
-      :chat-request="chatRequest"
-    ></online-users-drawer>
+    <div class="input-box pa-2">
+      <input-box :chat-request="chatRequest" @send-message="sendMessage" @send-typing="sendTypingEvent"/>
+    </div>
   </div>
 </template>
 
 <script>
 import InputBox from '../components/InputBox'
 import ChannelMessage from '../components/ChannelMessage'
-import OnlineUsersDrawer from '../components/OnlineUsersDrawer'
 
 import Echo from '@/plugins/echo'
 
@@ -64,8 +74,7 @@ import { mapActions } from 'vuex'
 export default {
   components: {
     InputBox,
-    ChannelMessage,
-    OnlineUsersDrawer
+    ChannelMessage
   },
   props: {
     // Current logged user
@@ -76,36 +85,24 @@ export default {
     chatRequest: {
       type: Object,
       default: () => ({})
-    },
-    onlineUsers: {
-      // eslint-disable-next-line vue/require-prop-type-constructor
-      type: Array | Object,
-      default: () => ({})
     }
   },
   data() {
     return {
-      // users online drawer
-      usersDrawer: false,
 
-      chat: {},
-      messages: []
-    }
-  },
-  watch: {
-    '$route.params.id'() {
-      this.startChannel(this.$route.params.id)
+      messages: [],
+      // users array for online users drawer
+      onlineUsers: {}
     }
   },
   created() {
-    this.initialize()
+    // this.initialize()
   },
   mounted() {
-
+    this.initialize()
   },
   methods: {
     ...mapActions({
-      getChat: 'chat/showChat',
       getMessages: 'message/fetchMessages',
       storeMessage: 'message/storeMessage'
     }),
@@ -113,27 +110,33 @@ export default {
       this.startChannel(this.chatRequest)
     },
     startChannel(chatRequest) {
-      this.getChat(chatRequest.chat.id).then((response) => {
-        this.chat = response.data
-        this.fetchMessages(chatRequest.id).then(() => {
-          this.joinEcho()
-        })
+      this.fetchMessages(chatRequest.id).then(() => {
+        this.joinEcho()
       }).catch((e) => {
         console.log(e)
       })
     },
     joinEcho() {
+      this.$emit('joinChannel', this.chatRequest)
       Echo.private('App.User.' + this.chatRequest.channel_name)
         .listen('MessageSent', (event) => {
           this.messages.push(event.message)
           this.scrollToBottom()
 
-          this.users.forEach((user, index) => {
-            if (user.id === event.message.user.id) {
-              user.typing = false
-              this.$set(this.users, index, user)
-            }
+          this.$emit('setTyping', {
+            channelName: this.chatRequest.channel_name,
+            user: event.message.user,
+            typing: false
           })
+        })
+        .listenForWhisper('typing', (data) => {
+          const typingData = {
+            channelName: this.chatRequest.channel_name,
+            user: data.user,
+            typing: true
+          }
+
+          this.$emit('setTyping', typingData)
         })
     },
     async fetchMessages(chatRequestId) {
@@ -148,8 +151,7 @@ export default {
         user: this.user,
         message: messageText,
         chat_request_id: this.chatRequest.id
-      }).then((response) => {
-        console.log(response)
+      }).then(() => {
         this.scrollToBottom()
       }).catch((err) => {
         console.log(err)
@@ -164,12 +166,12 @@ export default {
         this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight
       })
     },
-    addChannel(chatRequest) {
-      this.channel = chatRequest.channel_name
-      this.$emit('addChannel', chatRequest)
+    updateUsersDrawer() {
+      this.$emit('updateUsersDrawer')
     },
-    toggleUsersDrawer() {
-      this.$refs.onlineUsersDrawer.usersDrawer = !this.$refs.onlineUsersDrawer.usersDrawer
+    leaveChannel(chatRequest) {
+      Echo.leave('App.User.' + chatRequest.channel_name)
+      this.$emit('removeChannel', chatRequest)
     }
   }
 }
@@ -193,7 +195,7 @@ export default {
 
 .channel-page {
   position: absolute;
-  top: 65px;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
