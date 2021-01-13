@@ -9,12 +9,7 @@
         @click.stop="$emit('toggleChannelsDrawer')"
       ></v-app-bar-nav-icon>
 
-      <div v-if="$route.name !== 'apps-chat-request'" class="title font-weight-bold">
-        <v-btn
-          class="primary"
-          :to="{ name: 'apps-chat-request'}"
-        >{{ $tc('b2tickets.chat.request.title', 0) }}</v-btn>
-      </div>
+      <v-breadcrumbs :items="breadcrumbs"></v-breadcrumbs>
 
       <v-spacer></v-spacer>
 
@@ -89,10 +84,16 @@ export default {
   },
   data() {
     return {
-
       messages: [],
       // users array for online users drawer
-      onlineUsers: {}
+      onlineUsers: {},
+      breadcrumbs: [
+        {
+          text: this.$tc('b2tickets.chat.request.title', 0),
+          disabled: false,
+          to: { name: 'apps-chat-request' }
+        }
+      ]
     }
   },
   created() {
