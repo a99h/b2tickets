@@ -58,13 +58,13 @@
                 <template v-slot:item.created_at="{ item }">
                   {{ new Date(item.created_at).toLocaleString() }}
                 </template>
-                <template v-slot:item.ticketClients="{ item }">
+                <template v-slot:item.ticketChatRequests="{ item }">
                   <v-chip
-                    v-for="client in item.ticketClients"
-                    :key="client.id"
+                    v-for="chatRequest in item.ticketChatRequests"
+                    :key="chatRequest.user.id"
                     small
                     color="success"
-                  >{{ client.email }}
+                  >{{ chatRequest.user.email }}
                   </v-chip>
                 </template>
                 <template v-slot:item.ticketOperators="{ item }">
@@ -144,7 +144,7 @@ export default {
         value: 'id'
       },
       { text: this.$t('b2tickets.ticket.fields.issue'), value: 'issue' },
-      { text: this.$t('b2tickets.ticket.fields.ticketClients'), value: 'ticketClients' },
+      { text: this.$t('b2tickets.ticket.fields.ticketClients'), value: 'ticketChatRequests' },
       { text: this.$t('b2tickets.ticket.fields.ticketOperators'), value: 'ticketOperators' },
       { text: this.$t('b2tickets.ticketStatus.status'), value: 'ticketStatus' },
       { text: this.$t('b2tickets.ticket.fields.createdAt'), value: 'created_at' },
@@ -164,6 +164,7 @@ export default {
       this.loading.dataTable = 'info'
 
       await this.fetchTickets().then(() => {
+        console.log(this.getTickets)
         this.tickets = this.getTickets
       })
 
