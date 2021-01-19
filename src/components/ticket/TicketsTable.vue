@@ -61,7 +61,7 @@
                 <template v-slot:item.ticketChatRequests="{ item }">
                   <v-chip
                     v-for="chatRequest in item.ticketChatRequests"
-                    :key="chatRequest.user.id"
+                    :key="chatRequest.id"
                     small
                     color="success"
                   >{{ chatRequest.user.email }}
@@ -164,7 +164,6 @@ export default {
       this.loading.dataTable = 'info'
 
       await this.fetchTickets().then(() => {
-        console.log(this.getTickets)
         this.tickets = this.getTickets
       })
 

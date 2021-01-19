@@ -46,7 +46,7 @@
             ></v-textarea>
             <section v-if="dialogMode === 'show'">
               <v-input readonly>
-                <v-chip v-for="item in editedItem.ticketClients" :key="item.id" color="success">{{ item.name }}</v-chip>
+                <v-chip v-for="item in editedItem.ticketChatRequests" :key="item.id" color="success">{{ item.name }}</v-chip>
               </v-input>
               <v-input readonly>
                 <v-chip v-for="item in editedItem.ticketOperators" :key="item.id" color="error">{{ item.name }}</v-chip>
@@ -57,10 +57,10 @@
             </section>
             <section v-if="(dialogMode === 'create') || (dialogMode === 'edit')">
               <v-autocomplete
-                v-model="editedItem.ticketClients"
+                v-model="editedItem.ticketChatRequests"
                 :label="loadingLabel"
-                :items="clients"
-                :error-messages="ticketClientsErrors"
+                :items="chatRequests"
+                :error-messages="ticketChatRequestsErrors"
                 :hint="$t('b2tickets.ticket.select.ticketClients')"
                 clearable
                 deletable-chips
@@ -70,9 +70,9 @@
                 return-object
                 small-chips
                 item-color="success"
-                item-text="email"
-                @input="$v.editedItem.ticketClients.$touch()"
-                @blur="$v.editedItem.ticketClients.$touch()"
+                item-text="issue"
+                @input="$v.editedItem.ticketChatRequests.$touch()"
+                @blur="$v.editedItem.ticketChatRequests.$touch()"
               >
               </v-autocomplete>
               <v-autocomplete
@@ -150,7 +150,7 @@ export default {
     editedItem: {
       issue: { required },
       description: { maxLength: maxLength(10000) },
-      ticketClients: { required }
+      ticketChatRequests: { required }
     }
   },
   data: () => ({
@@ -164,24 +164,24 @@ export default {
     editedItem: {
       issue: '',
       description: '',
-      ticketClients: [],
+      ticketChatRequests: [],
       ticketOperators: [],
       ticketStatus: {}
     },
     defaultItem: {
       issue: '',
       description: '',
-      ticketClients: [],
+      ticketChatRequests: [],
       ticketOperators: [],
       ticketStatus: {}
     },
-    clients: [],
+    chatRequests: [],
     operators: [],
     statuses: []
   }),
   computed: {
     ...mapGetters({
-      getClients: 'client/getClients',
+      getChatRequests: 'chatRequest/getChatRequests',
       getOperators: 'user/getOperators',
       getStatuses: 'ticketStatus/getStatuses'
     }),
@@ -225,15 +225,16 @@ export default {
 
       return errors
     },
-    ticketClientsErrors () {
+    ticketChatRequestsErrors () {
       const errors = []
 
-      if (!this.$v.editedItem.ticketClients.$dirty) return errors
-      !this.$v.editedItem.ticketClients.required && errors.push('Необходимо добавить хотя бы одного пользователя')
+      if (!this.$v.editedItem.ticketChatRequests.$dirty) return errors
+      !this.$v.editedItem.ticketChatRequests.required && errors.push('Необходимо добавить хотя бы один запрос на чат')
 
-      if (this.backendErrors && this.backendErrors.errors.ticketClients) this.backendErrors.errors.ticketClients.forEach((error) => {
-        errors.push(error)
-      })
+      if (this.backendErrors && this.backendErrors.errors.ticketChatRequests)
+        this.backendErrors.errors.ticketChatRequests.forEach((error) => {
+          errors.push(error)
+        })
 
       return errors
     },
@@ -266,7 +267,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchClients: 'client/fetchClients',
+      fetchChatRequests: 'chatRequest/fetchChatRequests',
       fetchOperators: 'user/fetchOperators',
       fetchStatuses: 'ticketStatus/fetchStatuses',
       createTicket: 'ticket/storeTicket',
@@ -274,8 +275,8 @@ export default {
     }),
     async dialogInitialize() {
       this.loading.dialogForm = 'accent'
-      await this.fetchClients().then(() => {
-        this.clients = this.getClients
+      await this.fetchChatRequests().then(() => {
+        this.chatRequests = this.getChatRequests
       }).catch((err) => {
         this.$emit('ticketFormBackendErrors', err.response.data)
       })
@@ -344,7 +345,7 @@ export default {
     filteredItem(data) {
       return {
         ...data,
-        ticketClients: data.ticketClients.map((item) => item.id),
+        ticketChatRequests: data.ticketChatRequests.map((item) => item.id),
         ticketOperators: data.ticketOperators.map((item) => item.id),
         ticketStatus: data.ticketStatus.id
       }
