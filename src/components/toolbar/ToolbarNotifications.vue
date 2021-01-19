@@ -152,6 +152,7 @@ export default {
       Echo.private(this.channel)
         .notification((event) => {
           if (event.chat_request) {
+            console.log(event)
             this.items.unshift(event)
             if (!this.muted) this.playSound()
           }
