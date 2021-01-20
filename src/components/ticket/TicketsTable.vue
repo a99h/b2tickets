@@ -63,8 +63,10 @@
                     v-for="chatRequest in item.ticketChatRequests"
                     :key="chatRequest.id"
                     small
+                    outlined
                     color="success"
-                  >{{ chatRequest.user.email }}
+                  >
+                    <strong>Request #{{ chatRequest.id }} <span class="text--primary">{{ chatRequest.user.email }}</span></strong>
                   </v-chip>
                 </template>
                 <template v-slot:item.ticketOperators="{ item }">

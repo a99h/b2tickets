@@ -46,7 +46,9 @@
             ></v-textarea>
             <section v-if="dialogMode === 'show'">
               <v-input readonly>
-                <v-chip v-for="item in editedItem.ticketChatRequests" :key="item.id" color="success">{{ item.name }}</v-chip>
+                <v-chip v-for="item in editedItem.ticketChatRequests" :key="item.id" color="success">
+                  <strong>Request #{{ item.id }} <span class="text--primary">{{ item.user.email }}</span></strong>
+                </v-chip>
               </v-input>
               <v-input readonly>
                 <v-chip v-for="item in editedItem.ticketOperators" :key="item.id" color="error">{{ item.name }}</v-chip>
@@ -70,10 +72,25 @@
                 return-object
                 small-chips
                 item-color="success"
-                item-text="issue"
+                item-text="id"
                 @input="$v.editedItem.ticketChatRequests.$touch()"
                 @blur="$v.editedItem.ticketChatRequests.$touch()"
               >
+                <template v-slot:selection="{ item }">
+                  <v-chip
+                    small
+                    outlined
+                    color="success"
+                  >
+                    <strong>Request #{{ item.id }} <span class="text--primary">{{ item.user.email }}</span></strong>
+                  </v-chip>
+                </template>
+                <template v-slot:item="data">
+                  <v-list-item-content>
+                    <v-list-item-title v-html="data.item.id"></v-list-item-title>
+                    <v-list-item-subtitle v-html="data.item.user.email"></v-list-item-subtitle>
+                  </v-list-item-content>
+                </template>
               </v-autocomplete>
               <v-autocomplete
                 v-model="editedItem.ticketOperators"
