@@ -2,10 +2,13 @@
   <v-dialog v-model="dialog" max-width="1000px">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
+        id="ticketFormActivator"
+        :hidden="$route.name === 'apps-chat-channel'"
         color="primary"
         class="mb-2"
         v-bind="attrs"
         v-on="on"
+        @click="$route.name === 'apps-chat-channel' ? $emit('setTicketFormDefaultValues') : ''"
       >{{ $t('b2tickets.ticket.actions.createTicket') }}</v-btn>
     </template>
     <v-card :loading="loading.dialogForm">
@@ -66,6 +69,7 @@
                 :hint="$t('b2tickets.ticket.select.ticketChatRequests')"
                 clearable
                 deletable-chips
+                :disabled="$route.name === 'apps-chat-channel'"
                 eager
                 multiple
                 persistent-hint
@@ -100,6 +104,7 @@
                 :hint="$t('b2tickets.ticket.select.ticketOperators')"
                 clearable
                 deletable-chips
+                :disabled="$route.name === 'apps-chat-channel'"
                 eager
                 multiple
                 persistent-hint

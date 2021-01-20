@@ -3,13 +3,41 @@
   <div class="channel-page">
     <!-- channel toolbar -->
     <v-app-bar flat height="64">
-
+      <v-alert
+        v-if="backendErrors"
+        dismissible
+        border="left"
+        color="error"
+        class="mt-2"
+        type="error"
+      >
+        {{ backendErrors.message }}
+      </v-alert>
       <v-app-bar-nav-icon
         class="hidden-lg-and-up"
         @click.stop="$emit('toggleChannelsDrawer')"
       ></v-app-bar-nav-icon>
 
-      <v-breadcrumbs :items="breadcrumbs"></v-breadcrumbs>
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:item="{ item }">
+          <v-breadcrumbs-item
+            :to="item.to"
+            :disabled="item.disabled"
+            @click="clickBtn(item)"
+          >
+            {{ item.text }}
+          </v-breadcrumbs-item>
+        </template>
+      </v-breadcrumbs>
+      <TicketForm
+        v-if="ticketFormReady"
+        ref="dialog"
+        :tickets="getTickets"
+        @closeDialog="backendErrors = null"
+        @ticketFormBackendErrors="(err) => backendErrors = err"
+        @refreshState="refreshTickets"
+        @setTicketFormDefaultValues="setTicketFormDefaultValues"
+      ></TicketForm>
 
       <v-spacer></v-spacer>
 
@@ -53,10 +81,11 @@
 <script>
 import InputBox from '../components/InputBox'
 import ChannelMessage from '../components/ChannelMessage'
+import TicketForm from '@/components/ticket/TicketForm'
 
 import Echo from '@/plugins/echo'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 /*
 |---------------------------------------------------------------------
@@ -69,7 +98,8 @@ import { mapActions } from 'vuex'
 export default {
   components: {
     InputBox,
-    ChannelMessage
+    ChannelMessage,
+    TicketForm
   },
   props: {
     // Current logged user
@@ -92,12 +122,21 @@ export default {
           text: this.$tc('b2tickets.chat.request.title', 0),
           disabled: false,
           to: { name: 'apps-chat-request' }
+        },
+        {
+          text: this.$t('b2tickets.ticket.actions.createTicket'),
+          disabled: false,
+          to: ''
         }
-      ]
+      ],
+      backendErrors: null,
+      ticketFormReady: true
     }
   },
-  created() {
-    // this.initialize()
+  computed: {
+    ...mapGetters({
+      getTickets: 'ticket/getTickets'
+    })
   },
   mounted() {
     this.initialize()
@@ -107,6 +146,12 @@ export default {
       getMessages: 'message/fetchMessages',
       storeMessage: 'message/storeMessage'
     }),
+    async refreshTickets() {
+      this.ticketFormReady = false
+      await this.fetchTickets().then(() => {
+        this.ticketFormReady = true
+      })
+    },
     initialize() {
       this.startChannel(this.chatRequest)
     },
@@ -173,6 +218,14 @@ export default {
     leaveChannel(chatRequest) {
       Echo.leave('App.User.' + chatRequest.channel_name)
       this.$emit('removeChannel', chatRequest)
+    },
+    setTicketFormDefaultValues() {
+      this.$refs.dialog.editedItem.ticketChatRequests = [this.chatRequest]
+      this.$refs.dialog.editedItem.ticketOperators = [this.user]
+    },
+    clickBtn(item) {
+      if (item.text === this.$t('b2tickets.ticket.actions.createTicket'))
+        document.getElementById('ticketFormActivator').click()
     }
   }
 }
