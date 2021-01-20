@@ -63,7 +63,7 @@
                 :label="loadingLabel"
                 :items="chatRequests"
                 :error-messages="ticketChatRequestsErrors"
-                :hint="$t('b2tickets.ticket.select.ticketClients')"
+                :hint="$t('b2tickets.ticket.select.ticketChatRequests')"
                 clearable
                 deletable-chips
                 eager

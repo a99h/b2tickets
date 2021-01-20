@@ -295,12 +295,14 @@ export default {
         'description': 'Описание',
         'issue': 'Проблема',
         'ticketClients': 'Клиенты',
-        'ticketOperators': 'Операторы'
+        'ticketOperators': 'Операторы',
+        'ticketChatRequests': 'Запрос на чат: клиент'
       },
       'select': {
         'ticketClients': 'клиентов тикета',
         'ticketOperators': 'операторов тикета',
-        'ticketStatus': 'статус тикета'
+        'ticketStatus': 'статус тикета',
+        'ticketChatRequests': 'запросы на чат'
       }
     },
     'ticketStatus': {

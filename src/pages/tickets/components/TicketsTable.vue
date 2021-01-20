@@ -122,7 +122,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import TicketForm from './TicketForm'
+import TicketForm from '@/components/ticket/TicketForm'
 
 export default {
   name: 'Tickets',
@@ -146,7 +146,7 @@ export default {
         value: 'id'
       },
       { text: this.$t('b2tickets.ticket.fields.issue'), value: 'issue' },
-      { text: this.$t('b2tickets.ticket.fields.ticketClients'), value: 'ticketChatRequests' },
+      { text: this.$t('b2tickets.ticket.fields.ticketChatRequests'), value: 'ticketChatRequests' },
       { text: this.$t('b2tickets.ticket.fields.ticketOperators'), value: 'ticketOperators' },
       { text: this.$t('b2tickets.ticketStatus.status'), value: 'ticketStatus' },
       { text: this.$t('b2tickets.ticket.fields.createdAt'), value: 'created_at' },

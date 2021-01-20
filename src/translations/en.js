@@ -295,12 +295,14 @@ export default {
         description: 'Description',
         issue: 'Issue',
         ticketClients: 'Clients',
-        ticketOperators: 'Operators'
+        ticketOperators: 'Operators',
+        ticketChatRequests: 'Chat request: client'
       },
       select: {
         ticketClients: 'ticket clients',
         ticketOperators: 'ticket operators',
-        ticketStatus: 'ticket status'
+        ticketStatus: 'ticket status',
+        ticketChatRequests: 'chat requests'
       }
     },
     ticketStatus: {

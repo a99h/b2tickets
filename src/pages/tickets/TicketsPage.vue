@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import TicketsTable from '../../components/ticket/TicketsTable'
+import TicketsTable from './components/TicketsTable'
 export default {
   components: { TicketsTable }
 }
