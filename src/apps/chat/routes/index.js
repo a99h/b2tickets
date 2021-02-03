@@ -10,7 +10,7 @@ export default [{
   name: 'apps-chat-channel',
   component: () => import(/* webpackChunkName: "apps-chat-channel" */ '@/apps/chat/pages/ChannelPage.vue')
 },{
-  path: 'channel/:id/ticket',
+  path: 'channel/:id/create-ticket',
   name: 'apps-chat-channel-create-ticket',
   redirect: 'channel/:id'
 }]
