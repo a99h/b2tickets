@@ -126,7 +126,7 @@ export default {
         {
           text: this.$t('b2tickets.ticket.actions.createTicket'),
           disabled: false,
-          to: ''
+          to: { name: 'apps-chat-channel-create-ticket' }
         }
       ],
       backendErrors: null,
