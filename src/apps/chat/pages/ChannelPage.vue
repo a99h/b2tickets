@@ -1,22 +1,9 @@
 <template>
-  <!-- channel messages -->
-  <div class="channel-page">
+  <div>
     <!-- channel toolbar -->
     <v-app-bar flat height="64">
-      <v-alert
-        v-if="backendErrors"
-        dismissible
-        border="left"
-        color="error"
-        class="mt-2"
-        type="error"
-      >
-        {{ backendErrors.message }}
-      </v-alert>
-      <v-app-bar-nav-icon
-        class="hidden-lg-and-up"
-        @click.stop="$emit('toggleChannelsDrawer')"
-      ></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon class="hidden-lg-and-up" @click="$emit('toggle-menu')"></v-app-bar-nav-icon>
+      <div class="title font-weight-bold"># {{ $route.params.id }}</div>
 
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{ item }">
@@ -29,15 +16,6 @@
           </v-breadcrumbs-item>
         </template>
       </v-breadcrumbs>
-      <TicketForm
-        v-if="ticketFormReady"
-        ref="dialog"
-        :tickets="getTickets"
-        @closeDialog="backendErrors = null"
-        @ticketFormBackendErrors="(err) => backendErrors = err"
-        @refreshState="refreshTickets"
-        @setTicketFormDefaultValues="setTicketFormDefaultValues"
-      ></TicketForm>
 
       <v-spacer></v-spacer>
 
@@ -45,47 +23,78 @@
         v-if="$route.name === 'apps-chat-channel'"
         class="mx-1"
         icon
-        @click.stop="leaveChannel(chatRequest)"
+        @click.stop="leaveChannel()"
       >
         <v-icon color="error">mdi-exit-run</v-icon>
       </v-btn>
-      <v-btn
-        v-if="$route.name === 'apps-chat-channel'"
-        class="mx-1"
-        icon
-        @click.stop="$emit('toggleUsersDrawer')"
-      >
+      <v-btn class="mx-1" icon @click.stop="usersDrawer = !usersDrawer">
         <v-icon>mdi-account-group-outline</v-icon>
       </v-btn>
-
     </v-app-bar>
 
-    <div id="messages" ref="messages" class="messages mx-2">
-      <transition-group name="list">
-        <channel-message
-          v-for="message in messages"
-          :key="message.id"
-          :message="message"
-          :user="user"
-          class="my-4 d-flex"
-        />
-      </transition-group>
+    <v-divider></v-divider>
+
+    <!-- channel messages -->
+    <v-progress-linear
+      v-if="loading"
+      color="deep-purple accent-4"
+      indeterminate
+      rounded
+      height="6"
+    ></v-progress-linear>
+    <div v-if="!loading" class="channel-page">
+      <div id="messages" ref="messages" class="messages mx-2">
+        <transition-group name="list">
+          <channel-message
+            v-for="message in chat.messages"
+            :key="message.id"
+            :message="message"
+            :user="user"
+            class="my-4 d-flex"
+            :loading="loading"
+          />
+        </transition-group>
+      </div>
+
+      <div class="input-box pa-2">
+        <input-box :channel="channel" @send-message="sendMessage" @send-typing="sendTyping"/>
+      </div>
     </div>
 
-    <div class="input-box pa-2">
-      <input-box :chat-request="chatRequest" @send-message="sendMessage" @send-typing="sendTypingEvent"/>
-    </div>
+    <!-- online users drawer -->
+    <v-navigation-drawer
+      v-model="usersDrawer"
+      width="180"
+      :right="!$vuetify.rtl"
+      app
+    >
+      <v-list dense>
+        <v-subheader class="mx-1 overline">
+          {{ $t('chat.online', { count: chat.participants.length }) }}
+        </v-subheader>
+        <v-list-item v-for="item in chat.participants" :key="item.id" class="mb-1">
+          <user-avatar :user="item" class="mx-1" />
+          <v-list-item-content>
+            <v-list-item-title :class="{ 'primary--text': item.id === user.id }">{{ item.name }}</v-list-item-title>
+            <v-list-item-action-text>
+              <v-chip v-if="item.typing" class="primary" x-small>печатает...</v-chip>
+            </v-list-item-action-text>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
   </div>
 </template>
 
 <script>
 import InputBox from '../components/InputBox'
+import UserAvatar from '../components/UserAvatar'
 import ChannelMessage from '../components/ChannelMessage'
-import TicketForm from '@/components/ticket/TicketForm'
 
-import Echo from '@/plugins/echo'
+import { mapActions } from 'vuex'
 
-import { mapActions, mapGetters } from 'vuex'
+// Demo messages and users
+// import getMessage, { users } from '../content/messages'
 
 /*
 |---------------------------------------------------------------------
@@ -98,8 +107,8 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     InputBox,
-    ChannelMessage,
-    TicketForm
+    UserAvatar,
+    ChannelMessage
   },
   props: {
     // Current logged user
@@ -107,16 +116,26 @@ export default {
       type: Object,
       default: () => ({})
     },
-    chatRequest: {
+    chat: {
       type: Object,
       default: () => ({})
     }
   },
   data() {
     return {
+      loading: false,
+
+      // users online drawer
+      usersDrawer: true,
+
+      // channel information and messages
+      channel: '',
       messages: [],
-      // users array for online users drawer
-      onlineUsers: {},
+
+      // Instance of Chat class
+      chatInstance: {},
+
+      // App bar navigation
       breadcrumbs: [
         {
           text: this.$tc('b2tickets.chat.request.title', 0),
@@ -128,104 +147,59 @@ export default {
           disabled: false,
           to: { name: 'apps-chat-channel-create-ticket' }
         }
-      ],
-      backendErrors: null,
-      ticketFormReady: true
+      ]
     }
   },
-  computed: {
-    ...mapGetters({
-      getTickets: 'ticket/getTickets'
-    })
+  watch: {
+    '$route.params.id'() {
+      this.startChannel(this.$route.params.id)
+    }
   },
   mounted() {
-    this.initialize()
+    this.startChannel(this.$route.params.id)
+  },
+  beforeDestroy() {
+    this.unregisterListeners()
   },
   methods: {
     ...mapActions({
+      showChatRequest: 'chatRequest/showChatRequest',
       getMessages: 'message/fetchMessages',
       storeMessage: 'message/storeMessage'
     }),
-    async refreshTickets() {
-      this.ticketFormReady = false
-      await this.fetchTickets().then(() => {
-        this.ticketFormReady = true
-      })
-    },
-    initialize() {
-      this.startChannel(this.chatRequest)
-    },
-    startChannel(chatRequest) {
-      this.fetchMessages(chatRequest.id).then(() => {
-        this.joinEcho()
-      }).catch((e) => {
-        console.log(e)
-      })
-    },
-    joinEcho() {
-      this.$emit('joinChannel', this.chatRequest)
-      Echo.private('App.User.' + this.chatRequest.channel_name)
-        .listen('MessageSent', (event) => {
-          this.messages.push(event.message)
-          this.scrollToBottom()
 
-          this.$emit('setTyping', {
-            channelName: this.chatRequest.channel_name,
-            user: event.message.user,
-            typing: false
-          })
-        })
-        .listenForWhisper('typing', (data) => {
-          const typingData = {
-            channelName: this.chatRequest.channel_name,
-            user: data.user,
-            typing: true
-          }
+    startChannel(channelId) {
+      this.registerListeners()
 
-          this.$emit('setTyping', typingData)
-        })
+      this.channel = channelId
     },
-    async fetchMessages(chatRequestId) {
-      await this.getMessages(chatRequestId).then((response) => {
-        this.messages = response.data
-        this.scrollToBottom()
-      })
+    leaveChannel() {
+      this.unregisterListeners()
+      this.$emit('leave-channel', this.chat)
+    },
+    registerListeners() {
+      window.addEventListener('channel-page-update-users-drawer', this.updateUsersDrawer)
+      this.chat.watchParticipants()
+    },
+    unregisterListeners() {
+      window.removeEventListener('channel-page-update-users-drawer',this.updateUsersDrawer)
+      this.chat.unwatchParticipants()
     },
     // Send message to channel
     sendMessage(messageText) {
-      this.storeMessage({
-        user: this.user,
-        message: messageText,
-        chat_request_id: this.chatRequest.id
-      }).then(() => {
-        this.scrollToBottom()
-      }).catch((err) => {
-        console.log(err)
-      })
-    },
-    sendTypingEvent() {
-      Echo.private('App.User.' + this.channel)
-        .whisper('typing', this.user.name)
+      this.chat.sendMessage(messageText)
+      this.scrollToBottom()
     },
     scrollToBottom() {
       this.$nextTick(() => {
         this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight
       })
     },
+    sendTyping(typing) {
+      this.chat.sendTyping(typing)
+    },
     updateUsersDrawer() {
-      this.$emit('updateUsersDrawer')
-    },
-    leaveChannel(chatRequest) {
-      Echo.leave('App.User.' + chatRequest.channel_name)
-      this.$emit('removeChannel', chatRequest)
-    },
-    setTicketFormDefaultValues() {
-      this.$refs.dialog.editedItem.ticketChatRequests = [this.chatRequest]
-      this.$refs.dialog.editedItem.ticketOperators = [this.user]
-    },
-    clickBtn(item) {
-      if (item.text === this.$t('b2tickets.ticket.actions.createTicket'))
-        document.getElementById('ticketFormActivator').click()
+      this.$forceUpdate()
     }
   }
 }
@@ -249,7 +223,7 @@ export default {
 
 .channel-page {
   position: absolute;
-  top: 0;
+  top: 65px;
   bottom: 0;
   left: 0;
   right: 0;

@@ -6,13 +6,13 @@
       dense
       outlined
       maxlength="150"
-      :placeholder="`${$t('chat.message')} #${chatRequest.channel_name}`"
+      :placeholder="`${$t('chat.message')} #${channel}`"
       class="font-weight-bold position-relative"
       hide-details
       append-icon
       @click="$emit('input-focus')"
+      @keyup="sendTyping"
       @keyup.enter="sendMessage"
-      @keyup="sendTypingEvent"
     >
       <template v-slot:append>
         <emoji-picker @insert="insertEmoji"></emoji-picker>
@@ -44,9 +44,10 @@ export default {
     EmojiPicker
   },
   props: {
-    chatRequest: {
-      type: Object,
-      default: () => ({})
+    // Current channel name
+    channel: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -67,10 +68,10 @@ export default {
       this.input = ''
       this.$refs.input.focus()
     },
-    sendTypingEvent() {
+    sendTyping() {
       if (!this.input) return
 
-      this.$emit('send-typing')
+      this.$emit('send-typing', true)
     }
   }
 }

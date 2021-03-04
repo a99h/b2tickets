@@ -12,7 +12,16 @@ const main = ({ commit }) => {
   })
 }
 
+const showChatRequest = ({ commit }, id) => {
+  return new Promise((resolve, reject) => {
+    axios.get(route('api.ticketsystem.chat.chatrequest.show', id))
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err))
+  })
+}
+
 export default {
   main,
-  fetchChatRequests
+  fetchChatRequests,
+  showChatRequest
 }

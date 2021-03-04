@@ -37,6 +37,10 @@ export default {
     UserAvatar
   },
   props: {
+    loading: {
+      type: Boolean,
+      default: false
+    },
     // Current logged user
     user: {
       type: Object,
