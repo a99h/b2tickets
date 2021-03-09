@@ -75,7 +75,7 @@
         <v-list-item v-for="item in chat.participants" :key="item.id" class="mb-1">
           <user-avatar :user="item" class="mx-1" />
           <v-list-item-content>
-            <v-list-item-title :class="{ 'primary--text': item.id === user.id }">{{ item.name }}</v-list-item-title>
+            <v-list-item-title :class="{ 'primary--text': item.email === user.email }">{{ item.name }}</v-list-item-title>
             <v-list-item-action-text>
               <v-chip v-if="item.typing" class="primary" x-small>печатает...</v-chip>
             </v-list-item-action-text>
@@ -183,7 +183,6 @@ export default {
     },
     unregisterListeners() {
       window.removeEventListener('channel-page-update-users-drawer',this.updateUsersDrawer)
-      this.chat.unwatchParticipants()
     },
     // Send message to channel
     sendMessage(messageText) {

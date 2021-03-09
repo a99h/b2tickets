@@ -11,17 +11,23 @@ export default {
     Echo.join('App.User.' + chat.channelName)
       .here((users) => {
         chat.participants = users
+
+        chat.toggleActive()
       })
       .joining((user) => {
         if (!(chat.participants.some((us) => us.email === user.email))) chat.addParticipant(user)
+
+        chat.toggleActive()
       })
       .leaving((user) => {
+
+        // eslint-disable-next-line array-callback-return
         chat.participants.some((us) => {
           if (us.email === user.email) {
             chat.participants.splice(chat.participants.indexOf(us), 1)
 
-            return true
-          } else return false
+            chat.toggleActive()
+          }
         })
       })
   },

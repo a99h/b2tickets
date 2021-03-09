@@ -22,6 +22,15 @@ export default class Chat {
     return this._user
   }
 
+  set chat(value) {
+    if (value) {
+      this._chat = value
+    }
+  }
+  get chat() {
+    return this._chat
+  }
+
   set channelName(value) {
     this._channelName = value
   }
@@ -55,6 +64,27 @@ export default class Chat {
     this.participants.push(value)
   }
 
+  setTyping(data) {
+    const { user, message, typing } = data
+
+    this.participants.some((participant) => {
+      if (participant.email === user.email) {
+        this.participants[this.participants.indexOf(participant)].typing = typing
+        window.dispatchEvent(new Event('channel-page-update-users-drawer'))
+
+        return true
+      }
+
+      return false
+    })
+  }
+
+  toggleActive() {
+    Object.values(this.participants).length > 1 ? this.setActive(1) : this.setActive(0)
+  }
+
+  setActive(value) {}
+
   watchParticipants() {
     channelService.watchParticipants(this)
   }
@@ -69,23 +99,6 @@ export default class Chat {
 
   unsubscribeChannel() {
     channelService.unsubscribeChannel(this)
-  }
-
-  setTyping(data) {
-    const { user, message, typing } = data
-
-    // console.log(message)
-
-    this.participants.some((participant) => {
-      if (participant.email === user.email) {
-        this.participants[this.participants.indexOf(participant)].typing = typing
-        window.dispatchEvent(new Event('channel-page-update-users-drawer'))
-
-        return true
-      }
-
-      return false
-    })
   }
 
   sendTyping(typing) {

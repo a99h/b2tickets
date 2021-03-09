@@ -1,12 +1,15 @@
 import Chat from './Chat'
+import { showChat, updateChat } from '../http/chat'
 
 export default class ClientsChat extends Chat {
+
   constructor(options) {
     const { channelName, chatRequest, user } = options
 
     super({ channelName, user })
 
     this.chatRequest = chatRequest
+    this.chat = chatRequest.chat
   }
 
   set chat(value) {
@@ -54,6 +57,20 @@ export default class ClientsChat extends Chat {
       chat_request_id: this.chatRequest.id
     })
   }
+
+  setActive(value) {
+    showChat(this.chat.id).then((res) => {
+      if (res.data.active !== value)
+        updateChat({
+          ...this.chat,
+          active: value
+        }).then((resp) => {
+          this.chat.active = resp.data.active
+        }).catch((e) => {
+          console.log(e)
+        })
+    })
+  }
 }
 
 function isEmpty(value) {
@@ -68,33 +85,4 @@ function isEmpty(value) {
   }
 
   return true
-}
-
-const chat2 = {
-  chat: {},
-  messages: [],
-  users: [],
-  chatRequest: {},
-  joinEcho(channelName) {
-    Echo.private('App.User.' + channelName)
-      .listen('MessageSent', (event) => {
-        this.messages.push(event.message)
-        this.scrollToBottom()
-
-        this.$emit('setTyping', {
-          channelName: this.chatRequest.channel_name,
-          user: event.message.user,
-          typing: false
-        })
-      })
-      .listenForWhisper('typing', (data) => {
-        const typingData = {
-          channelName: this.chatRequest.channel_name,
-          user: data.user,
-          typing: true
-        }
-
-        this.$emit('setTyping', typingData)
-      })
-  }
 }

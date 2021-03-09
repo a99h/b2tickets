@@ -8,6 +8,10 @@ export default class OperatorsChat extends Chat {
     const { channelName, user } = options
 
     super({ channelName, user })
+
+    this.chat = {
+      active: 0
+    }
   }
 
   sendMessage(message) {
@@ -29,5 +33,9 @@ export default class OperatorsChat extends Chat {
         timestamp: (new Date()).getTime()
       }
     }
+  }
+
+  setActive(value) {
+    this.chat.active = value
   }
 }

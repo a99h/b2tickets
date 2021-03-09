@@ -30,6 +30,9 @@
           :key="chat.channelName"
           @click="changeChannel(chat)"
         >
+          <v-list-item-avatar>
+            <v-icon :color="chat.chat.active ? 'primary' : 'error'">mdi-radiobox-marked</v-icon>
+          </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title># {{ chat.channelName }}</v-list-item-title>
           </v-list-item-content>
@@ -116,7 +119,7 @@ export default {
       user: 'auth/getUser'
     })
   },
-  created() {
+  mounted() {
     this.addDefaultChannels(this.defaultChannels)
   },
   beforeDestroy() {
