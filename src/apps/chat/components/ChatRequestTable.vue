@@ -114,7 +114,7 @@ export default {
       this.backendErrors = null
     },
     addChannel(chatRequest) {
-      this.$emit('addChannel', chatRequest)
+      this.$emit('addChat', chatRequest)
     }
   }
 }

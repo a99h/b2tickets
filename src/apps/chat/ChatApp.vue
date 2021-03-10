@@ -11,8 +11,8 @@
       width="240"
     >
       <div class="px-2 py-1">
-        <div class="title font-weight-bold primary--text">Chat Template</div>
-        <div class="overline">1.0.0</div>
+        <div class="title font-weight-bold primary--text">Chat</div>
+        <div class="overline">2.0.0</div>
       </div>
 
       <v-list dense>
@@ -34,7 +34,7 @@
             <v-icon :color="chat.chat.active ? 'primary' : 'error'">mdi-radiobox-marked</v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title># {{ chat.channelName }}</v-list-item-title>
+            <v-list-item-title>{{ chat | channelTitle }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -47,7 +47,7 @@
         :user="user"
         :chat="currentChat"
         @toggle-menu="drawer = !drawer"
-        @addChannel="addChat"
+        @addChat="addChat"
         @leave-channel="leaveChat"
       ></router-view>
     </v-card>
@@ -89,8 +89,12 @@
 import { ClientsChat, OperatorsChat } from '@/apps/chat/lib/chat'
 
 import { mapGetters } from 'vuex'
+import channelTitle from '@/apps/chat/filters/channelTitle'
 
 export default {
+  filters: {
+    channelTitle: channelTitle
+  },
   data() {
     return {
       // loading
@@ -119,7 +123,7 @@ export default {
       user: 'auth/getUser'
     })
   },
-  mounted() {
+  created() {
     this.addDefaultChannels(this.defaultChannels)
   },
   beforeDestroy() {

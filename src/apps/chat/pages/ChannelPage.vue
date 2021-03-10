@@ -3,19 +3,26 @@
     <!-- channel toolbar -->
     <v-app-bar flat height="64">
       <v-app-bar-nav-icon class="hidden-lg-and-up" @click="$emit('toggle-menu')"></v-app-bar-nav-icon>
-      <div class="title font-weight-bold"># {{ $route.params.id }}</div>
+      <div class="title font-weight-bold">{{ chat | channelTitle }}</div>
 
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{ item }">
           <v-breadcrumbs-item
             :to="item.to"
             :disabled="item.disabled"
-            @click="clickBtn(item)"
+            @click="breadcrumbsOnClick(item)"
           >
             {{ item.text }}
           </v-breadcrumbs-item>
         </template>
       </v-breadcrumbs>
+      <TicketForm
+        ref="ticketForm"
+        :tickets="getTickets"
+        @closeDialog="backendErrors = null"
+        @ticketFormBackendErrors="(err) => backendErrors = err"
+        @refreshState="refreshTickets"
+      ></TicketForm>
 
       <v-spacer></v-spacer>
 
@@ -36,13 +43,13 @@
 
     <!-- channel messages -->
     <v-progress-linear
-      v-if="loading"
+      v-if="loading.messages"
       color="deep-purple accent-4"
       indeterminate
       rounded
       height="6"
     ></v-progress-linear>
-    <div v-if="!loading" class="channel-page">
+    <div v-if="!loading.messages" class="channel-page">
       <div id="messages" ref="messages" class="messages mx-2">
         <transition-group name="list">
           <channel-message
@@ -51,7 +58,7 @@
             :message="message"
             :user="user"
             class="my-4 d-flex"
-            :loading="loading"
+            :loading="loading.messages"
           />
         </transition-group>
       </div>
@@ -90,11 +97,11 @@
 import InputBox from '../components/InputBox'
 import UserAvatar from '../components/UserAvatar'
 import ChannelMessage from '../components/ChannelMessage'
+import TicketForm from '@/components/ticket/TicketForm'
 
-import { mapActions } from 'vuex'
+import channelTitle from '@/apps/chat/filters/channelTitle'
 
-// Demo messages and users
-// import getMessage, { users } from '../content/messages'
+import { mapActions, mapGetters } from 'vuex'
 
 /*
 |---------------------------------------------------------------------
@@ -108,7 +115,11 @@ export default {
   components: {
     InputBox,
     UserAvatar,
-    ChannelMessage
+    ChannelMessage,
+    TicketForm
+  },
+  filters: {
+    channelTitle: channelTitle
   },
   props: {
     // Current logged user
@@ -123,7 +134,10 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: {
+        messages: false,
+        tickets: true
+      },
 
       // users online drawer
       usersDrawer: true,
@@ -144,11 +158,16 @@ export default {
         },
         {
           text: this.$t('b2tickets.ticket.actions.createTicket'),
-          disabled: false,
+          disabled: true,
           to: { name: 'apps-chat-channel-create-ticket' }
         }
       ]
     }
+  },
+  computed: {
+    ...mapGetters({
+      getTickets: 'ticket/getTickets'
+    })
   },
   watch: {
     '$route.params.id'() {
@@ -157,6 +176,9 @@ export default {
   },
   mounted() {
     this.startChannel(this.$route.params.id)
+    this.prepareTicketForm().then(() => {
+      this.breadcrumbs[1].disabled = this.chat.chatRequest === undefined
+    })
   },
   beforeDestroy() {
     this.unregisterListeners()
@@ -165,7 +187,8 @@ export default {
     ...mapActions({
       showChatRequest: 'chatRequest/showChatRequest',
       getMessages: 'message/fetchMessages',
-      storeMessage: 'message/storeMessage'
+      storeMessage: 'message/storeMessage',
+      fetchTickets: 'ticket/fetchTickets'
     }),
 
     startChannel(channelId) {
@@ -199,6 +222,31 @@ export default {
     },
     updateUsersDrawer() {
       this.$forceUpdate()
+    },
+    prepareTicketForm() {
+      return new Promise((resolve, reject) => {
+        this.fetchTickets()
+          .then((response) => resolve(response))
+          .catch((err) => reject(err))
+      })
+    },
+    breadcrumbsOnClick(item) {
+      if (item.text === this.$t('b2tickets.ticket.actions.createTicket')) {
+        this.$refs.ticketForm.openDialog({
+          ticketChatRequests: [this.chat.chatRequest],
+          ticketOperators: [this.user]
+        })
+      }
+    },
+    setTicketFormDefaultValues() {
+      this.$refs.ticketForm.editedItem.ticketChatRequests = [this.chat.chatRequest]
+      this.$refs.ticketForm.editedItem.ticketOperators = [this.user]
+    },
+    async refreshTickets() {
+      console.log('loading spinner true')
+      await this.fetchTickets().then(() => {
+        console.log('loading spinner false')
+      })
     }
   }
 }

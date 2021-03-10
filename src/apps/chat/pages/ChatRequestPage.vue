@@ -1,6 +1,6 @@
 <template>
   <!-- chat request table -->
-  <chat-request-table @addChannel="addChat"/>
+  <chat-request-table @addChat="addChat"/>
 </template>
 
 <script>
@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     addChat(chatRequest) {
-      this.$emit('addChannel', {
+      this.$emit('addChat', {
         chatRequest: chatRequest,
         channelName: chatRequest.channel_name,
         user: this.user
