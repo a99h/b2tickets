@@ -1,5 +1,6 @@
 import Chat from './Chat'
 import { showChat, updateChat } from '../http/chat'
+import { getMessages, storeMessage } from '../http/message'
 
 export default class ClientsChat extends Chat {
 
@@ -10,6 +11,11 @@ export default class ClientsChat extends Chat {
 
     this.chatRequest = chatRequest
     this.chat = chatRequest.chat
+    getMessages(chatRequest.id).then((res) => {
+      this.messages = res.data
+    }).catch((e) => {
+      this.backendErrors.push(e)
+    })
   }
 
   set chat(value) {
@@ -51,10 +57,12 @@ export default class ClientsChat extends Chat {
   }
 
   sendMessage(message) {
-    this.storeMessage({
+    storeMessage({
       user: this.user,
       message: message,
       chat_request_id: this.chatRequest.id
+    }).catch((e) => {
+      this.backendErrors.push(e)
     })
   }
 

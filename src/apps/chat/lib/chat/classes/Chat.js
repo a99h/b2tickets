@@ -4,6 +4,7 @@ import { channelService, messageService } from '../services'
 export default class Chat {
   messages = [];
   participants = [];
+  backendErrors = [];
 
   constructor(options) {
     const { channelName, user } = options

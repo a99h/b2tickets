@@ -55,6 +55,7 @@
           <channel-message
             v-for="message in chat.messages"
             :key="message.id"
+            v-model="chat.messages"
             :message="message"
             :user="user"
             class="my-4 d-flex"

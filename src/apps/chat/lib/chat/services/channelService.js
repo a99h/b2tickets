@@ -39,7 +39,6 @@ export default {
 
     Echo.private('App.User.' + chat.channelName)
       .listen('MessageSent', (event) => {
-        console.log(event)
         chat.addMessage(event.message)
         chat.setTyping({
           user: event.message.user,
