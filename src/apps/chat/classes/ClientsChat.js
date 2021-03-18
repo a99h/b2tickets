@@ -1,6 +1,7 @@
 import Chat from './Chat'
 import { showChat, updateChat } from '../http/chat'
 import { getMessages, storeMessage } from '../http/message'
+import isEmpty from '@/lib/isEmpty'
 
 export default class ClientsChat extends Chat {
 
@@ -75,22 +76,8 @@ export default class ClientsChat extends Chat {
         }).then((resp) => {
           this.chat.active = resp.data.active
         }).catch((e) => {
-          console.log(e)
+          this.backendErrors.push(e)
         })
     })
   }
-}
-
-function isEmpty(value) {
-  for (const prop in value) {
-    // eslint-disable-next-line no-prototype-builtins
-    if (value.hasOwnProperty(prop)) {
-      return false
-    }
-  }
-  if ((value instanceof Map) || (value instanceof Set)) {
-    if (value.size > 0) return false
-  }
-
-  return true
 }

@@ -47,7 +47,7 @@
         :user="user"
         :chat="currentChat"
         @toggle-menu="drawer = !drawer"
-        @addChat="addChat"
+        @addChat="addChatAndEnter"
         @leave-channel="leaveChat"
       ></router-view>
     </v-card>
@@ -86,10 +86,12 @@
 | Navigation drawer with channels for the chat application
 |
 */
-import { ClientsChat, OperatorsChat } from '@/apps/chat/lib/chat'
-
-import { mapGetters } from 'vuex'
+import ClientsChat from '@/apps/chat/classes/ClientsChat'
+import OperatorsChat from '@/apps/chat/classes/OperatorsChat'
+import channelService from '@/apps/chat/services/channelService'
 import channelTitle from '@/apps/chat/filters/channelTitle'
+
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   filters: {
@@ -108,46 +110,49 @@ export default {
       // initial channels
       defaultChannels: ['general', 'restroom'],
 
-      chats: [],
-
       // create channel variables
       showCreateDialog: false,
       newChannel: '',
 
-      chatRequest: null,
-      currentChat: {}
+      chatRequest: null
     }
   },
   computed: {
     ...mapGetters({
-      user: 'auth/getUser'
+      user: 'auth/getUser',
+      chats: 'chat/getChats',
+      currentChat: 'chat/getCurrentChat'
     })
   },
   created() {
     this.addDefaultChannels(this.defaultChannels)
   },
-  beforeDestroy() {
-    this.currentChat.unsubscribeChannel()
-    this.currentChat = {}
-    this.chats = []
+  mounted() {
+    this.changeChannel(this.currentChat)
   },
   methods: {
+    ...mapActions({
+      storeChat: 'chat/addChat',
+      deleteChat: 'chat/removeChat',
+      setCurrentChat: 'chat/setCurrentChat'
+    }),
     addDefaultChannels(defaultChannels) {
       defaultChannels.forEach((channelName) => {
         this.addChat({ channelName: channelName, user: this.user })
       })
     },
     newChat() {
-      this.addChat({ channelName: this.newChannel, user: this.user })
+      this.addChatAndEnter({ channelName: this.newChannel, user: this.user })
 
       this.newChannel = ''
     },
+    addChatAndEnter(options) {
+      this.addChat(options)
+      this.changeChannel(this.chats[this.chats.length - 1])
+    },
     changeChannel(chat) {
-      if (this.currentChat !== chat) {
-        this.currentChat = chat
-
-        this.$router.push(`/apps/chat/channel/${chat.channelName}`)
-      }
+      this.setCurrentChat(this.chats.indexOf(chat))
+      if (this.$route.params.id !== chat.channelName) this.$router.push(`/apps/chat/channel/${chat.channelName}`)
     },
     // Add and join the channel on creation
     addChat(options) {
@@ -164,28 +169,26 @@ export default {
 
         const chat = this.createChat(options)
 
-        chat.subscribeChannel()
+        channelService.subscribeChannel(chat)
 
-        // Initialize chat prop for injection to child component
-        if (Object.values(this.currentChat).length === 0) this.currentChat = chat
-
-        this.chats.push(chat)
+        this.storeChat(chat)
 
         this.loading.addChat = false
         this.showCreateDialog = false
 
-        this.changeChannel(chat)
+        if (this.currentChat === undefined) this.setCurrentChat(this.chats.indexOf(chat))
       }
 
       this.showCreateDialog = false
     },
     leaveChat(chat) {
       if (!this.defaultChannels.some((channelName) => chat.channelName === channelName)) {
-        chat.unsubscribeChannel()
-        this.chats.splice(this.chats.indexOf(chat), 1)
+        channelService.unsubscribeChannel(chat)
+
+        this.deleteChat(chat)
 
         this.changeChannel(this.chats[0])
-      }
+      } else alert('You cannot leave default channels')
     },
     createChat(options) {
       const { chatRequest } = options

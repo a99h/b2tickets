@@ -1,6 +1,3 @@
-import Echo from '@/plugins/echo'
-import { channelService, messageService } from '../services'
-
 export default class Chat {
   messages = [];
   participants = [];
@@ -71,6 +68,7 @@ export default class Chat {
     this.participants.some((participant) => {
       if (participant.email === user.email) {
         this.participants[this.participants.indexOf(participant)].typing = typing
+
         window.dispatchEvent(new Event('channel-page-update-users-drawer'))
 
         return true
@@ -86,23 +84,5 @@ export default class Chat {
 
   setActive(value) {}
 
-  watchParticipants() {
-    channelService.watchParticipants(this)
-  }
-
-  unwatchParticipants() {
-    channelService.unwatchParticipants(this)
-  }
-
-  subscribeChannel() {
-    channelService.subscribeChannel(this)
-  }
-
-  unsubscribeChannel() {
-    channelService.unsubscribeChannel(this)
-  }
-
-  sendTyping(typing) {
-    messageService.sendTyping(this.channelName, this.user, typing)
-  }
+  sendMessage(message) {}
 }

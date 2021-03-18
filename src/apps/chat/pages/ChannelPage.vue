@@ -103,6 +103,7 @@ import TicketForm from '@/components/ticket/TicketForm'
 import channelTitle from '@/apps/chat/filters/channelTitle'
 
 import { mapActions, mapGetters } from 'vuex'
+import { messageService, channelService } from '@/apps/chat/services'
 
 /*
 |---------------------------------------------------------------------
@@ -203,7 +204,7 @@ export default {
     },
     registerListeners() {
       window.addEventListener('channel-page-update-users-drawer', this.updateUsersDrawer)
-      this.chat.watchParticipants()
+      channelService.watchParticipants(this.chat)
     },
     unregisterListeners() {
       window.removeEventListener('channel-page-update-users-drawer',this.updateUsersDrawer)
@@ -219,7 +220,7 @@ export default {
       })
     },
     sendTyping(typing) {
-      this.chat.sendTyping(typing)
+      messageService.sendTyping(this.chat.channelName, this.chat.user, typing)
     },
     updateUsersDrawer() {
       this.$forceUpdate()

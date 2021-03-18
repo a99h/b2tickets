@@ -5,7 +5,7 @@ export default {
   unsubscribeChannel(chat) {
     if (!(chat instanceof Chat)) return
 
-    Echo.leave('App.User.' + chat.channelName)
+    this.unwatchParticipants(chat)
   },
   watchParticipants(chat) {
     Echo.join('App.User.' + chat.channelName)

@@ -3,12 +3,16 @@ import mutations from './mutations'
 
 // state initial values
 const state = {
-  chattingUsers: []
+  chats: [],
+  currentChatIndex: -1
 }
 
 const getters = {
-  getChattingUsers(state) {
-    return state.chattingUsers
+  getChats(state) {
+    return state.chats
+  },
+  getCurrentChat(state) {
+    return state.chats[state.currentChatIndex]
   }
 }
 

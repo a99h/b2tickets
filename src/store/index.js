@@ -8,7 +8,7 @@ import TicketModule from './ticket'
 import UserModule from './user'
 import ClientModule from './client'
 import TicketStatusModule from './ticket/status'
-import chat from './chat'
+import chat from '@/apps/chat/store'
 
 Vue.use(Vuex)
 
