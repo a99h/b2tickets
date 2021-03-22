@@ -7,8 +7,8 @@
         <template v-slot:activator="{ on, attrs }">
           <v-card
             class="pa-1"
-            :class="{ 'primary darken-1': isOwnMessage}"
-            :dark="isOwnMessage"
+            :class="{ 'primary darken-1': isOwnMessage, 'orange darken-1': isTypingMessage}"
+            :dark="isOwnMessage || isTypingMessage"
             v-bind="attrs"
             v-on="on"
           >
@@ -56,6 +56,9 @@ export default {
     // Check if it's a message from the logged user
     isOwnMessage() {
       return this.user.id === this.message.user.id
+    },
+    isTypingMessage() {
+      return typeof this.message.id === 'symbol'
     }
   }
 }

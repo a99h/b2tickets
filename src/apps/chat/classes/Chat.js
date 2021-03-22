@@ -1,7 +1,10 @@
+import isEmpty from '@/lib/isEmpty'
+
 export default class Chat {
   messages = [];
   participants = [];
   backendErrors = [];
+  typingMessageId = Symbol('typing');
 
   constructor(options) {
     const { channelName, user } = options
@@ -9,8 +12,6 @@ export default class Chat {
     this.channelName = channelName
     this.user = user
     this.participants.push(user)
-
-    // this.subscribeChannel(channelName)
   }
 
   set user(value) {
@@ -18,15 +19,6 @@ export default class Chat {
   }
   get user() {
     return this._user
-  }
-
-  set chat(value) {
-    if (value) {
-      this._chat = value
-    }
-  }
-  get chat() {
-    return this._chat
   }
 
   set channelName(value) {
@@ -49,6 +41,12 @@ export default class Chat {
       this.messages.push(value)
     }
   }
+  updateMessage(messageIndex, value) {
+    this.messages[messageIndex] = value
+  }
+  removeMessage(messageIndex) {
+    if (messageIndex > -1) this.messages.splice(messageIndex, 1)
+  }
 
   set participants(value) {
     if (value) {
@@ -63,7 +61,9 @@ export default class Chat {
   }
 
   setTyping(data) {
-    const { user, message, typing } = data
+    const { user, typing } = data
+
+    typing ? this.addTypingMessage(data) : this.removeTypingMessage(data)
 
     this.participants.some((participant) => {
       if (participant.email === user.email) {
@@ -75,6 +75,45 @@ export default class Chat {
       }
 
       return false
+    })
+  }
+
+  addTypingMessage(data) {
+    const { user, message, typing } = data
+    const filteredMessage = {
+      id: this.typingMessageId,
+      user: user,
+      text: typing ? message : ''
+    }
+
+    const typingMessages = this.typingMessages()
+
+    if (isEmpty(typingMessages)) this.addMessage(filteredMessage)
+    else {
+      typingMessages.forEach((index) => this.updateMessage(index, filteredMessage))
+    }
+  }
+
+  typingMessages() {
+    const { typingMessageId } = this
+    const typingMessages = []
+
+    this.messages.some((msg) => {
+      if (msg.id === typingMessageId) {
+        typingMessages.push(this.messages.indexOf(msg))
+
+        return true
+      } else return false
+    })
+
+    return typingMessages
+  }
+
+  removeTypingMessage(data) {
+    const typingMessages = this.typingMessages()
+
+    if (!isEmpty(typingMessages)) typingMessages.forEach((index) => {
+      if (this.messages[index].user.email === data.user.email) this.removeMessage(index)
     })
   }
 
