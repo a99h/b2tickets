@@ -256,7 +256,8 @@ export default {
           'operators_online': 'Операторы онлайн',
           'user': 'Пользователь'
         }
-      }
+      },
+      'chatHistory': 'История чатов'
     },
     'common': {
       'description': 'Предоставим лучшую клиентскую поддержку.',

@@ -257,7 +257,8 @@ export default {
           operators_online: 'Operators online',
           user: 'User'
         }
-      }
+      },
+      chatHistory: 'Chat history'
     },
     common: {
       description: 'Let\'s provide best client supporting.',
