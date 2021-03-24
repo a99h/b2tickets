@@ -6,13 +6,26 @@
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-card
-            class="pa-1"
+            class="pa-1 pb-3"
             :class="{ 'primary darken-1': isOwnMessage, 'orange darken-1': isTypingMessage}"
             :dark="isOwnMessage || isTypingMessage"
             v-bind="attrs"
             v-on="on"
           >
-            <div class="font-weight-bold">{{ message.text }}</div>
+            <div class="font-weight-bold">
+              <v-badge
+                bottom
+                offset-x="40"
+                offset-y="-5"
+                color="transparent"
+              >
+                <template v-slot:badge="">
+                  <span class="caption">{{ message.timestamp | getTime }}</span>
+                  <v-icon medium>mdi-check-all</v-icon>
+                </template>
+                {{ message.text }}
+              </v-badge>
+            </div>
           </v-card>
         </template>
         <span>{{ message.timestamp | formatDate('lll') }}</span>
@@ -31,10 +44,18 @@
 |
 */
 import UserAvatar from './UserAvatar'
+import moment from 'moment'
 
 export default {
   components: {
     UserAvatar
+  },
+  filters: {
+    getTime: function (value) {
+      if (!value) return ''
+
+      return moment(value).format('hh:mm')
+    }
   },
   props: {
     loading: {

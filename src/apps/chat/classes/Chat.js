@@ -5,6 +5,7 @@ export default class Chat {
   participants = [];
   backendErrors = [];
   typingMessageId = Symbol('typing');
+  unreadMessagesCount = 0;
 
   constructor(options) {
     const { channelName, user } = options
@@ -39,6 +40,23 @@ export default class Chat {
   addMessage(value) {
     if (value) {
       this.messages.push(value)
+
+      if (!this.isTypingMessage(value)) this.unreadMessagesCount = this.unreadMessagesCount + 1
+    }
+  }
+  addTypingMessage(data) {
+    const { user, message, typing } = data
+    const filteredMessage = {
+      id: this.typingMessageId,
+      user: user,
+      text: typing ? message : ''
+    }
+
+    const typingMessages = this.typingMessages()
+
+    if (isEmpty(typingMessages)) this.addMessage(filteredMessage)
+    else {
+      typingMessages.forEach((index) => this.updateMessage(index, filteredMessage))
     }
   }
   updateMessage(messageIndex, value) {
@@ -78,22 +96,6 @@ export default class Chat {
     })
   }
 
-  addTypingMessage(data) {
-    const { user, message, typing } = data
-    const filteredMessage = {
-      id: this.typingMessageId,
-      user: user,
-      text: typing ? message : ''
-    }
-
-    const typingMessages = this.typingMessages()
-
-    if (isEmpty(typingMessages)) this.addMessage(filteredMessage)
-    else {
-      typingMessages.forEach((index) => this.updateMessage(index, filteredMessage))
-    }
-  }
-
   typingMessages() {
     const { typingMessageId } = this
     const typingMessages = []
@@ -119,6 +121,10 @@ export default class Chat {
 
   toggleActive() {
     Object.values(this.participants).length > 1 ? this.setActive(1) : this.setActive(0)
+  }
+
+  isTypingMessage(message) {
+    return typeof message.id === 'symbol'
   }
 
   setActive(value) {}

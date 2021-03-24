@@ -15,7 +15,8 @@
         <div class="overline">2.0.0</div>
       </div>
 
-      <v-list dense>
+      <!-- channels list -->
+      <v-list three-line>
         <v-subheader class="ml-1 overline">{{ $tc('chat.channel', 2) }}</v-subheader>
         <div class="mx-2 mb-2">
           <v-btn outlined block @click="showCreateDialog = true">
@@ -24,19 +25,31 @@
           </v-btn>
         </div>
 
-        <!-- channels list -->
-        <v-list-item
-          v-for="chat of chats"
-          :key="chat.channelName"
-          @click="changeChannel(chat)"
-        >
-          <v-list-item-avatar>
-            <v-icon :color="chat.chat.active ? 'primary' : 'error'">mdi-radiobox-marked</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>{{ chat | channelTitle }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <template v-for="chat in chats">
+
+          <v-list-item
+            :key="chat.channelName"
+            @click="changeChannel(chat)"
+          >
+            <v-list-item-avatar>
+              <v-icon :color="chat.chat.active ? 'primary' : 'error'">mdi-radiobox-marked</v-icon>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ chat | channelTitle }}
+                <v-avatar
+                  v-if="chat.unreadMessagesCount > 0"
+                  color="success"
+                  size="18"
+                >
+                  <span class="white--text caption">{{ chat.unreadMessagesCount }}</span>
+                </v-avatar>
+              </v-list-item-title>
+              <v-list-item-subtitle>{{ chat | lastMessage }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
       </v-list>
     </v-navigation-drawer>
 
@@ -92,10 +105,12 @@ import channelService from '@/apps/chat/services/channelService'
 import channelTitle from '@/apps/chat/filters/channelTitle'
 
 import { mapActions, mapGetters } from 'vuex'
+import lastMessage from '@/apps/chat/filters/lastMessage'
 
 export default {
   filters: {
-    channelTitle: channelTitle
+    channelTitle: channelTitle,
+    lastMessage: lastMessage
   },
   data() {
     return {

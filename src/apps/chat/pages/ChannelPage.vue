@@ -174,6 +174,9 @@ export default {
   watch: {
     '$route.params.id'() {
       this.startChannel(this.$route.params.id)
+    },
+    'chat.unreadMessagesCount'() {
+      this.chat.unreadMessagesCount = 0
     }
   },
   mounted() {
@@ -195,6 +198,7 @@ export default {
 
     startChannel(channelId) {
       this.registerListeners()
+      this.chat.unreadMessagesCount = 0
 
       this.channel = channelId
     },
