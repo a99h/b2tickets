@@ -4,8 +4,9 @@ import Router from 'vue-router'
 // Routes
 import AppsRoutes from './apps.routes'
 import PagesRoutes from './pages.routes'
-import TicketsRoutes from './tickets.routes'
-import UsersRoutes from './users.routes'
+import TicketsRoutes from '@/pages/tickets/router'
+import UsersRoutes from '@/pages/users/router'
+import ChatsRoutes from '@/pages/chats/router'
 
 // Middlewares
 import auth from './middleware/auth'
@@ -32,6 +33,7 @@ export const routes = [{
 ...PagesRoutes,
 ...UsersRoutes,
 ...TicketsRoutes,
+...ChatsRoutes,
 {
   path: '/blank',
   name: 'blank',

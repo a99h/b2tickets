@@ -25,7 +25,7 @@
           </v-btn>
         </div>
 
-        <template v-for="chat in chats">
+        <template v-for="chat in openedChats">
 
           <v-list-item
             :key="chat.channelName"
@@ -83,7 +83,7 @@
         <v-card-actions class="pa-2">
           <v-spacer></v-spacer>
           <v-btn @click="showCreateDialog = false">{{ $t('common.cancel') }}</v-btn>
-          <v-btn :loading="loading.addChat" color="success" @click="newChat()">{{ $t('common.add') }}</v-btn>
+          <v-btn :loading="loading.addOpenedChat" color="success" @click="newChat()">{{ $t('common.add') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -116,7 +116,7 @@ export default {
     return {
       // loading
       loading: {
-        addChat: false
+        addOpenedChat: false
       },
 
       // navigation drawer
@@ -135,7 +135,7 @@ export default {
   computed: {
     ...mapGetters({
       user: 'auth/getUser',
-      chats: 'chat/getChats',
+      openedChats: 'chat/getOpenedChats',
       currentChat: 'chat/getCurrentChat'
     })
   },
@@ -147,13 +147,13 @@ export default {
   },
   methods: {
     ...mapActions({
-      storeChat: 'chat/addChat',
-      deleteChat: 'chat/removeChat',
+      storeOpenedChat: 'chat/addOpenedChat',
+      deleteOpenedChat: 'chat/removeOpenedChat',
       setCurrentChat: 'chat/setCurrentChat'
     }),
     addDefaultChannels(defaultChannels) {
       defaultChannels.forEach((channelName) => {
-        this.addChat({ channelName: channelName, user: this.user })
+        this.addOpenedChat({ channelName: channelName, user: this.user })
       })
     },
     newChat() {
@@ -162,15 +162,15 @@ export default {
       this.newChannel = ''
     },
     addChatAndEnter(options) {
-      this.addChat(options)
-      this.changeChannel(this.chats[this.chats.length - 1])
+      this.addOpenedChat(options)
+      this.changeChannel(this.openedChats[this.openedChats.length - 1])
     },
     changeChannel(chat) {
-      this.setCurrentChat(this.chats.indexOf(chat))
+      this.setCurrentChat(this.openedChats.indexOf(chat))
       if (this.$route.params.id !== chat.channelName) this.$router.push(`/apps/chat/channel/${chat.channelName}`)
     },
     // Add and join the channel on creation
-    addChat(options) {
+    addOpenedChat(options) {
       const { channelName, user } = options
 
       if (!channelName || !user) {
@@ -179,19 +179,19 @@ export default {
         return
       }
 
-      if (!this.chatExists(channelName)) {
-        this.loading.addChat = true
+      if (!this.openedChatExists(channelName)) {
+        this.loading.addOpenedChat = true
 
         const chat = this.createChat(options)
 
         channelService.subscribeChannel(chat)
 
-        this.storeChat(chat)
+        this.storeOpenedChat(chat)
 
-        this.loading.addChat = false
+        this.loading.addOpenedChat = false
         this.showCreateDialog = false
 
-        if (this.currentChat === undefined) this.setCurrentChat(this.chats.indexOf(chat))
+        if (this.currentChat === undefined) this.setCurrentChat(this.openedChats.indexOf(chat))
       }
 
       this.showCreateDialog = false
@@ -200,9 +200,9 @@ export default {
       if (!this.defaultChannels.some((channelName) => chat.channelName === channelName)) {
         channelService.unsubscribeChannel(chat)
 
-        this.deleteChat(chat)
+        this.deleteOpenedChat(chat)
 
-        this.changeChannel(this.chats[0])
+        this.changeChannel(this.openedChats[0])
       } else alert('You cannot leave default channels')
     },
     createChat(options) {
@@ -211,8 +211,8 @@ export default {
       if (!chatRequest) return new OperatorsChat(options)
       else return new ClientsChat(options)
     },
-    chatExists(channelName) {
-      return this.chats.some((chat) => chat.channelName === channelName)
+    openedChatExists(channelName) {
+      return this.openedChats.some((chat) => chat.channelName === channelName)
     }
   }
 }
