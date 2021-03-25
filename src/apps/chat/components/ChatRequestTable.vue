@@ -88,7 +88,7 @@ export default {
         align: 'start',
         value: 'id'
       },
-      { text: this.$t('b2tickets.chat.request.fields.user'), value: 'user.email' },
+      { text: this.$t('b2tickets.chat.request.fields.client'), value: 'user.email' },
       { text: this.$t('b2tickets.chat.request.fields.message'), value: 'message' },
       { text: this.$t('b2tickets.chat.request.fields.operators_online'), value: 'operators_online' },
       { text: this.$t('b2tickets.common.created_at'), value: 'created_at' },

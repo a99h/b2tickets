@@ -146,7 +146,10 @@ export default {
         value: 'id'
       },
       { text: this.$t('b2tickets.ticket.fields.issue'), value: 'issue' },
-      { text: this.$t('b2tickets.ticket.fields.ticketChatRequests'), value: 'ticketChatRequests' },
+      {
+        text: this.$tc('b2tickets.chat.request.title', 1) + ': ' + this.$t('b2tickets.chat.request.fields.client'),
+        value: 'ticketChatRequests'
+      },
       { text: this.$t('b2tickets.ticket.fields.ticketOperators'), value: 'ticketOperators' },
       { text: this.$t('b2tickets.ticketStatus.status'), value: 'ticketStatus' },
       { text: this.$t('b2tickets.ticket.fields.createdAt'), value: 'created_at' },

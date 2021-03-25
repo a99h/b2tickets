@@ -1,4 +1,4 @@
-import chatRoutes from '../apps/chat/routes'
+import chatRoutes from '../apps/chat/router'
 
 export default [{
   path: '/apps/chat',

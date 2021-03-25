@@ -1,4 +1,4 @@
-import axios from '@/plugins/axios'
+import { indexChat } from '@/apps/chat/http/chat'
 
 const addOpenedChat = ({ commit }, value) => {
   commit('ADD_OPENED_CHAT', value)
@@ -21,10 +21,10 @@ const fetchChats = ({ dispatch }) => {
 }
 
 const main = ({ commit }) => {
-  return axios.get(route('api.ticketsystem.ticket.ticket.index')).then((response) => {
-    commit('SET_TICKETS', response.data.data)
+  return indexChat().then((response) => {
+    commit('SET_CHATS', response.data)
   }).catch(() => {
-    commit('SET_TICKETS', [])
+    commit('SET_CHATS', [])
   })
 }
 
@@ -32,5 +32,7 @@ export default {
   addOpenedChat,
   removeOpenedChat,
   truncateOpenedChats,
-  setCurrentChat
+  setCurrentChat,
+  fetchChats,
+  main
 }

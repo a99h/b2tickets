@@ -254,10 +254,13 @@ export default {
         'fields': {
           'message': 'Сообщение',
           'operators_online': 'Операторы онлайн',
-          'user': 'Пользователь'
+          'client': 'Клиент'
         }
       },
-      'chatHistory': 'История чатов'
+      'chatHistory': 'История чатов',
+      'fields': {
+        'active': 'Активен'
+      }
     },
     'common': {
       'description': 'Предоставим лучшую клиентскую поддержку.',

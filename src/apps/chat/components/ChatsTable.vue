@@ -21,7 +21,7 @@
               </v-alert>
               <v-data-table
                 :headers="headers"
-                :items="tickets"
+                :items="chats"
                 :loading="loading.dataTable"
                 :search="search"
                 fixed
@@ -32,7 +32,7 @@
               >
                 <template v-slot:top>
                   <v-toolbar flat class="primary--text">
-                    <v-toolbar-title>{{ $t('b2tickets.ticket.tickets') }}</v-toolbar-title>
+                    <v-toolbar-title>{{ $tc('b2tickets.chat.title', 0) }}</v-toolbar-title>
                     <v-divider
                       class="mx-4"
                       inset
@@ -48,7 +48,7 @@
                     <v-spacer></v-spacer>
                     <TicketForm
                       ref="dialog"
-                      :tickets="tickets"
+                      :tickets="chats"
                       @closeDialog="onCloseDialog"
                       @ticketFormBackendErrors="(err) => backendErrors = err"
                       @refreshState="dataTableInitialize"
@@ -58,33 +58,8 @@
                 <template v-slot:item.created_at="{ item }">
                   {{ new Date(item.created_at).toLocaleString() }}
                 </template>
-                <template v-slot:item.ticketChatRequests="{ item }">
-                  <v-chip
-                    v-for="chatRequest in item.ticketChatRequests"
-                    :key="chatRequest.id"
-                    small
-                    outlined
-                    color="success"
-                  >
-                    <strong>Request #{{ chatRequest.id }} <span class="text--primary">{{ chatRequest.user.email }}</span></strong>
-                  </v-chip>
-                </template>
-                <template v-slot:item.ticketOperators="{ item }">
-                  <v-chip
-                    v-for="operator in item.ticketOperators"
-                    :key="operator.id"
-                    small
-                    color="error"
-                  >{{ operator.name }}
-                  </v-chip>
-                </template>
-                <template v-slot:item.ticketStatus="{ item }">
-                  <div class="font-weight-bold d-flex align-center">
-                    <div :class="item.ticketStatus.color + '--text'">
-                      <v-icon small :color="item.ticketStatus.color">mdi-circle-medium</v-icon>
-                      <span>{{ $t('b2tickets.ticketStatus.' + item.ticketStatus.title) }}</span>
-                    </div>
-                  </div>
+                <template v-slot:item.updated_at="{ item }">
+                  {{ new Date(item.updated_at).toLocaleString() }}
                 </template>
                 <template v-slot:item.actions="{ item }">
                   <v-icon
@@ -100,12 +75,6 @@
                     @click="editItem(item)"
                   >
                     mdi-pencil
-                  </v-icon>
-                  <v-icon
-                    small
-                    @click="deleteItem(item)"
-                  >
-                    mdi-delete
                   </v-icon>
                 </template>
                 <template v-slot:no-data>
@@ -123,6 +92,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import TicketForm from '@/components/ticket/TicketForm'
+import { showChat } from '@/apps/chat/http/chat'
 
 export default {
   name: 'Chats',
@@ -145,10 +115,13 @@ export default {
         align: 'start',
         value: 'id'
       },
-      { text: this.$tc('b2tickets.chat.fields.chatChatRequest', 1), value: 'ticketChatRequest' },
+      {
+        text: this.$tc('b2tickets.chat.request.title', 1) + '(ID)',
+        value: 'chat_request_id'
+      },
       { text: this.$t('b2tickets.chat.fields.active'), value: 'active' },
       { text: this.$t('b2tickets.common.created_at'), value: 'created_at' },
-      { text: this.$t('b2tickets.common.created_at'), value: 'created_at' },
+      { text: this.$t('b2tickets.common.updated_at'), value: 'updated_at' },
       { text: '', value: 'actions', sortable: false }
     ]}
   },
@@ -157,15 +130,13 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchChats: 'chat/fetchChats',
-      showTicket: 'ticket/showTicket',
-      deleteTicket: 'ticket/deleteTicket'
+      fetchChats: 'chat/fetchChats'
     }),
     async dataTableInitialize() {
       this.loading.dataTable = 'info'
 
-      await this.fetchTickets().then(() => {
-        this.tickets = this.getTickets
+      await this.fetchChats().then(() => {
+        this.chats = this.getChats
       })
 
       this.loading.dataTable = false
@@ -176,7 +147,7 @@ export default {
     },
     async showItem(item) {
       this.backendErrors = null
-      await this.showTicket(item).then((response) => {
+      await this.showChat(item).then((response) => {
         this.$refs.dialog.show(response.data)
       }).catch((err) => {
         this.$refs.dialog.dialogInitialize()
@@ -185,20 +156,11 @@ export default {
     },
     async editItem(item) {
       this.backendErrors = null
-      await this.showTicket(item).then((response) => {
-        Object.assign(this.tickets[this.tickets.indexOf(item)], response.data)
-        this.$refs.dialog.edit(this.tickets[this.tickets.indexOf(item)])
+      await showChat(item).then((response) => {
+        Object.assign(this.chats[this.chats.indexOf(item)], response.data)
+        this.$refs.dialog.edit(this.chats[this.chats.indexOf(item)])
       }).catch((err) => {
         this.$refs.dialog.dialogInitialize()
-        this.backendErrors = err.response.data.message
-      })
-    },
-    async deleteItem(item) {
-      this.backendErrors = null
-      confirm('Are you sure you want to delete this item?') &&
-      await this.deleteTicket(item).then(() => {
-        this.tickets.splice(this.tickets.indexOf(item), 1)
-      }).catch((err) => {
         this.backendErrors = err.response.data.message
       })
     }

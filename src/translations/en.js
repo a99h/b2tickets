@@ -255,10 +255,13 @@ export default {
         fields: {
           message: 'Message',
           operators_online: 'Operators online',
-          user: 'User'
+          client: 'Client'
         }
       },
-      chatHistory: 'Chat history'
+      chatHistory: 'Chat history',
+      fields: {
+        active: 'Active'
+      }
     },
     common: {
       description: 'Let\'s provide best client supporting.',
