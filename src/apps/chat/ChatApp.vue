@@ -57,8 +57,7 @@
     <v-card class="flex-grow-1">
 
       <chat-toolbar
-        :breadcrumbs="breadcrumbs"
-        :channel-title="currentChat | channelTitle"
+        :chat="currentChat"
         @leave-channel="leaveChat"
         @toggle-menu="drawer = !drawer"
       />
@@ -140,24 +139,7 @@ export default {
       showCreateDialog: false,
       newChannel: '',
 
-      chatRequest: null,
-
-      // App bar navigation
-      breadcrumbs: [
-        {
-          text: this.$tc('b2tickets.chat.request.title', 0),
-          disabled: false,
-          to: { name: 'apps-chat-request' }
-        }, {
-          text: this.$t('b2tickets.chat.chatHistory'),
-          disabled: false,
-          to: { name: 'apps-chat-list' }
-        }, {
-          text: this.$t('b2tickets.ticket.actions.createTicket'),
-          disabled: true,
-          to: { name: 'apps-chat-channel-create-ticket' }
-        }
-      ]
+      chatRequest: null
     }
   },
   computed: {

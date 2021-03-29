@@ -59,7 +59,6 @@
 import InputBox from '../components/InputBox'
 import UserAvatar from '../components/UserAvatar'
 import ChannelMessage from '../components/ChannelMessage'
-import TicketForm from '@/components/ticket/TicketForm'
 
 import channelTitle from '@/apps/chat/filters/channelTitle'
 
@@ -112,11 +111,6 @@ export default {
       chatInstance: {}
     }
   },
-  computed: {
-    ...mapGetters({
-      getTickets: 'ticket/getTickets'
-    })
-  },
   watch: {
     '$route.params.id'() {
       this.startChannel(this.$route.params.id)
@@ -124,9 +118,6 @@ export default {
   },
   mounted() {
     this.startChannel(this.$route.params.id)
-    this.prepareTicketForm().then(() => {
-      this.breadcrumbs[2].disabled = this.chat.chatRequest === undefined
-    })
   },
   beforeDestroy() {
     this.unregisterListeners()
@@ -171,17 +162,6 @@ export default {
     },
     updateUsersDrawer() {
       this.$forceUpdate()
-    },
-    prepareTicketForm() {
-      return new Promise((resolve, reject) => {
-        this.fetchTickets()
-          .then((response) => resolve(response))
-          .catch((err) => reject(err))
-      })
-    },
-    setTicketFormDefaultValues() {
-      this.$refs.ticketForm.editedItem.ticketChatRequests = [this.chat.chatRequest]
-      this.$refs.ticketForm.editedItem.ticketOperators = [this.user]
     }
   }
 }

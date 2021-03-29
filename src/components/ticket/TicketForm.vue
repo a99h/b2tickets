@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         id="ticketFormActivator"
-        :hidden="$route.name === 'apps-chat-channel'"
+        :hidden="activatorHidden"
         color="primary"
         class="mb-2"
         v-bind="attrs"
@@ -165,6 +165,10 @@ export default {
     tickets: {
       type: Array,
       default: () => ({})
+    },
+    activatorHidden: {
+      type: Boolean,
+      required: false
     }
   },
   validations: {
@@ -368,7 +372,7 @@ export default {
       const filteredData = { ...data }
 
       if (ticketChatRequests) Object.assign(filteredData, { ticketChatRequests: data.ticketChatRequests.map((item) => item.id) })
-      if (ticketOperators) Object.assign(filteredData, { ticketOperators: data.ticketOperators.map((item) => item.id) })
+      if (ticketOperators !== []) Object.assign(filteredData, { ticketOperators: data.ticketOperators.map((item) => item.id) })
       if (ticketStatus) Object.assign(filteredData, { ticketStatus: data.ticketStatus.id })
 
       return filteredData
