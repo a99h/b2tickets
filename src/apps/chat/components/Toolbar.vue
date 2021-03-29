@@ -11,7 +11,10 @@
           :disabled="item.disabled"
           @click="breadcrumbsOnClick(item)"
         >
-          {{ item.text }}
+          <span v-if="loading.ticketForm && isCreateTicketBtn(item)">
+            <v-progress-circular indeterminate color="primary" size="20"></v-progress-circular>
+          </span>
+          <span v-else>{{ item.text }}</span>
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
@@ -62,6 +65,9 @@ export default {
   },
   data() {
     return {
+      loading: {
+        ticketForm: true
+      },
       // App bar navigation
       breadcrumbs: [
         {
@@ -97,6 +103,9 @@ export default {
       }
     }
   },
+  mounted() {
+    this.ticketFormInitialize()
+  },
   methods: {
     ...mapActions({
       showChatRequest: 'chatRequest/showChatRequest',
@@ -109,12 +118,15 @@ export default {
     },
     breadcrumbsOnClick(item) {
       if (item.text === this.$t('b2tickets.ticket.actions.createTicket')) {
-        this.setTicketFormDefaultValues()
         this.$refs.ticketForm.dialog = true
       }
     },
     ticketFormInitialize() {
-      this.refreshTickets()
+      this.loading.ticketForm = true
+
+      this.refreshTickets().then(() => {
+        this.loading.ticketForm = false
+      })
       this.setTicketFormDefaultValues()
     },
     async refreshTickets() {
@@ -126,6 +138,9 @@ export default {
     setTicketFormDefaultValues() {
       this.$refs.ticketForm.editedItem.ticketChatRequests = [this.chat.chatRequest]
       this.$refs.ticketForm.editedItem.ticketOperators = [this.chat.user]
+    },
+    isCreateTicketBtn(item) {
+      return item.text === this.$t('b2tickets.ticket.actions.createTicket')
     }
   }
 }

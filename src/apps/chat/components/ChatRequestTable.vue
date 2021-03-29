@@ -55,7 +55,10 @@
           <v-icon left>
             mdi-wechat
           </v-icon>
-          {{ $tc('b2tickets.chat.title', 1) }}
+          <span v-if="loading.chatBtn === item.id">
+            <v-progress-circular indeterminate color="primary" size="20"></v-progress-circular>
+          </span>
+          <span v-else>{{ $tc('b2tickets.chat.title', 1) }}</span>
         </v-chip>
       </template>
       <template v-slot:no-data>
@@ -72,7 +75,8 @@ export default {
   name: 'ChatRequestTable',
   data: () => ({
     loading: {
-      dataTable: 'info'
+      dataTable: 'info',
+      chatBtn: -1
     },
     backendErrors: null,
     search: '',
@@ -82,19 +86,21 @@ export default {
     ...mapGetters({
       getChatRequests: 'chatRequest/getChatRequests'
     }),
-    headers() { return [
-      {
-        text: 'ID',
-        align: 'start',
-        value: 'id'
-      },
-      { text: this.$t('b2tickets.chat.request.fields.client'), value: 'user.email' },
-      { text: this.$t('b2tickets.chat.request.fields.message'), value: 'message' },
-      { text: this.$t('b2tickets.chat.request.fields.operators_online'), value: 'operators_online' },
-      { text: this.$t('b2tickets.common.created_at'), value: 'created_at' },
-      { text: this.$t('b2tickets.common.updated_at'), value: 'updated_at' },
-      { text: '', value: 'actions', sortable: false }
-    ]}
+    headers() {
+      return [
+        {
+          text: 'ID',
+          align: 'start',
+          value: 'id'
+        },
+        { text: this.$t('b2tickets.chat.request.fields.client'), value: 'user.email' },
+        { text: this.$t('b2tickets.chat.request.fields.message'), value: 'message' },
+        { text: this.$t('b2tickets.chat.request.fields.operators_online'), value: 'operators_online' },
+        { text: this.$t('b2tickets.common.created_at'), value: 'created_at' },
+        { text: this.$t('b2tickets.common.updated_at'), value: 'updated_at' },
+        { text: '', value: 'actions', sortable: false }
+      ]
+    }
   },
   mounted() {
     this.dataTableInitialize()
@@ -114,6 +120,8 @@ export default {
       this.backendErrors = null
     },
     emitAddChatEvent(chatRequest) {
+      this.loading.chatBtn = chatRequest.id
+
       const data = {
         chatRequest: chatRequest,
         channelName: chatRequest.channel_name

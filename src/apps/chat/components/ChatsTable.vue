@@ -65,7 +65,10 @@
                     <v-icon left>
                       mdi-wechat
                     </v-icon>
-                    {{ $tc('b2tickets.chat.title', 1) }}
+                    <span v-if="loading.chatBtn === item.id">
+                      <v-progress-circular indeterminate color="primary" size="20"></v-progress-circular>
+                    </span>
+                    <span v-else>{{ $tc('b2tickets.chat.title', 1) }}</span>
                   </v-chip>
                 </template>
                 <template v-slot:item.created_at="{ item }">
@@ -113,7 +116,8 @@ export default {
   components: { TicketForm },
   data: () => ({
     loading: {
-      dataTable: 'info'
+      dataTable: 'info',
+      chatBtn: -1
     },
     backendErrors: null,
     search: '',
@@ -187,6 +191,8 @@ export default {
       })
     },
     emitAddChatEvent(chatRequest) {
+      this.loading.chatBtn = chatRequest.id
+
       const data = {
         chatRequest: chatRequest,
         channelName: chatRequest.channel_name
