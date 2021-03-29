@@ -259,7 +259,11 @@ export default {
       },
       'chatHistory': 'История чатов',
       'fields': {
-        'active': 'Активен'
+        'active': 'Активен',
+        'client': 'Клиент'
+      },
+      'actions': {
+        'enter': 'Начать чат'
       }
     },
     'common': {

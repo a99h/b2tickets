@@ -260,7 +260,11 @@ export default {
       },
       chatHistory: 'Chat history',
       fields: {
-        active: 'Active'
+        active: 'Active',
+        client: 'Client'
+      },
+      actions: {
+        enter: 'Start chat'
       }
     },
     common: {

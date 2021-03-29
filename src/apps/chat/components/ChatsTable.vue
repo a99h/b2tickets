@@ -46,13 +46,14 @@
                       hide-details
                     ></v-text-field>
                     <v-spacer></v-spacer>
-                    <TicketForm
+                    <ChatForm
                       ref="dialog"
                       :tickets="chats"
+                      :activator-hidden="true"
                       @closeDialog="onCloseDialog"
                       @ticketFormBackendErrors="(err) => backendErrors = err"
                       @refreshState="dataTableInitialize"
-                    ></TicketForm>
+                    ></ChatForm>
                   </v-toolbar>
                 </template>
                 <template v-slot:item.chat_request_id="{ item }">
@@ -107,13 +108,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import TicketForm from '@/components/ticket/TicketForm'
+import ChatForm from '@/apps/chat/components/ChatForm'
 import { showChat } from '@/apps/chat/http/chat'
 import { showChatRequest } from '@/apps/chat/http/chatRequest'
 
 export default {
   name: 'Chats',
-  components: { TicketForm },
+  components: { ChatForm },
   data: () => ({
     loading: {
       dataTable: 'info',
@@ -134,11 +135,11 @@ export default {
         value: 'id'
       },
       {
-        text: this.$tc('b2tickets.chat.request.title', 1) + '(ID)',
+        text: this.$t('b2tickets.chat.actions.enter'),
         value: 'chat_request_id'
       },
+      { text: this.$t('b2tickets.chat.fields.client'), value: 'client.email' },
       { text: this.$t('b2tickets.chat.fields.active'), value: 'active' },
-      { text: this.$t('b2tickets.common.created_at'), value: 'created_at' },
       { text: this.$t('b2tickets.common.updated_at'), value: 'updated_at' },
       { text: '', value: 'actions', sortable: false }
     ]}
