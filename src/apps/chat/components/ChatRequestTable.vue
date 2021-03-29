@@ -50,7 +50,7 @@
           class="ma-2"
           color="success"
           outlined
-          @click="addChannel(item)"
+          @click="emitAddChatEvent(item)"
         >
           <v-icon left>
             mdi-wechat
@@ -113,8 +113,13 @@ export default {
       this.loading.dataTable = false
       this.backendErrors = null
     },
-    addChannel(chatRequest) {
-      this.$emit('addChat', chatRequest)
+    emitAddChatEvent(chatRequest) {
+      const data = {
+        chatRequest: chatRequest,
+        channelName: chatRequest.channel_name
+      }
+
+      this.$emit('add-chat', data)
     }
   }
 }
