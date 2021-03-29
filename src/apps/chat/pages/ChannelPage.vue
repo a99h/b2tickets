@@ -1,44 +1,5 @@
 <template>
   <div>
-    <!-- channel toolbar -->
-    <v-app-bar flat height="64">
-      <v-app-bar-nav-icon class="hidden-lg-and-up" @click="$emit('toggle-menu')"></v-app-bar-nav-icon>
-      <div class="title font-weight-bold">{{ chat | channelTitle }}</div>
-
-      <v-breadcrumbs :items="breadcrumbs">
-        <template v-slot:item="{ item }">
-          <v-breadcrumbs-item
-            :to="item.to"
-            :disabled="item.disabled"
-            @click="breadcrumbsOnClick(item)"
-          >
-            {{ item.text }}
-          </v-breadcrumbs-item>
-        </template>
-      </v-breadcrumbs>
-      <TicketForm
-        ref="ticketForm"
-        :tickets="getTickets"
-        @closeDialog="backendErrors = null"
-        @ticketFormBackendErrors="(err) => backendErrors = err"
-        @refreshState="refreshTickets"
-      ></TicketForm>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        v-if="$route.name === 'apps-chat-channel'"
-        class="mx-1"
-        icon
-        @click.stop="leaveChannel()"
-      >
-        <v-icon color="error">mdi-exit-run</v-icon>
-      </v-btn>
-      <v-btn class="mx-1" icon @click.stop="usersDrawer = !usersDrawer">
-        <v-icon>mdi-account-group-outline</v-icon>
-      </v-btn>
-    </v-app-bar>
-
     <v-divider></v-divider>
 
     <!-- channel messages -->
@@ -117,8 +78,7 @@ export default {
   components: {
     InputBox,
     UserAvatar,
-    ChannelMessage,
-    TicketForm
+    ChannelMessage
   },
   filters: {
     channelTitle: channelTitle
@@ -149,24 +109,7 @@ export default {
       messages: [],
 
       // Instance of Chat class
-      chatInstance: {},
-
-      // App bar navigation
-      breadcrumbs: [
-        {
-          text: this.$tc('b2tickets.chat.request.title', 0),
-          disabled: false,
-          to: { name: 'apps-chat-request' }
-        }, {
-          text: this.$t('b2tickets.chat.chatHistory'),
-          disabled: false,
-          to: { name: 'apps-chat-list' }
-        }, {
-          text: this.$t('b2tickets.ticket.actions.createTicket'),
-          disabled: true,
-          to: { name: 'apps-chat-channel-create-ticket' }
-        }
-      ]
+      chatInstance: {}
     }
   },
   computed: {
@@ -236,23 +179,9 @@ export default {
           .catch((err) => reject(err))
       })
     },
-    breadcrumbsOnClick(item) {
-      if (item.text === this.$t('b2tickets.ticket.actions.createTicket')) {
-        this.$refs.ticketForm.openDialog({
-          ticketChatRequests: [this.chat.chatRequest],
-          ticketOperators: [this.user]
-        })
-      }
-    },
     setTicketFormDefaultValues() {
       this.$refs.ticketForm.editedItem.ticketChatRequests = [this.chat.chatRequest]
       this.$refs.ticketForm.editedItem.ticketOperators = [this.user]
-    },
-    async refreshTickets() {
-      console.log('loading spinner true')
-      await this.fetchTickets().then(() => {
-        console.log('loading spinner false')
-      })
     }
   }
 }

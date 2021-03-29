@@ -55,14 +55,21 @@
 
     <!-- channel view -->
     <v-card class="flex-grow-1">
+
+      <chat-toolbar
+        :breadcrumbs="breadcrumbs"
+        :channel-title="currentChat | channelTitle"
+        @leave-channel="leaveChat"
+        @toggle-menu="drawer = !drawer"
+      />
+
       <router-view
         :key="$route.fullPath"
         :user="user"
         :chat="currentChat"
-        @toggle-menu="drawer = !drawer"
         @add-chat="addChatAndEnter"
-        @leave-channel="leaveChat"
       ></router-view>
+
     </v-card>
 
     <!-- create a new channel dialog -->
@@ -103,11 +110,15 @@ import ClientsChat from '@/apps/chat/classes/ClientsChat'
 import OperatorsChat from '@/apps/chat/classes/OperatorsChat'
 import channelService from '@/apps/chat/services/channelService'
 import channelTitle from '@/apps/chat/filters/channelTitle'
+import ChatToolbar from '@/apps/chat/components/Toolbar'
 
 import { mapActions, mapGetters } from 'vuex'
 import lastMessage from '@/apps/chat/filters/lastMessage'
 
 export default {
+  components: {
+    ChatToolbar
+  },
   filters: {
     channelTitle: channelTitle,
     lastMessage: lastMessage
@@ -129,7 +140,24 @@ export default {
       showCreateDialog: false,
       newChannel: '',
 
-      chatRequest: null
+      chatRequest: null,
+
+      // App bar navigation
+      breadcrumbs: [
+        {
+          text: this.$tc('b2tickets.chat.request.title', 0),
+          disabled: false,
+          to: { name: 'apps-chat-request' }
+        }, {
+          text: this.$t('b2tickets.chat.chatHistory'),
+          disabled: false,
+          to: { name: 'apps-chat-list' }
+        }, {
+          text: this.$t('b2tickets.ticket.actions.createTicket'),
+          disabled: true,
+          to: { name: 'apps-chat-channel-create-ticket' }
+        }
+      ]
     }
   },
   computed: {
@@ -162,7 +190,6 @@ export default {
       this.newChannel = ''
     },
     addChatAndEnter(options) {
-      console.log(options)
       this.addOpenedChat(options)
       this.changeChannel(this.openedChats[this.openedChats.length - 1])
     },
@@ -199,7 +226,9 @@ export default {
 
       this.showCreateDialog = false
     },
-    leaveChat(chat) {
+    leaveChat() {
+      const chat = this.currentChat
+
       if (!this.defaultChannels.some((channelName) => chat.channelName === channelName)) {
         channelService.unsubscribeChannel(chat)
 

@@ -10,7 +10,6 @@ export default {
   components: { ChatsTable },
   methods: {
     addChat(eventData) {
-      console.log(eventData)
       this.$emit('add-chat', eventData)
     }
   }
