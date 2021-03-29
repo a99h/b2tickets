@@ -60,7 +60,7 @@
         :user="user"
         :chat="currentChat"
         @toggle-menu="drawer = !drawer"
-        @addChat="addChatAndEnter"
+        @add-chat="addChatAndEnter"
         @leave-channel="leaveChat"
       ></router-view>
     </v-card>
@@ -143,7 +143,7 @@ export default {
     this.addDefaultChannels(this.defaultChannels)
   },
   mounted() {
-    this.changeChannel(this.currentChat)
+    // this.changeChannel(this.currentChat)
   },
   methods: {
     ...mapActions({
@@ -162,6 +162,7 @@ export default {
       this.newChannel = ''
     },
     addChatAndEnter(options) {
+      console.log(options)
       this.addOpenedChat(options)
       this.changeChannel(this.openedChats[this.openedChats.length - 1])
     },
@@ -171,6 +172,8 @@ export default {
     },
     // Add and join the channel on creation
     addOpenedChat(options) {
+      options.user = this.user
+
       const { channelName, user } = options
 
       if (!channelName || !user) {

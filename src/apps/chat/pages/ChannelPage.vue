@@ -157,8 +157,11 @@ export default {
           text: this.$tc('b2tickets.chat.request.title', 0),
           disabled: false,
           to: { name: 'apps-chat-request' }
-        },
-        {
+        }, {
+          text: this.$t('b2tickets.chat.chatHistory'),
+          disabled: false,
+          to: { name: 'apps-chat-list' }
+        }, {
           text: this.$t('b2tickets.ticket.actions.createTicket'),
           disabled: true,
           to: { name: 'apps-chat-channel-create-ticket' }
@@ -174,15 +177,12 @@ export default {
   watch: {
     '$route.params.id'() {
       this.startChannel(this.$route.params.id)
-    },
-    'chat.unreadMessagesCount'() {
-      this.chat.unreadMessagesCount = 0
     }
   },
   mounted() {
     this.startChannel(this.$route.params.id)
     this.prepareTicketForm().then(() => {
-      this.breadcrumbs[1].disabled = this.chat.chatRequest === undefined
+      this.breadcrumbs[2].disabled = this.chat.chatRequest === undefined
     })
   },
   beforeDestroy() {

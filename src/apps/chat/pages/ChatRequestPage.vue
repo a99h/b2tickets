@@ -30,8 +30,7 @@ export default {
     addChat(chatRequest) {
       this.$emit('addChat', {
         chatRequest: chatRequest,
-        channelName: chatRequest.channel_name,
-        user: this.user
+        channelName: chatRequest.channel_name
       })
     }
   }

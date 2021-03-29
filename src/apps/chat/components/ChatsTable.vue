@@ -55,6 +55,19 @@
                     ></TicketForm>
                   </v-toolbar>
                 </template>
+                <template v-slot:item.chat_request_id="{ item }">
+                  <v-chip
+                    class="ma-2"
+                    color="success"
+                    outlined
+                    @click="addChatByChatRequest(item.chat_request_id)"
+                  >
+                    <v-icon left>
+                      mdi-wechat
+                    </v-icon>
+                    {{ $tc('b2tickets.chat.title', 1) }}
+                  </v-chip>
+                </template>
                 <template v-slot:item.created_at="{ item }">
                   {{ new Date(item.created_at).toLocaleString() }}
                 </template>
@@ -65,7 +78,7 @@
                   <v-icon
                     small
                     class="mr-2"
-                    @click="showItem(item)"
+                    @click="showItem(item.id)"
                   >
                     mdi-eye
                   </v-icon>
@@ -93,6 +106,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import TicketForm from '@/components/ticket/TicketForm'
 import { showChat } from '@/apps/chat/http/chat'
+import { showChatRequest } from '@/apps/chat/http/chatRequest'
 
 export default {
   name: 'Chats',
@@ -147,11 +161,12 @@ export default {
     },
     async showItem(item) {
       this.backendErrors = null
-      await this.showChat(item).then((response) => {
+      await showChat(item).then((response) => {
         this.$refs.dialog.show(response.data)
       }).catch((err) => {
         this.$refs.dialog.dialogInitialize()
-        this.backendErrors = err.response.data.message
+        this.backendErrors = err.response.data
+        console.log(this.backendErrors)
       })
     },
     async editItem(item) {
@@ -163,6 +178,21 @@ export default {
         this.$refs.dialog.dialogInitialize()
         this.backendErrors = err.response.data.message
       })
+    },
+    addChatByChatRequest(chatRequestId) {
+      showChatRequest(chatRequestId).then((res) => {
+        this.emitAddChatEvent(res.data)
+      }).catch((err) => {
+        this.backendErrors = err.response.data.message
+      })
+    },
+    emitAddChatEvent(chatRequest) {
+      const data = {
+        chatRequest: chatRequest,
+        channelName: chatRequest.channel_name
+      }
+
+      this.$emit('add-chat', data)
     }
   }
 }

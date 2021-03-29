@@ -1,12 +1,18 @@
 <template>
   <div class="flex-grow-1">
-    <chats-table></chats-table>
+    <chats-table @add-chat="addChat"></chats-table>
   </div>
 </template>
 
 <script>
 import ChatsTable from '../components/ChatsTable'
 export default {
-  components: { ChatsTable }
+  components: { ChatsTable },
+  methods: {
+    addChat(eventData) {
+      console.log(eventData)
+      this.$emit('add-chat', eventData)
+    }
+  }
 }
 </script>
