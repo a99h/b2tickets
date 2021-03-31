@@ -47,7 +47,7 @@
                     ></v-text-field>
                     <v-spacer></v-spacer>
 
-                    <ChatInfo ref="chatInfo" :activator-hidden="true"></ChatInfo>
+                    <ChatInfo ref="chatInfo" :activator-hidden="true" :chat="currentItem"></ChatInfo>
 
                   </v-toolbar>
                 </template>
@@ -78,9 +78,8 @@
                     <v-btn
                       :dark="!$vuetify.theme.dark"
                       small
-                      :disabled="$refs.chatInfo.dialog"
-                      :loading="$refs.chatInfo.dialog"
-                      @click="showItem(item.id)"
+                      :disabled="$refs.chatInfo.loadingDialog"
+                      @click="showItem(item)"
                     >
                       {{ $t('b2tickets.chat.form.show') }}
                     </v-btn>
@@ -115,7 +114,8 @@ export default {
     },
     backendErrors: null,
     search: '',
-    chats: []
+    chats: [],
+    currentItem: {}
   }),
   computed: {
     ...mapGetters({
@@ -157,8 +157,9 @@ export default {
     onCloseDialog() {
       this.backendErrors = null
     },
-    showItem() {
-      this.$refs.chatInfo.dialog = true
+    showItem(item) {
+      this.currentItem = item
+      this.$refs.chatInfo.loadingDialog = true
     },
     async editItem(item) {
       this.backendErrors = null

@@ -1,7 +1,4 @@
 <template>
-  <!--  &lt;!&ndash; id, Avatar, Name, email, app id, created_at &ndash;&gt;-->
-  <!--  <ClientInfo />-->
-
   <!--  &lt;!&ndash; Related tickets, enter chat button &ndash;&gt;-->
   <!--  <ChatInfoActions />-->
 
@@ -14,11 +11,10 @@
   <!--  <ChatRequestMetaData />-->
   <div class="text-center">
     <v-dialog
-      v-model="dialog"
+      v-model="loadingDialog"
       persistent
-      :width="loading ? 300 : 'auto'"
-      :fullscreen="!loading"
-      transition="dialog-bottom-transition"
+      :width="300"
+      transition="scale-transition"
     >
       <v-card
         v-if="loading"
@@ -33,7 +29,14 @@
           ></v-progress-linear>
         </v-card-text>
       </v-card>
-      <v-card v-if="!loading">
+    </v-dialog>
+    <v-dialog
+      v-model="dialog"
+      persistent
+      fullscreen
+      transition="scale-transition"
+    >
+      <v-card>
         <v-toolbar
           dark
           color="primary"
@@ -43,39 +46,16 @@
             dark
             @click="dialog = false"
           >
-            <v-icon>mdi-close</v-icon>
+            <v-icon x-large>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>Settings</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn
-              dark
-              text
-              @click="dialog = false"
-            >
-              Save
-            </v-btn>
-          </v-toolbar-items>
+          <v-toolbar-title>{{ $t('b2tickets.chat.form.show') }}</v-toolbar-title>
         </v-toolbar>
-        <v-list
-          three-line
-          subheader
-        >
-          <v-subheader>User Controls</v-subheader>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>Content filtering</v-list-item-title>
-              <v-list-item-subtitle>Set the content filtering level to restrict apps that can be downloaded</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>Password</v-list-item-title>
-              <v-list-item-subtitle>Require password for purchase or use password to restrict purchase</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+
+        <!-- id, Avatar, Name, email, app id, created_at -->
+        <ClientInfo :client="chat.client"/>
+
         <v-divider></v-divider>
+
         <v-list
           three-line
           subheader
@@ -115,17 +95,27 @@
 </template>
 
 <script>
+import ClientInfo from '@/components/client/ClientInfo'
+
 export default {
   name: 'ChatInfo',
+  components: {
+    ClientInfo
+  },
   props: {
     activatorHidden: {
       type: Boolean,
       required: false
+    },
+    chat: {
+      type: Object,
+      required: true
     }
   },
   data () {
     return {
       dialog: false,
+      loadingDialog: false,
       loading: false,
       notifications: false,
       sound: true,
@@ -133,10 +123,20 @@ export default {
     }
   },
   watch: {
-    dialog (val) {
+    loadingDialog (val) {
       if (!val) return
 
       this.initialize()
+    },
+    dialog (val) {
+      if (val) return
+
+      if (!val) this.loadingDialog = val
+    },
+    loading (val) {
+      if (val) return
+
+      this.dialog = true
     }
   },
   methods: {
