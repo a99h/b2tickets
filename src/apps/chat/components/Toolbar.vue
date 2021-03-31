@@ -70,11 +70,12 @@ export default {
       },
       // App bar navigation
       breadcrumbs: [
+        // {
+        //   text: this.$tc('b2tickets.chat.request.title', 0),
+        //   disabled: false,
+        //   to: { name: 'apps-chat-request' }
+        // },
         {
-          text: this.$tc('b2tickets.chat.request.title', 0),
-          disabled: false,
-          to: { name: 'apps-chat-request' }
-        }, {
           text: this.$t('b2tickets.chat.chatHistory'),
           disabled: false,
           to: { name: 'apps-chat-list' }
