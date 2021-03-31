@@ -59,7 +59,7 @@
         <v-expansion-panel>
           <v-expansion-panel-header
             class="title"
-          >{{ $t('b2tickets.common.actions') }}
+          >{{ $tc('b2tickets.common.action', 0) }}
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <div class="mb-2">

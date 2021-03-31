@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import ChatsTable from '../components/ChatsTable'
+import ChatsTable from '@/apps/chat/components/ChatTable'
 export default {
   components: { ChatsTable },
   methods: {

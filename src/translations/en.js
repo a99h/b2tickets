@@ -263,8 +263,11 @@ export default {
         active: 'Active',
         client: 'Client'
       },
-      actions: {
-        enter: 'Start chat'
+      actions: 'Start chat',
+      form: {
+        show: 'Chat info',
+        create: 'New chat',
+        edit: 'Edit chat'
       }
     },
     common: {
@@ -272,9 +275,18 @@ export default {
       loading: 'Loading...',
       select: 'Please select',
       welcome: 'Become a member of our team',
-      actions: 'Actions',
-      created_at: 'Created at',
-      updated_at: 'Updated at'
+      fields: {
+        actions: 'Actions',
+        created_at: 'Created at',
+        updated_at: 'Updated at'
+      },
+      action: 'Action | Actions',
+      actions: {
+        show: 'Show',
+        create: 'Create',
+        update: 'Update',
+        delete: 'Delete'
+      }
     },
     menu: {
       apps: 'Applications'

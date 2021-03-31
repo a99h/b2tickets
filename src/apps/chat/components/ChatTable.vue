@@ -46,14 +46,9 @@
                       hide-details
                     ></v-text-field>
                     <v-spacer></v-spacer>
-                    <ChatForm
-                      ref="dialog"
-                      :tickets="chats"
-                      :activator-hidden="true"
-                      @closeDialog="onCloseDialog"
-                      @ticketFormBackendErrors="(err) => backendErrors = err"
-                      @refreshState="dataTableInitialize"
-                    ></ChatForm>
+
+                    <ChatInfo ref="chatInfo" :activator-hidden="true"></ChatInfo>
+
                   </v-toolbar>
                 </template>
                 <template v-slot:item.chat_request_id="{ item }">
@@ -72,27 +67,24 @@
                     <span v-else>{{ $tc('b2tickets.chat.title', 1) }}</span>
                   </v-chip>
                 </template>
-                <template v-slot:item.created_at="{ item }">
-                  {{ new Date(item.created_at).toLocaleString() }}
+                <template v-slot:item.active="{ item }">
+                  <v-icon :color="item.active ? 'primary' : 'error'">mdi-radiobox-marked</v-icon>
                 </template>
                 <template v-slot:item.updated_at="{ item }">
                   {{ new Date(item.updated_at).toLocaleString() }}
                 </template>
                 <template v-slot:item.actions="{ item }">
-                  <v-icon
-                    small
-                    class="mr-2"
-                    @click="showItem(item.id)"
-                  >
-                    mdi-eye
-                  </v-icon>
-                  <v-icon
-                    small
-                    class="mr-2"
-                    @click="editItem(item)"
-                  >
-                    mdi-pencil
-                  </v-icon>
+                  <div class="actions">
+                    <v-btn
+                      :dark="!$vuetify.theme.dark"
+                      small
+                      :disabled="$refs.chatInfo.dialog"
+                      :loading="$refs.chatInfo.dialog"
+                      @click="showItem(item.id)"
+                    >
+                      {{ $t('b2tickets.chat.form.show') }}
+                    </v-btn>
+                  </div>
                 </template>
                 <template v-slot:no-data>
                   <v-btn color="warning" @click="dataTableInitialize">Обновить</v-btn>
@@ -109,12 +101,13 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import ChatForm from '@/apps/chat/components/ChatForm'
+import ChatInfo from '@/apps/chat/components/ChatInfo/ChatInfo'
 import { showChat } from '@/apps/chat/http/chat'
 import { showChatRequest } from '@/apps/chat/http/chatRequest'
 
 export default {
   name: 'Chats',
-  components: { ChatForm },
+  components: { ChatInfo },
   data: () => ({
     loading: {
       dataTable: 'info',
@@ -138,7 +131,7 @@ export default {
         text: this.$t('b2tickets.chat.actions.enter'),
         value: 'chat_request_id'
       },
-      { text: this.$t('b2tickets.chat.fields.client'), value: 'client.email' },
+      { text: this.$t('b2tickets.chat.fields.client'), value: 'chatClient.email' },
       { text: this.$t('b2tickets.chat.fields.active'), value: 'active' },
       { text: this.$t('b2tickets.common.updated_at'), value: 'updated_at' },
       { text: '', value: 'actions', sortable: false }
@@ -164,19 +157,12 @@ export default {
     onCloseDialog() {
       this.backendErrors = null
     },
-    async showItem(item) {
-      this.backendErrors = null
-      await showChat(item).then((response) => {
-        this.$refs.dialog.show(response.data)
-      }).catch((err) => {
-        this.$refs.dialog.dialogInitialize()
-        this.backendErrors = err.response.data
-        console.log(this.backendErrors)
-      })
+    showItem() {
+      this.$refs.chatInfo.dialog = true
     },
     async editItem(item) {
       this.backendErrors = null
-      await showChat(item).then((response) => {
+      await showChat(item.id).then((response) => {
         Object.assign(this.chats[this.chats.indexOf(item)], response.data)
         this.$refs.dialog.edit(this.chats[this.chats.indexOf(item)])
       }).catch((err) => {

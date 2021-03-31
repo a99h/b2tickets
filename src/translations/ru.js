@@ -262,8 +262,11 @@ export default {
         'active': 'Активен',
         'client': 'Клиент'
       },
-      'actions': {
-        'enter': 'Начать чат'
+      'actions': 'Начать чат',
+      'form': {
+        'show': 'Информация о чате',
+        'create': 'Новый чат',
+        'edit': 'Редактировать чат'
       }
     },
     'common': {
@@ -273,7 +276,16 @@ export default {
       'welcome': 'Станьте участником нашей команды',
       'created_at': 'Создано',
       'updated_at': 'Обновлено',
-      'actions': 'Действия'
+      'fields': {
+        'actions': 'Действия'
+      },
+      'action': 'Действие | Действия',
+      'actions': {
+        'show': 'Показать',
+        'create': 'Создать',
+        'update': 'Обновить',
+        'delete': 'Удалить'
+      }
     },
     'menu': {
       'apps': 'Приложения'

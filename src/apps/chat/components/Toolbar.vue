@@ -122,17 +122,13 @@ export default {
       }
     },
     ticketFormInitialize() {
-      this.loading.ticketForm = true
-
-      this.refreshTickets().then(() => {
-        this.loading.ticketForm = false
-      })
+      this.refreshTickets()
       this.setTicketFormDefaultValues()
     },
     async refreshTickets() {
-      console.log('loading spinner true')
+      this.loading.ticketForm = true
       await this.fetchTickets().then(() => {
-        console.log('loading spinner false')
+        this.loading.ticketForm = false
       })
     },
     setTicketFormDefaultValues() {
