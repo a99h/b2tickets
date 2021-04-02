@@ -228,7 +228,8 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { parseZone } from 'moment'
 import { computed } from 'vue'
-import { avatars }  from './avatars'
+import axios from '@/plugins/axios'
+
 export default {
   data() {
     return {
@@ -240,7 +241,7 @@ export default {
       disableDialog: false,
       Avatar: false,
       isLoading: false,
-      items: false,
+      items: [],
 
       showNewPassword: false,
       newPassword: '',
@@ -280,9 +281,29 @@ export default {
   },
   mounted() {
     this.user = this.getUser
-    this.items = avatars
+
+    this.getAvatars()
+    console.log(this.items)
   },
   methods: {
+    getImgUrl(id) {
+      try {
+        const images = require.context('@/assets/images/avatars', false, /\.svg$/)
+
+        return images('./avatar' + id + '.svg')
+      } catch {
+        return undefined
+      }
+    },
+    getAvatars(counter = 1) {
+      const image = this.getImgUrl(counter)
+
+      if (image) {
+        this.items.push(this.getImgUrl(counter))
+
+        this.getAvatars(this.items.length + 1)
+      }
+    },
     confirmPasswordReset() {
       this.isLoading = true
 
