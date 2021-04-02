@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import UsersTable from './components/UsersTable'
+import UsersTable from '@/components/user/UsersTable'
 export default {
   name: 'UsersPage',
   components: { UsersTable }

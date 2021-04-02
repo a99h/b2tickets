@@ -42,7 +42,9 @@
 
     <v-tabs-items v-model="tab">
       <v-tab-item value="tabs-account">
-        <account-tab ref="tabs-account" :user="user"></account-tab>
+
+        <account-tab ref="tabs-account" :user="user" />
+
       </v-tab-item>
 
       <v-tab-item value="tabs-information">
@@ -55,7 +57,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import CopyLabel from '../../components/common/CopyLabel'
-import AccountTab from './EditUser/AccountTab'
+import AccountTab from '@/components/user/AccountTab'
 
 export default {
   components: {

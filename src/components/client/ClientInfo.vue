@@ -1,15 +1,5 @@
 <template>
   <div class="flex-grow-1">
-    <div class="d-flex align-center py-3">
-      <div>
-        <div class="display-1">{{ $t('b2tickets.user.actions.editUser') }} {{ user.name && `- ${user.name}` }}</div>
-        <v-breadcrumbs :items="breadcrumbs" class="pa-0 py-2"></v-breadcrumbs>
-      </div>
-      <v-spacer></v-spacer>
-      <v-btn icon @click>
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
-    </div>
 
     <div
       v-for="(role, inx) in user.userRoles"
@@ -55,7 +45,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import CopyLabel from '../../components/common/CopyLabel'
-import AccountTab from '@/pages/users/EditUser/AccountTab'
+import AccountTab from '@/components/user/AccountTab'
 
 export default {
   name: 'ClientInfo',
