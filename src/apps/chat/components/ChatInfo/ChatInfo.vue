@@ -55,7 +55,7 @@
           <v-col cols="8">
             <v-container>
               <!-- id, Avatar, Name, email, app id, created_at -->
-              <ClientInfo :client="chat.client"/>
+              <AccountCard :user="chat.chatClient"/>
 
               <v-divider></v-divider>
 
@@ -102,12 +102,12 @@
 </template>
 
 <script>
-import ClientInfo from '@/components/client/ClientInfo'
+import AccountCard from '@/components/user/AccountCard'
 
 export default {
   name: 'ChatInfo',
   components: {
-    ClientInfo
+    AccountCard
   },
   props: {
     activatorHidden: {

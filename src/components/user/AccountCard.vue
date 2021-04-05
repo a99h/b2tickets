@@ -4,14 +4,10 @@
     <v-card>
       <v-card-title>{{ $t('b2tickets.user.pages.editUser.info') }}</v-card-title>
       <div class="d-flex flex-column flex-sm-row">
-        <v-col>
-          <v-img
-            :src="user.userSettings.avatar"
-            aspect-ratio="1"
-            class="blue-grey lighten-4 rounded elevation-3"
-            max-width="100"
-            max-height="100"
-          ></v-img>
+        <div class="d-flex flex-column justify-center align-center mx-3">
+
+          <UserAvatar :user="user" :size="80" />
+
           <v-btn
             v-if="checkUserRole(user, 'operator')"
             class="mt-1"
@@ -45,7 +41,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-        </v-col>
+        </div>
         <v-card-text class="flex-grow-1 pt-2 pa-sm-2">
           <v-text-field
             v-model="user.name"
@@ -59,7 +55,7 @@
           ></v-text-field>
         </v-card-text>
       </div>
-      <v-card-actions class="justify-end">
+      <v-card-actions v-if="checkUserRole(user, 'operator')" class="justify-end">
         <v-btn color="success" @click>{{ $t('common.save') }}</v-btn>
       </v-card-actions>
     </v-card>
@@ -67,7 +63,12 @@
 </template>
 
 <script>
+import UserAvatar from '@/apps/chat/components/UserAvatar'
+
 export default {
+  components: {
+    UserAvatar
+  },
   props: {
     user: {
       type: Object,

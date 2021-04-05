@@ -1,5 +1,5 @@
 <template>
-  <v-avatar size="40" class="elevation-1 grey lighten-3">
+  <v-avatar :size="size" class="elevation-1 grey lighten-3">
     <v-img v-if="user.userSettings && user.userSettings.avatar" :src="user.userSettings.avatar" />
     <span v-else class="text--primary">{{ initials }}</span>
   </v-avatar>
@@ -21,6 +21,11 @@ export default {
     user: {
       type: Object,
       default: () => {}
+    },
+    size: {
+      type: Number,
+      required: false,
+      default: 40
     }
   },
   computed: {

@@ -84,8 +84,8 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import CopyLabel from '../../components/common/CopyLabel'
 import AccountCard from '@/components/user/AccountCard'
-import UserMetaTab from '@/components/user/UserMetaTab'
-import UserActionsTab from '@/components/user/UserActionsTab'
+import UserMetaTab from '@/components/tabs/UserMetaTab'
+import UserActionsTab from '@/components/tabs/UserActionsTab'
 
 export default {
   components: {
