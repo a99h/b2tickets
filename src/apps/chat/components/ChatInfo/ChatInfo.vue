@@ -152,7 +152,7 @@ export default {
 
       setTimeout(() => {
         this.loading = false
-      }, 4000)
+      }, 500)
     }
   }
 }

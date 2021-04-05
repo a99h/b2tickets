@@ -158,9 +158,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.buy-button {
-  box-shadow: 1px 1px 18px #ee44aa;
-}
-</style>

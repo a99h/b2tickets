@@ -43,12 +43,38 @@
     <v-tabs-items v-model="tab">
       <v-tab-item value="tabs-account">
 
-        <account-tab ref="tabs-account" :user="user" />
+        <v-container>
+
+          <v-card
+            v-if="!userEnabled"
+            class="warning mb-4"
+          >
+            <v-card-title>{{ $t('b2tickets.user.pages.editUser.userDisabled') }}</v-card-title>
+            <v-card-subtitle>
+              {{ $t('b2tickets.user.pages.editUser.thisUserDisable') }}
+            </v-card-subtitle>
+            <v-card-actions>
+              <v-btn @click="userEnabled = true" color="success">
+                <v-icon left small>mdi-account-check</v-icon>{{ $t('b2tickets.user.pages.editUser.userEnable') }}
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+
+          <accountCard :user="user" />
+
+          <v-expansion-panels v-model="panel" multiple class="mt-3">
+
+            <UserActionsTab :user="user" />
+            <UserMetaTab :user="user"/>
+
+          </v-expansion-panels>
+
+        </v-container>
 
       </v-tab-item>
 
       <v-tab-item value="tabs-information">
-        <information-tab ref="tabs-information" :user="user"></information-tab>
+        <information-tab :user="user"></information-tab>
       </v-tab-item>
     </v-tabs-items>
   </div>
@@ -57,16 +83,22 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import CopyLabel from '../../components/common/CopyLabel'
-import AccountTab from '@/components/user/AccountTab'
+import AccountCard from '@/components/user/AccountCard'
+import UserMetaTab from '@/components/user/UserMetaTab'
+import UserActionsTab from '@/components/user/UserActionsTab'
 
 export default {
   components: {
     CopyLabel,
-    AccountTab
+    AccountCard,
+    UserMetaTab,
+    UserActionsTab
   },
   data() {
     return {
-      user: '',
+      panel: [0],
+      user: {},
+      userEnabled: false,
       userRoles: true,
       tab: null,
       getIconFromRoleName: true,
@@ -83,11 +115,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters ({ getUser: 'auth/getUser' })
+    ...mapGetters ({
+      getUser: 'auth/getUser'
+    })
   },
   mounted() {
     this.user = this.getUser
-    this.user.role = this.role
   },
   methods: {
     getIconByRoleName (role) {

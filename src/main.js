@@ -40,6 +40,9 @@ import './assets/scss/theme.scss'
 // Animation library - https://animate.style/
 import 'animate.css/animate.min.css'
 
+// Avatars
+// import './assets/images/avatars'
+
 // Set this to false to prevent the production tip on Vue startup.
 Vue.config.productionTip = false
 
