@@ -45,36 +45,39 @@
 
         <v-container>
 
-          <v-card
-            v-if="!userEnabled"
-            class="warning mb-4"
-          >
-            <v-card-title>{{ $t('b2tickets.user.pages.editUser.userDisabled') }}</v-card-title>
-            <v-card-subtitle>
-              {{ $t('b2tickets.user.pages.editUser.thisUserDisable') }}
-            </v-card-subtitle>
-            <v-card-actions>
-              <v-btn @click="userEnabled = true" color="success">
-                <v-icon left small>mdi-account-check</v-icon>{{ $t('b2tickets.user.pages.editUser.userEnable') }}
-              </v-btn>
-            </v-card-actions>
-          </v-card>
+          <v-sheet class="px-3 py-3 primary">
 
-          <accountCard :user="user" />
+            <v-card
+              v-if="!userEnabled"
+              class="warning mb-4"
+            >
+              <v-card-title>{{ $t('b2tickets.user.pages.editUser.userDisabled') }}</v-card-title>
+              <v-card-subtitle>
+                {{ $t('b2tickets.user.pages.editUser.thisUserDisable') }}
+              </v-card-subtitle>
+              <v-card-actions>
+                <v-btn @click="userEnabled = true" color="success">
+                  <v-icon left small>mdi-account-check</v-icon>{{ $t('b2tickets.user.pages.editUser.userEnable') }}
+                </v-btn>
+              </v-card-actions>
+            </v-card>
 
-          <v-expansion-panels v-model="panel" multiple class="mt-3">
+            <AccountCard :user="user" />
 
-            <UserActionsTab :user="user" />
-            <UserMetaTab :user="user"/>
+            <v-expansion-panels v-model="panel" multiple class="mt-3">
 
-          </v-expansion-panels>
+              <UserActionsTab :user="user" />
+              <UserMetaTab :user="user"/>
+
+            </v-expansion-panels>
+          </v-sheet>
 
         </v-container>
 
       </v-tab-item>
 
       <v-tab-item value="tabs-information">
-        <information-tab :user="user"></information-tab>
+        <InformationTab :user="user" />
       </v-tab-item>
     </v-tabs-items>
   </div>
@@ -86,13 +89,15 @@ import CopyLabel from '../../components/common/CopyLabel'
 import AccountCard from '@/components/user/AccountCard'
 import UserMetaTab from '@/components/tabs/UserMetaTab'
 import UserActionsTab from '@/components/tabs/UserActionsTab'
+import InformationTab from '@/components/tabs/InformationTab'
 
 export default {
   components: {
     CopyLabel,
     AccountCard,
     UserMetaTab,
-    UserActionsTab
+    UserActionsTab,
+    InformationTab
   },
   data() {
     return {

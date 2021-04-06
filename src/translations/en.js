@@ -366,7 +366,15 @@ export default {
           metadata: 'Metadata'
         }
       },
-      title: 'User | Users'
+      title: 'User | Users',
+      tabs: {
+        meta: {
+          title: 'User metadata'
+        },
+        account: {
+          title: 'User information'
+        }
+      }
     }
   }
 }

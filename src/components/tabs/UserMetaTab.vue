@@ -2,7 +2,7 @@
   <v-expansion-panel>
     <v-expansion-panel-header
       class="title"
-    >{{ $t('b2tickets.user.pages.editUser.metadata') }}
+    >{{ $t('b2tickets.user.tabs.meta.title') }}
     </v-expansion-panel-header>
     <v-expansion-panel-content class="body-2">
       <span class="font-weight-bold">{{ $t('b2tickets.common.created_at') }}</span>

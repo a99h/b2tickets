@@ -78,7 +78,7 @@
                     <v-btn
                       :dark="!$vuetify.theme.dark"
                       small
-                      :disabled="$refs.chatInfo.loadingDialog"
+                      :disabled="$refs.chatInfo.dialogLoader"
                       @click="showItem(item)"
                     >
                       {{ $t('b2tickets.chat.form.show') }}
@@ -158,8 +158,8 @@ export default {
       this.backendErrors = null
     },
     showItem(item) {
-      this.currentItem = item
-      this.$refs.chatInfo.loadingDialog = true
+      this.currentItem = this.chats[this.chats.indexOf(item)]
+      this.$refs.chatInfo.dialogLoader = true
     },
     async editItem(item) {
       this.backendErrors = null

@@ -9,15 +9,15 @@
 
   <!--  &lt;!&ndash; id, created, channel_name &ndash;&gt;-->
   <!--  <ChatRequestMetaData />-->
-  <div class="text-center">
+  <div class="text-center" style="max-height: 80vh">
     <v-dialog
-      v-model="loadingDialog"
+      v-model="dialogLoader"
       persistent
       :width="300"
       transition="scale-transition"
     >
       <v-card
-        v-if="loading"
+        v-if="loadingDialog"
         color="surface"
       >
         <v-card-text>
@@ -51,50 +51,52 @@
           <v-toolbar-title>{{ $t('b2tickets.chat.form.show') }}</v-toolbar-title>
         </v-toolbar>
 
-        <v-row>
+        <v-row class="surface">
           <v-col cols="8">
             <v-container>
               <!-- id, Avatar, Name, email, app id, created_at -->
-              <AccountCard :user="chat.chatClient"/>
+              <v-sheet class="px-3 py-3 primary">
 
-              <v-divider></v-divider>
+                <AccountCard :user="chat.chatClient"/>
 
-              <v-list
-                three-line
-                subheader
-              >
-                <v-subheader>General</v-subheader>
-                <v-list-item>
-                  <v-list-item-action>
-                    <v-checkbox v-model="notifications"></v-checkbox>
-                  </v-list-item-action>
-                  <v-list-item-content>
-                    <v-list-item-title>Notifications</v-list-item-title>
-                    <v-list-item-subtitle>Notify me about updates to apps or games that I downloaded</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-action>
-                    <v-checkbox v-model="sound"></v-checkbox>
-                  </v-list-item-action>
-                  <v-list-item-content>
-                    <v-list-item-title>Sound</v-list-item-title>
-                    <v-list-item-subtitle>Auto-update apps at any time. Data charges may apply</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-action>
-                    <v-checkbox v-model="widgets"></v-checkbox>
-                  </v-list-item-action>
-                  <v-list-item-content>
-                    <v-list-item-title>Auto-add widgets</v-list-item-title>
-                    <v-list-item-subtitle>Automatically add home screen widgets</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
+                <v-expansion-panels v-model="panel" multiple class="mt-3">
+
+                  <UserMetaTab :user="chat.chatClient"/>
+
+                </v-expansion-panels>
+              </v-sheet>
             </v-container>
           </v-col>
-          <v-col cols="4"></v-col>
+          <v-col cols="4" class="no-gutters flex-column">
+            <div class="d-flex flex-grow-1 flex-row mt-2">
+              <v-card class="flex-grow-1">
+                <v-progress-linear
+                  v-if="loadingMessages"
+                  color="deep-purple accent-4"
+                  indeterminate
+                  rounded
+                  height="6"
+                ></v-progress-linear>
+                <div v-if="!loadingMessages" class="channel-page">
+                  <div id="messages" ref="messages" class="messages mx-2">
+                    <transition-group name="list">
+
+                      <ChannelMessage
+                        v-for="message in chatInstance.messages"
+                        :key="message.id"
+                        v-model="chatInstance.messages"
+                        :message="message"
+                        :user="chatInstance.user"
+                        class="my-3 d-flex"
+                        :loading="loadingMessages"
+                      />
+
+                    </transition-group>
+                  </div>
+                </div>
+              </v-card>
+            </div>
+          </v-col>
         </v-row>
       </v-card>
     </v-dialog>
@@ -103,11 +105,18 @@
 
 <script>
 import AccountCard from '@/components/user/AccountCard'
+import UserMetaTab from '@/components/tabs/UserMetaTab'
+import ChannelMessage from '@/apps/chat/components/ChannelMessage'
+import { mapActions, mapGetters } from 'vuex'
+import ClientsChat from '@/apps/chat/classes/ClientsChat'
+import { showChatRequest } from '@/apps/chat/http/chatRequest'
 
 export default {
   name: 'ChatInfo',
   components: {
-    AccountCard
+    UserMetaTab,
+    AccountCard,
+    ChannelMessage
   },
   props: {
     activatorHidden: {
@@ -121,43 +130,133 @@ export default {
   },
   data () {
     return {
+      panel: [0],
       dialog: false,
+      dialogLoader: false,
       loadingDialog: false,
-      loading: false,
+      loadingMessages: false,
+      loadingTickets: true,
       notifications: false,
       sound: true,
-      widgets: false
+      widgets: false,
+      chatInstance: {},
+      backendErrors: [],
+      chaRequest: {}
     }
   },
+  computed: {
+    ...mapGetters({
+      whoAmI: 'auth/getUser'
+    })
+  },
   watch: {
-    loadingDialog (val) {
+    dialogLoader (val) {
       if (!val) return
 
       this.initialize()
+      this.dialog = true
     },
     dialog (val) {
       if (val) return
 
-      if (!val) this.loadingDialog = val
+      this.dialogLoader = val
+      console.log(this.chatInstance)
     },
-    loading (val) {
+    loadingDialog (val) {
       if (val) return
 
       this.dialog = true
     }
   },
+  mounted() {
+  },
   methods: {
+    ...mapActions({
+      getMessages: 'message/fetchMessages'
+    }),
     initialize() {
-      this.loading = true
+      this.loadingDialog = true
 
-      setTimeout(() => {
-        this.loading = false
-      }, 500)
+      console.log(this.chat)
+      this.fetchChatRequest(this.chat.chat_request_id).then(() => {
+        this.createChat({
+          chatRequest: this.chatRequest,
+          channelName: this.chatRequest.channelName,
+          user: this.whoAmI
+        })
+        console.log(this.chatInstance)
+        this.loadingDialog = false
+      }).catch(() => {
+        this.loadingDialog = false
+      })
+    },
+    createChat(options) {
+      this.chatInstance = new ClientsChat(options)
+    },
+    async fetchChatRequest(chat_request_id) {
+      await showChatRequest(chat_request_id).then((res) => {
+        this.chatRequest = res.data
+      }).catch((e) => {
+        this.backendErrors.push(e)
+      })
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+// List Transition Animation
+.list-enter-active {
+  transition: all 0.3s;
+}
 
+.list-move {
+  transition: transform 0.3s;
+}
+
+.list-enter,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+// -- End List Transition Animation
+
+.channel-page {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-height: 80%;
+  display: flex;
+  flex-direction: column;
+
+  .messages {
+    flex-grow: 1;
+    margin-bottom: 68px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0;
+  }
+
+  .input-box {
+    position: fixed;
+    bottom: 12px;
+    width: 100%;
+  }
+
+  .messages {
+    padding-bottom: 0px;
+  }
+
+  .input-box {
+    position: absolute;
+    bottom: 12px;
+  }
+}
+
+.theme--dark {
+  .channel-page {
+    background: none;
+  }
+}
 </style>
