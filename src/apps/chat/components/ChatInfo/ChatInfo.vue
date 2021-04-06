@@ -54,12 +54,7 @@
             <!-- id, Avatar, Name, email, app id, created_at -->
             <v-sheet class="px-3 py-3 primary">
 
-              <v-card class="mb-3 d-flex justify-space-around">
-                <v-card-actions v-for="item in navMenu.items" :key="item.id">
-                  <span :class="navMenu.spanColor">{{ item.title }}</span>
-                  <v-icon medium class="mx-1" :color="navMenu.iconColor">{{ item.icon }}</v-icon>
-                </v-card-actions>
-              </v-card>
+              <InfoActionsCard />
 
               <AccountCard :user="chat.chatClient"/>
 
@@ -110,6 +105,7 @@
 
 <script>
 import AccountCard from '@/components/user/AccountCard'
+import InfoActionsCard from '@/apps/chat/components/ChatInfo/InfoActionsCard'
 import UserMetaTab from '@/components/user/tabs/UserMetaTab'
 import ChatMetaTab from '@/apps/chat/components/tabs/ChatMetaTab'
 import ChannelMessage from '@/apps/chat/components/ChannelMessage'
@@ -120,10 +116,11 @@ import { showChatRequest } from '@/apps/chat/http/chatRequest'
 export default {
   name: 'ChatInfo',
   components: {
-    UserMetaTab,
     AccountCard,
+    InfoActionsCard,
     ChannelMessage,
-    ChatMetaTab
+    ChatMetaTab,
+    UserMetaTab
   },
   props: {
     activatorHidden: {
@@ -148,21 +145,7 @@ export default {
       widgets: false,
       chatInstance: {},
       backendErrors: [],
-      chaRequest: {},
-      navMenu: {
-        items: [{
-          title: 'Тикеты',
-          icon: 'mdi-card-bulleted-settings'
-        },{
-          title: 'Чат',
-          icon: 'mdi-wechat'
-        },{
-          title: 'Выйти',
-          icon: 'mdi-exit-run'
-        }],
-        spanColor: 'accent--text',
-        iconColor: 'accent'
-      }
+      chaRequest: {}
     }
   },
   computed: {
