@@ -1,10 +1,12 @@
 <template>
   <v-card class="mb-3 d-flex justify-space-around">
     <v-card-actions v-for="item in navMenu.items" :key="item.id">
-      <router-link :to="item.to">
-        <span :class="navMenu.spanColor">{{ item.title }}</span>
-        <v-icon medium class="mx-1" :color="navMenu.iconColor">{{ item.icon }}</v-icon>
+      <span @click="onClickActionHook(item)">
+        <router-link :to="item.to">
+          <span :class="navMenu.spanColor">{{ item.title }}</span>
+          <v-icon medium class="mx-1" :color="navMenu.iconColor">{{ item.icon }}</v-icon>
       </router-link>
+      </span>
     </v-card-actions>
   </v-card>
 </template>
@@ -32,11 +34,16 @@ export default {
         },{
           title: 'Выйти',
           icon: 'mdi-exit-run',
-          to: { name: 'ticket-list', params: { chatId: this.chatId } }
+          to: { name: 'apps-chat-list' }
         }],
         spanColor: 'accent--text',
         iconColor: 'accent'
       }
+    }
+  },
+  methods: {
+    onClickActionHook(item) {
+      if (item.to.name === 'apps-chat-list') this.$emit('close-dialog')
     }
   }
 }

@@ -37,9 +37,6 @@ export default {
       required: true
     }
   },
-  mounted() {
-    console.log(this.chat)
-  },
   methods: {
     chatIsValid(chat) {
       return chat instanceof ClientsChat

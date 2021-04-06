@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "ChatMetaData"
+  name: 'ChatMetaData'
 }
 </script>
 

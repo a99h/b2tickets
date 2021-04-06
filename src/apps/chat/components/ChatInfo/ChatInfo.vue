@@ -54,7 +54,7 @@
             <!-- id, Avatar, Name, email, app id, created_at -->
             <v-sheet class="px-3 py-3 primary">
 
-              <InfoActionsCard :chat-id="chat.id"/>
+              <InfoActionsCard :chat-id="chat.id" @close-dialog="dialog = false"/>
 
               <AccountCard :user="chat.chatClient"/>
 
@@ -164,7 +164,6 @@ export default {
       if (val) return
 
       this.dialogLoader = val
-      console.log(this.chatInstance)
     },
     loadingDialog (val) {
       if (val) return
