@@ -56,7 +56,7 @@
     <!-- channel view -->
     <v-card class="flex-grow-1">
 
-      <chat-toolbar
+      <ChatToolbar
         :chat="currentChat"
         @leave-channel="leaveChat"
         @toggle-menu="drawer = !drawer"

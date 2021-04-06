@@ -51,21 +51,26 @@
 
         <v-row class="surface">
           <v-col cols="8">
-            <v-container>
-              <!-- id, Avatar, Name, email, app id, created_at -->
-              <v-sheet class="px-3 py-3 primary">
+            <!-- id, Avatar, Name, email, app id, created_at -->
+            <v-sheet class="px-3 py-3 primary">
 
-                <AccountCard :user="chat.chatClient"/>
+              <v-card class="mb-3 d-flex justify-space-around">
+                <v-card-actions v-for="item in navMenu.items" :key="item.id">
+                  <span :class="navMenu.spanColor">{{ item.title }}</span>
+                  <v-icon medium class="mx-1" :color="navMenu.iconColor">{{ item.icon }}</v-icon>
+                </v-card-actions>
+              </v-card>
 
-                <v-expansion-panels v-model="panel" multiple class="mt-3">
+              <AccountCard :user="chat.chatClient"/>
 
-                  <UserMetaTab :user="chat.chatClient"/>
+              <v-expansion-panels v-model="panel" multiple class="mt-3">
 
-                  <ChatMetaTab :chat="chat"/>
+                <UserMetaTab :user="chat.chatClient"/>
 
-                </v-expansion-panels>
-              </v-sheet>
-            </v-container>
+                <ChatMetaTab :chat="chat"/>
+
+              </v-expansion-panels>
+            </v-sheet>
           </v-col>
           <v-col cols="4" class="no-gutters flex-column">
             <div class="d-flex flex-grow-1 flex-row mt-2">
@@ -143,7 +148,21 @@ export default {
       widgets: false,
       chatInstance: {},
       backendErrors: [],
-      chaRequest: {}
+      chaRequest: {},
+      navMenu: {
+        items: [{
+          title: 'Тикеты',
+          icon: 'mdi-card-bulleted-settings'
+        },{
+          title: 'Чат',
+          icon: 'mdi-wechat'
+        },{
+          title: 'Выйти',
+          icon: 'mdi-exit-run'
+        }],
+        spanColor: 'accent--text',
+        iconColor: 'accent'
+      }
     }
   },
   computed: {
