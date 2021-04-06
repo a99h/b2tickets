@@ -2,8 +2,6 @@
   <!--  &lt;!&ndash; Related tickets, enter chat button &ndash;&gt;-->
   <!--  <ChatInfoActions />-->
 
-  <!--  <ChatLastMessage />-->
-
   <!--  &lt;!&ndash; id, Created, updated, active &ndash;&gt;-->
   <!--  <ChatMetaData />-->
 
@@ -63,6 +61,8 @@
 
                   <UserMetaTab :user="chat.chatClient"/>
 
+                  <ChatMetaTab :chat="chat"/>
+
                 </v-expansion-panels>
               </v-sheet>
             </v-container>
@@ -105,7 +105,8 @@
 
 <script>
 import AccountCard from '@/components/user/AccountCard'
-import UserMetaTab from '@/components/tabs/UserMetaTab'
+import UserMetaTab from '@/components/user/tabs/UserMetaTab'
+import ChatMetaTab from '@/apps/chat/components/tabs/ChatMetaTab'
 import ChannelMessage from '@/apps/chat/components/ChannelMessage'
 import { mapActions, mapGetters } from 'vuex'
 import ClientsChat from '@/apps/chat/classes/ClientsChat'
@@ -116,7 +117,8 @@ export default {
   components: {
     UserMetaTab,
     AccountCard,
-    ChannelMessage
+    ChannelMessage,
+    ChatMetaTab
   },
   props: {
     activatorHidden: {
@@ -130,7 +132,7 @@ export default {
   },
   data () {
     return {
-      panel: [0],
+      panel: [0,1],
       dialog: false,
       dialogLoader: false,
       loadingDialog: false,

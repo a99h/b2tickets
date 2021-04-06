@@ -147,8 +147,8 @@ export default {
       { text: this.$t('b2tickets.user.fields.name'), value: 'name' },
       { text: this.$t('b2tickets.user.fields.email'), value: 'email' },
       { text: this.$t('b2tickets.user.fields.userRoles'), value: 'userRoles' },
-      { text: this.$t('b2tickets.common.created_at'), value: 'created_at' },
-      { text: this.$t('b2tickets.common.updated_at'), value: 'updated_at' },
+      { text: this.$t('b2tickets.common.fields.created_at'), value: 'created_at' },
+      { text: this.$t('b2tickets.common.fields.updated_at'), value: 'updated_at' },
       { text: '', value: 'actions', sortable: false }
     ]}
   },

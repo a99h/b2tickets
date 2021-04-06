@@ -252,6 +252,7 @@ export default {
       'request': {
         'title': 'Запрос на чат | Запросы на чат',
         'fields': {
+          'id': 'ID запроса на чат',
           'message': 'Сообщение',
           'operators_online': 'Операторы онлайн',
           'client': 'Клиент'
@@ -259,6 +260,7 @@ export default {
       },
       'chatHistory': 'История чатов',
       'fields': {
+        'id': 'ID чата',
         'active': 'Активен',
         'client': 'Клиент'
       },
@@ -270,14 +272,17 @@ export default {
       }
     },
     'common': {
+      'yes': 'Да',
+      'no': 'Нет',
       'description': 'Предоставим лучшую клиентскую поддержку.',
       'loading': 'Идет загрузка...',
       'select': 'Пожалуйста выберите',
       'welcome': 'Станьте участником нашей команды',
-      'created_at': 'Создано',
-      'updated_at': 'Обновлено',
       'fields': {
-        'actions': 'Действия'
+        'id': 'ID',
+        'actions': 'Действия',
+        'created_at': 'Создано',
+        'updated_at': 'Обновлено'
       },
       'action': 'Действие | Действия',
       'actions': {
@@ -300,6 +305,21 @@ export default {
         'waitingOperator': 'ожидает оператора!'
       },
       'title': 'Уведомление | Уведомления'
+    },
+    'tabs': {
+      'user': {
+        'meta': {
+          'title': 'Метаданные пользователя'
+        },
+        'account': {
+          'title': 'Информация о пользователе'
+        }
+      },
+      'chat': {
+        'info': {
+          'title': 'Информация о чате'
+        }
+      }
     },
     'ticket': {
       'ticket': 'тикет',
@@ -361,20 +381,13 @@ export default {
         'admin': 'Администратор'
       },
       'fields': {
+        'id': 'ID',
         'name': 'Имя',
         'email': 'Email',
         'password': 'Пароль',
         'userRoles': 'Роли'
       },
-      'title': 'Пользователь | Пользователи',
-      'tabs': {
-        'meta': {
-          'title': 'Метаданные пользователя'
-        },
-        'account': {
-          'title': 'Информация о пользователе'
-        }
-      }
+      'title': 'Пользователь | Пользователи'
     }
   }
 }

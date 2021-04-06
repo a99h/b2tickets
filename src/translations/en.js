@@ -253,6 +253,7 @@ export default {
       request: {
         title: 'Chat request | Chat requests',
         fields: {
+          id: 'Chat Request ID',
           message: 'Message',
           operators_online: 'Operators online',
           client: 'Client'
@@ -260,6 +261,7 @@ export default {
       },
       chatHistory: 'Chat history',
       fields: {
+        id: 'Chat ID',
         active: 'Active',
         client: 'Client'
       },
@@ -271,11 +273,14 @@ export default {
       }
     },
     common: {
+      yes: 'Yes',
+      no: 'No',
       description: 'Let\'s provide best client supporting.',
       loading: 'Loading...',
       select: 'Please select',
       welcome: 'Become a member of our team',
       fields: {
+        id: 'ID',
         actions: 'Actions',
         created_at: 'Created at',
         updated_at: 'Updated at'
@@ -301,6 +306,21 @@ export default {
         waitingOperator: 'is waiting for operator!'
       },
       title: 'Notification | Notifications'
+    },
+    tabs: {
+      user: {
+        meta: {
+          title: 'User metadata'
+        },
+        account: {
+          title: 'User information'
+        }
+      },
+      chat: {
+        info: {
+          title: 'Chat information'
+        }
+      }
     },
     ticket: {
       ticket: 'ticket',
@@ -343,6 +363,7 @@ export default {
         admin: 'Administrator'
       },
       fields: {
+        id: 'ID',
         name: 'Name',
         email: 'Email',
         password: 'Password',
@@ -366,15 +387,7 @@ export default {
           metadata: 'Metadata'
         }
       },
-      title: 'User | Users',
-      tabs: {
-        meta: {
-          title: 'User metadata'
-        },
-        account: {
-          title: 'User information'
-        }
-      }
+      title: 'User | Users'
     }
   }
 }

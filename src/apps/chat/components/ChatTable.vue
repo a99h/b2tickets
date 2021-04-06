@@ -133,7 +133,7 @@ export default {
       },
       { text: this.$t('b2tickets.chat.fields.client'), value: 'chatClient.email' },
       { text: this.$t('b2tickets.chat.fields.active'), value: 'active' },
-      { text: this.$t('b2tickets.common.updated_at'), value: 'updated_at' },
+      { text: this.$t('b2tickets.common.fields.updated_at'), value: 'updated_at' },
       { text: '', value: 'actions', sortable: false }
     ]}
   },

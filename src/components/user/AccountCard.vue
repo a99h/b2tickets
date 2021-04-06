@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>{{ $t('b2tickets.user.tabs.account.title') }}</v-card-title>
+    <v-card-title>{{ $t('b2tickets.tabs.user.account.title') }}</v-card-title>
     <div class="d-flex flex-column flex-sm-row">
       <div class="d-flex flex-column justify-center align-center mx-3">
 
