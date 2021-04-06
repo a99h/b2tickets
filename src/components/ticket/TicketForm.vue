@@ -169,6 +169,10 @@ export default {
     activatorHidden: {
       type: Boolean,
       required: false
+    },
+    chatId: {
+      type: Number,
+      required: false
     }
   },
   validations: {
@@ -191,7 +195,8 @@ export default {
       description: '',
       ticketChatRequests: [],
       ticketOperators: [],
-      ticketStatus: {}
+      ticketStatus: {},
+      ticketChat: null
     },
     defaultItem: {
       issue: '',
@@ -374,6 +379,8 @@ export default {
       if (ticketChatRequests) Object.assign(filteredData, { ticketChatRequests: data.ticketChatRequests.map((item) => item.id) })
       if (ticketOperators !== []) Object.assign(filteredData, { ticketOperators: data.ticketOperators.map((item) => item.id) })
       if (ticketStatus) Object.assign(filteredData, { ticketStatus: data.ticketStatus.id })
+
+      if (this.chatId) Object.assign(filteredData, { ticketChat: this.chatId })
 
       return filteredData
     }

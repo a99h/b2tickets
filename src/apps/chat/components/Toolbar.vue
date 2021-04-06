@@ -22,6 +22,7 @@
       ref="ticketForm"
       :tickets="getTickets"
       :activator-hidden="true"
+      :chat-id="chat.chat.id"
       @closeDialog="backendErrors = null"
       @ticketFormBackendErrors="(err) => backendErrors = err"
       @refreshState="refreshTickets"
