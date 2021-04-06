@@ -158,6 +158,7 @@ export default {
   },
   mounted() {
     this.dataTableInitialize()
+    console.log(this.$route.params)
   },
   methods: {
     ...mapActions({
@@ -170,6 +171,7 @@ export default {
 
       await this.fetchTickets().then(() => {
         this.tickets = this.getTickets
+        console.log(this.tickets)
       })
 
       this.loading.dataTable = false

@@ -54,7 +54,7 @@
             <!-- id, Avatar, Name, email, app id, created_at -->
             <v-sheet class="px-3 py-3 primary">
 
-              <InfoActionsCard />
+              <InfoActionsCard :chat-id="chat.id"/>
 
               <AccountCard :user="chat.chatClient"/>
 
@@ -173,6 +173,7 @@ export default {
     }
   },
   mounted() {
+    // this.initialize()
   },
   methods: {
     ...mapActions({
@@ -181,14 +182,12 @@ export default {
     initialize() {
       this.loadingDialog = true
 
-      console.log(this.chat)
       this.fetchChatRequest(this.chat.chat_request_id).then(() => {
         this.createChat({
           chatRequest: this.chatRequest,
           channelName: this.chatRequest.channelName,
           user: this.whoAmI
         })
-        console.log(this.chatInstance)
         this.loadingDialog = false
       }).catch(() => {
         this.loadingDialog = false
