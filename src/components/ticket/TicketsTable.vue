@@ -170,12 +170,22 @@ export default {
       this.loading.dataTable = 'info'
 
       await this.fetchTickets().then(() => {
-        this.tickets = this.getTickets
-        console.log(this.tickets)
+        this.tickets = this.$route.params.chatId !== undefined
+          ? this.filterTickets(this.getTickets, { chatId: this.$route.params.chatId })
+          : this.getTickets
       })
 
       this.loading.dataTable = false
       this.backendErrors = null
+    },
+    filterTickets(tickets, options) {
+      const { chatId } = options
+
+      return chatId ? tickets.filter((ticket) => {
+        const { ticketChat } = ticket
+
+        return ticketChat ? ticketChat.id === chatId : false
+      }) : tickets
     },
     onCloseDialog() {
       this.backendErrors = null
