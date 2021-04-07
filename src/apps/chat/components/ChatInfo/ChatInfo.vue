@@ -54,7 +54,7 @@
             <!-- id, Avatar, Name, email, app id, created_at -->
             <v-sheet class="px-3 py-3 primary">
 
-              <InfoActionsCard :chat-id="chat.id" @close-dialog="dialog = false"/>
+              <InfoActionsCard :chat-id="chat.id" :channel-name="chat.chatRequest.channel_name" @close-dialog="dialog = false"/>
 
               <AccountCard :user="chat.chatClient"/>
 
@@ -145,7 +145,7 @@ export default {
       widgets: false,
       chatInstance: {},
       backendErrors: [],
-      chaRequest: {}
+      chatRequest: {}
     }
   },
   computed: {
@@ -168,11 +168,14 @@ export default {
     loadingDialog (val) {
       if (val) return
 
+      console.log(this.chat)
+
       this.dialog = true
     }
   },
   mounted() {
     // this.initialize()
+    console.log(this.chat)
   },
   methods: {
     ...mapActions({

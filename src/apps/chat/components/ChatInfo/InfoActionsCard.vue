@@ -5,7 +5,7 @@
         <router-link :to="item.to">
           <span :class="navMenu.spanColor">{{ item.title }}</span>
           <v-icon medium class="mx-1" :color="navMenu.iconColor">{{ item.icon }}</v-icon>
-      </router-link>
+        </router-link>
       </span>
     </v-card-actions>
   </v-card>
@@ -17,6 +17,10 @@ export default {
   props: {
     chatId: {
       type: Number,
+      required: true
+    },
+    channelName: {
+      type: String,
       required: true
     }
   },
@@ -30,7 +34,7 @@ export default {
         },{
           title: 'Чат',
           icon: 'mdi-wechat',
-          to: { name: 'ticket-list', params: { chatId: this.chatId } }
+          to: { name: 'apps-chat-channel', params: { id: this.channelName } }
         },{
           title: 'Выйти',
           icon: 'mdi-exit-run',
@@ -40,6 +44,9 @@ export default {
         iconColor: 'accent'
       }
     }
+  },
+  mounted() {
+    console.log(this.channelName)
   },
   methods: {
     onClickActionHook(item) {

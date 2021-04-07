@@ -158,8 +158,13 @@ export default {
       this.backendErrors = null
     },
     showItem(item) {
-      this.currentItem = this.chats[this.chats.indexOf(item)]
-      this.$refs.chatInfo.dialogLoader = true
+      const chat = this.chats[this.chats.indexOf(item)]
+
+      showChatRequest(chat.chat_request_id).then((res) => {
+        this.currentItem = { ...chat, chatRequest: res.data }
+
+        this.$refs.chatInfo.dialogLoader = true
+      })
     },
     async editItem(item) {
       this.backendErrors = null
@@ -187,6 +192,12 @@ export default {
       }
 
       this.$emit('add-chat', data)
+    },
+    async setChatRequest() {
+      await showChatRequest(this.chat.chat_request_id).then((res) => {
+        this.chatRequest = res.data
+      }).catch(() => {
+      })
     }
   }
 }
