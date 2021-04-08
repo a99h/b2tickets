@@ -1,13 +1,5 @@
 <template>
-  <!--  &lt;!&ndash; Related tickets, enter chat button &ndash;&gt;-->
-  <!--  <ChatInfoActions />-->
-
-  <!--  &lt;!&ndash; id, Created, updated, active &ndash;&gt;-->
-  <!--  <ChatMetaData />-->
-
-  <!--  &lt;!&ndash; id, created, channel_name &ndash;&gt;-->
-  <!--  <ChatRequestMetaData />-->
-  <div class="text-center" style="max-height: 80vh">
+  <div class="text-center">
     <v-dialog
       v-model="dialogLoader"
       persistent
@@ -25,9 +17,10 @@
             color="white"
             class="mb-0"
           ></v-progress-linear>
-        </v-card-text>
+        </v-card-text> 
       </v-card>
     </v-dialog>
+
     <v-dialog
       v-model="dialog"
       persistent
@@ -49,10 +42,10 @@
           <v-toolbar-title>{{ $t('b2tickets.chat.form.show') }}</v-toolbar-title>
         </v-toolbar>
 
-        <v-row class="surface">
-          <v-col cols="8">
-            <!-- id, Avatar, Name, email, app id, created_at -->
-            <v-sheet class="px-3 py-3 primary">
+        <v-row class="surface ma-0">
+
+          <v-col cols="6">
+            <v-sheet class="pa-3 primary">
 
               <InfoActionsCard :chat-id="chat.id" :channel-name="chat.chatRequest.channel_name" @close-dialog="dialog = false"/>
 
@@ -67,9 +60,10 @@
               </v-expansion-panels>
             </v-sheet>
           </v-col>
-          <v-col cols="4" class="no-gutters flex-column">
-            <div class="d-flex flex-grow-1 flex-row mt-2">
-              <v-card class="flex-grow-1">
+
+          <v-col cols="6">
+            <v-sheet class="pa-3 primary">
+              <v-card style="height: 100%">
                 <v-progress-linear
                   v-if="loadingMessages"
                   color="deep-purple accent-4"
@@ -78,7 +72,7 @@
                   height="6"
                 ></v-progress-linear>
                 <div v-if="!loadingMessages" class="channel-page">
-                  <div id="messages" ref="messages" class="messages mx-2">
+                  <div id="messages" ref="messages" class="messages px-2">
                     <transition-group name="list">
 
                       <ChannelMessage
@@ -93,9 +87,12 @@
 
                     </transition-group>
                   </div>
+                  <div class="input-box pa-2">
+                    <InputBox />
+                  </div>
                 </div>
               </v-card>
-            </div>
+            </v-sheet>
           </v-col>
         </v-row>
       </v-card>
@@ -112,6 +109,7 @@ import ChannelMessage from '@/apps/chat/components/ChannelMessage'
 import { mapActions, mapGetters } from 'vuex'
 import ClientsChat from '@/apps/chat/classes/ClientsChat'
 import { showChatRequest } from '@/apps/chat/http/chatRequest'
+import InputBox from '@/apps/chat/components/InputBox'
 
 export default {
   name: 'ChatInfo',
@@ -120,7 +118,8 @@ export default {
     InfoActionsCard,
     ChannelMessage,
     ChatMetaTab,
-    UserMetaTab
+    UserMetaTab,
+    InputBox
   },
   props: {
     activatorHidden: {
@@ -210,6 +209,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.row {
+  height: calc(100vh - 64px);
+}
+
+.primary {
+  height: 100%;
+}
+
 // List Transition Animation
 .list-enter-active {
   transition: all 0.3s;
@@ -227,35 +235,14 @@ export default {
 // -- End List Transition Animation
 
 .channel-page {
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  max-height: 80%;
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+  display: grid;
+  grid-template: "messages" "input-box";
+  grid-template-rows: 1fr auto;
 
   .messages {
-    flex-grow: 1;
-    margin-bottom: 68px;
-    overflow-y: scroll;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    min-height: 0;
-  }
-
-  .input-box {
-    position: fixed;
-    bottom: 12px;
-    width: 100%;
-  }
-
-  .messages {
-    padding-bottom: 0px;
-  }
-
-  .input-box {
-    position: absolute;
-    bottom: 12px;
   }
 }
 
