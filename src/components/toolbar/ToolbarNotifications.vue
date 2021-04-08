@@ -122,7 +122,7 @@ export default {
     }
   },
   sockets: {
-    connect: function () {
+    connect() {
       console.log('socket connected')
     },
     customEmit: function (data) {
@@ -143,6 +143,11 @@ export default {
   created() {
     this.initialize()
     this.interval = setInterval(() => this.$forceUpdate(), 1000 * 60)
+
+    this.$socket.emit('new-operator', this.user)
+    this.$socket.on('some event', () => {
+      console.log('event from server')
+    })
   },
   beforeDestroy() {
     clearInterval(this.interval)
@@ -157,12 +162,18 @@ export default {
       this.getNotifications()
       this.joinEcho()
     },
+    emitNewChatRequest(chatRequest) {
+      // $socket is socket.io-client instance
+      this.$socket.emit('new-chat-request', chatRequest)
+    },
     joinEcho() {
       Echo.private(this.channel)
         .notification((event) => {
           if (event.chat_request) {
             this.items.unshift(event)
             if (!this.muted) this.playSound()
+
+            this.emitNewChatRequest(event.chat_request)
           }
         })
     },

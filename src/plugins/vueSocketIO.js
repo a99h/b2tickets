@@ -3,7 +3,9 @@ import store from '@/store'
 import VueSocketIO from 'vue-socket.io'
 import SocketIO from 'socket.io-client'
 
-const options = { path: '/socket.io/socket.io.js' } //Options object to pass into SocketIO
+const options = {
+  path: '/socket.io/socket.io.js'
+} //Options object to pass into SocketIO
 
 const socketInstance = new VueSocketIO({
   debug: true,
