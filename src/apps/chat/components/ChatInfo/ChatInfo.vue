@@ -24,7 +24,7 @@
     <v-dialog
       v-model="dialog"
       persistent
-      fullscreen
+      width="80vw"
       transition="scale-transition"
     >
       <v-card>
@@ -42,57 +42,51 @@
           <v-toolbar-title>{{ $t('b2tickets.chat.form.show') }}</v-toolbar-title>
         </v-toolbar>
 
-        <v-row class="surface ma-0">
+        <v-row class="ma-0">
 
-          <v-col cols="6">
-            <v-sheet class="pa-3 primary">
-
+          <v-col cols="6" class="general-info-section">
+            <v-card class="card scroll">
               <InfoActionsCard :chat-id="chat.id" :channel-name="chat.chatRequest.channel_name" @close-dialog="dialog = false"/>
 
               <AccountCard :user="chat.chatClient"/>
 
-              <v-expansion-panels v-model="panel" multiple class="mt-3">
+              <v-expansion-panels v-model="panel" multiple class="my-1.5">
 
                 <UserMetaTab :user="chat.chatClient"/>
 
                 <ChatMetaTab :chat="chat"/>
 
               </v-expansion-panels>
-            </v-sheet>
+            </v-card>
           </v-col>
 
-          <v-col cols="6">
-            <v-sheet class="pa-3 primary">
-              <v-card style="height: 100%">
-                <v-progress-linear
-                  v-if="loadingMessages"
-                  color="deep-purple accent-4"
-                  indeterminate
-                  rounded
-                  height="6"
-                ></v-progress-linear>
-                <div v-if="!loadingMessages" class="channel-page">
-                  <div id="messages" ref="messages" class="messages px-2">
-                    <transition-group name="list">
+          <v-col cols="6" class="chat-section section">
+            <v-card class="card pa-1">
+              <v-progress-linear
+                v-if="loadingMessages"
+                color="deep-purple accent-4"
+                indeterminate
+                rounded
+                height="6"
+              ></v-progress-linear>
+              <div v-if="!loadingMessages" class="chat scroll">
+                <div id="messages" ref="messages" class="messages">
+                  <transition-group name="list">
 
-                      <ChannelMessage
-                        v-for="message in chatInstance.messages"
-                        :key="message.id"
-                        v-model="chatInstance.messages"
-                        :message="message"
-                        :user="chatInstance.user"
-                        class="my-3 d-flex"
-                        :loading="loadingMessages"
-                      />
+                    <ChannelMessage
+                      v-for="message in chatInstance.messages"
+                      :key="message.id"
+                      v-model="chatInstance.messages"
+                      :message="message"
+                      :user="chatInstance.user"
+                      class="my-1 d-flex"
+                      :loading="loadingMessages"
+                    />
 
-                    </transition-group>
-                  </div>
-                  <div class="input-box pa-2">
-                    <InputBox />
-                  </div>
+                  </transition-group>
                 </div>
-              </v-card>
-            </v-sheet>
+              </div>
+            </v-card>
           </v-col>
         </v-row>
       </v-card>
@@ -109,7 +103,6 @@ import ChannelMessage from '@/apps/chat/components/ChannelMessage'
 import { mapActions, mapGetters } from 'vuex'
 import ClientsChat from '@/apps/chat/classes/ClientsChat'
 import { showChatRequest } from '@/apps/chat/http/chatRequest'
-import InputBox from '@/apps/chat/components/InputBox'
 
 export default {
   name: 'ChatInfo',
@@ -118,8 +111,7 @@ export default {
     InfoActionsCard,
     ChannelMessage,
     ChatMetaTab,
-    UserMetaTab,
-    InputBox
+    UserMetaTab
   },
   props: {
     activatorHidden: {
@@ -160,9 +152,14 @@ export default {
       this.dialog = true
     },
     dialog (val) {
-      if (val) return
+      if (val) {
+        document.documentElement.style.overflow = 'hidden'
+      }
 
-      this.dialogLoader = val
+      else {
+        document.documentElement.removeAttribute('style')
+        this.dialogLoader = val
+      }
     },
     loadingDialog (val) {
       if (val) return
@@ -176,6 +173,7 @@ export default {
     // this.initialize()
     console.log(this.chat)
   },
+
   methods: {
     ...mapActions({
       getMessages: 'message/fetchMessages'
@@ -211,11 +209,28 @@ export default {
 <style lang="scss" scoped>
 
 .row {
-  height: calc(100vh - 64px);
+  height: calc(100% - 64px)
 }
 
-.primary {
+.card {
+  border: 1px solid green;
+}
+
+.general-info-section,
+.chat-section,
+.card,
+.scroll,
+.chat {
   height: 100%;
+}
+
+.scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.messages {
+  word-break: break-all;
 }
 
 // List Transition Animation
@@ -232,20 +247,8 @@ export default {
   opacity: 0;
   transform: translateX(-10px);
 }
+
 // -- End List Transition Animation
-
-.channel-page {
-  height: 100%;
-  display: grid;
-  grid-template: "messages" "input-box";
-  grid-template-rows: 1fr auto;
-
-  .messages {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
 .theme--dark {
   .channel-page {
     background: none;
