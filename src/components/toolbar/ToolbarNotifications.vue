@@ -127,6 +127,12 @@ export default {
     },
     customEmit: function (data) {
       console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
+    },
+    operatorSuggested: function (data) {
+      console.log(data)
+      if (data.operatorId === this.user.id) this.$socket.emit('chat-request-accepted', data)
+
+      // if (this.user.id === 6) this.$socket.emit('set-priority', { operatorId: this.user.id, priority: 15 })
     }
   },
   computed: {
@@ -164,7 +170,8 @@ export default {
     },
     emitNewChatRequest(chatRequest) {
       // $socket is socket.io-client instance
-      this.$socket.emit('new-chat-request', chatRequest)
+      // if (this.user.id === 6)
+      this.$socket.emit('new-chat-request', chatRequest.id)
     },
     joinEcho() {
       Echo.private(this.channel)
