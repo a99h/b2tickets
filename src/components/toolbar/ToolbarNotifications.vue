@@ -21,7 +21,7 @@
       </v-badge>
     </template>
 
-    <!-- dropdown card -->
+    <!-- Notifications -->
     <v-card>
       <v-system-bar
         window
@@ -87,6 +87,7 @@
         <v-btn color="error" small @click="softDeleteAllNotifications(checkedItems)">{{ $t('b2tickets.notifications.chatRequest.markAll') }} </v-btn>
       </div>
     </v-card>
+
   </v-menu>
 </template>
 
@@ -107,6 +108,7 @@ import VueSocketIO from '@/plugins/vueSocketIO'
 export default {
   data() {
     return {
+      chatRequestAlert: false,
       menu: false,
       audio: null,
       dialog2: false,
@@ -125,12 +127,10 @@ export default {
     connect() {
       console.log('socket connected')
     },
-    customEmit: function (data) {
-      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
-    },
     operatorSuggested: function (data) {
       console.log(data)
-      if (data.operatorId === this.user.id) this.$socket.emit('chat-request-accepted', data)
+      // if (data.operatorId === this.user.id) this.$socket.emit('chat-request-accepted', data)
+      this.chatRequestAlert = true
 
       // if (this.user.id === 6) this.$socket.emit('set-priority', { operatorId: this.user.id, priority: 15 })
     }
@@ -214,11 +214,7 @@ export default {
       this.$i18n.locale = locale
       this.$vuetify.lang.current = locale
 
-      if (locale === 'ar') {
-        this.$vuetify.rtl = true
-      } else {
-        this.$vuetify.rtl = false
-      }
+      this.$vuetify.rtl = locale === 'ar'
     }
   }
 }

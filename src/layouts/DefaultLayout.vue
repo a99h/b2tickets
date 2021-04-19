@@ -105,8 +105,13 @@
     <v-main>
       <v-container class="fill-height" :fluid="!isContentBoxed">
         <v-layout>
+
+          <ChatRequestAlert />
+
           <slot></slot>
+
           <customization-menu />
+
         </v-layout>
       </v-container>
 
@@ -120,6 +125,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import VueSocketIO from '@/plugins/vueSocketIO'
 
 // navigation menu configurations
 import config from '../configs'
@@ -130,6 +136,7 @@ import ToolbarApps from '../components/toolbar/ToolbarApps'
 import ToolbarLanguage from '../components/toolbar/ToolbarLanguage'
 import CustomizationMenu from '../components/navigation/CustomizationMenu'
 import ToolbarNotifications from '../components/toolbar/ToolbarNotifications'
+import ChatRequestAlert from '@/apps/chat/components/ChatRequestAlert'
 
 export default {
   components: {
@@ -138,7 +145,8 @@ export default {
     ToolbarUser,
     ToolbarApps,
     ToolbarLanguage,
-    ToolbarNotifications
+    ToolbarNotifications,
+    ChatRequestAlert
   },
   data() {
     return {
