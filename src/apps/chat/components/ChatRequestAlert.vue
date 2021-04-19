@@ -9,17 +9,22 @@
       <v-card class="darken-2">
         <!-- ChatRequestAlert -->
         <v-alert
+          :v-model="alert.active"
           outlined
         >
           <template v-slot:prepend="">
-            <div class="d-block pr-2" style="cursor: pointer" @click="alert.active=false">
-              <span class="title success--text">Accept</span>
-              <v-icon x-large color="success">mdi-chat-alert</v-icon>
+            <div class="d-block pr-2">
+              <v-btn :key="alert.chatRequest.id" style="cursor: pointer" @click="acceptChatRequest(alert.chatRequest.id)">
+                <span class="title success--text">Accept</span>
+                <v-icon x-large color="success">mdi-chat-alert</v-icon>
+              </v-btn>
               <v-spacer
                 class="my-5"
               ></v-spacer>
-              <span class="title error--text">Decline</span>
-              <v-icon x-large color="error">mdi-close-circle</v-icon>
+              <v-btn style="cursor: pointer" @click="stopTimer(alert.chatRequest.id)">
+                <span class="title error--text">Decline</span>
+                <v-icon x-large color="error">mdi-close-circle</v-icon>
+              </v-btn>
             </div>
           </template>
 
@@ -55,6 +60,7 @@
 
 <script>
 import { showChatRequest } from '@/apps/chat/http/chatRequest'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ChatRequestAlert',
@@ -69,40 +75,42 @@ export default {
       chatRequest: {}
     }
   },
+  computed: {
+    ...mapGetters({
+      user: 'auth/getUser'
+    })
+  },
   sockets: {
-    connect() {
-      console.log('socket connected')
-    },
     operatorSuggested: function (data) {
-      console.log(data)
-      // if (data.operatorId === this.user.id) this.$socket.emit('chat-request-accepted', data)
-      // this.chatRequestAlert = true
+      if (data.operatorId !== this.user.id) return
 
       showChatRequest(data.chatRequestId).then((res) => {
         console.log(res.data)
         this.chatRequestAlerts.push({
           active: true,
-          timeout: 30,
+          timeout: data.operatorTimeout,
           timer: null,
-          chatRequest: res.data
+          chatRequest: res.data,
+          loading: false
         })
 
         this.startTimer(res.data.id)
         this.chatRequestAlert = true
-      })
-      // this.startTimer()
 
-      // if (this.user.id === 6) this.$socket.emit('set-priority', { operatorId: this.user.id, priority: 15 })
+        // delete this
+        // if (data.operatorId === 6) this.$socket.emit('toggle-down-priority', { operatorId: data.operatorId, priority: 15 })
+      })
+    },
+    operatorAccepted: function (data) {
+      const alert = this.alertByChatRequestId(data.chatRequestId)
+
+      alert.loading = false
+
+      if (data.operatorId === this.user.id) this.openChat(data.chatRequestId)
+
+      this.stopTimer(data.chatRequestId)
     }
   },
-  // watch: {
-  //   timeout(time) {
-  //     if (time === 0) {
-  //       this.stopTimer()
-  //       this.chatRequestAlert = false
-  //     }
-  //   }
-  // },
   mounted() {
   },
   destroyed() {
@@ -115,7 +123,6 @@ export default {
       const alert = this.alertByChatRequestId(chatRequestId)
 
       alert.timer = setInterval(() => {
-        console.log(alert.timeout)
         alert.timeout--
         if (alert.timeout === 0) this.stopTimer(chatRequestId)
       }, 1000)
@@ -125,12 +132,28 @@ export default {
 
       clearTimeout(alert.timer)
 
-      this.chatRequestAlerts.splice(this.chatRequestAlerts.indexOf(alert),1)
-
-      if (this.chatRequestAlerts.length === 0) this.chatRequestAlert = false
+      this.removeAlert(alert)
     },
     alertByChatRequestId(chatRequestId) {
       return this.chatRequestAlerts.find((alert) => alert.chatRequest.id === chatRequestId)
+    },
+    removeAlert(alert) {
+      this.chatRequestAlerts.splice(this.chatRequestAlerts.indexOf(alert),1)
+
+      console.log(this.chatRequestAlerts.length)
+
+      if (this.chatRequestAlerts.length === 0) this.chatRequestAlert = false
+    },
+    openChat(chatRequestId) {
+      console.log(chatRequestId)
+    },
+    acceptChatRequest(chatRequestId) {
+      this.alertByChatRequestId(chatRequestId).loading = true
+
+      this.$socket.emit('chat-request-accepted', {
+        chatRequestId: chatRequestId,
+        operatorId: this.user.id
+      })
     }
   }
 }

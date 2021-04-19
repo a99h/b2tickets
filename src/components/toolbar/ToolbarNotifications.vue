@@ -126,13 +126,6 @@ export default {
   sockets: {
     connect() {
       console.log('socket connected')
-    },
-    operatorSuggested: function (data) {
-      console.log(data)
-      // if (data.operatorId === this.user.id) this.$socket.emit('chat-request-accepted', data)
-      this.chatRequestAlert = true
-
-      // if (this.user.id === 6) this.$socket.emit('set-priority', { operatorId: this.user.id, priority: 15 })
     }
   },
   computed: {

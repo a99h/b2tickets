@@ -106,7 +106,7 @@
       <v-container class="fill-height" :fluid="!isContentBoxed">
         <v-layout>
 
-          <ChatRequestAlert />
+          <ChatRequestAlert/>
 
           <slot></slot>
 
