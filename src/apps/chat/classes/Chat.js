@@ -1,7 +1,8 @@
 import isEmpty from '@/lib/isEmpty'
 
-export default class Chat {
+export default class Chat {  
   messages = [];
+  read_at = 0;
   participants = [];
   backendErrors = [];
   typingMessageId = Symbol('typing');

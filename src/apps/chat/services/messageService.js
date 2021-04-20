@@ -7,5 +7,8 @@ export default {
   },
   whisperMessage(channelName, eventName, data) {
     Echo.private('App.User.' + channelName).whisper(eventName, data)
+  },
+  listenLastMessageRead(channelName, eventName, func) {
+    Echo.private('App.User.' + channelName).listenForWhisper(eventName, func)
   }
 }

@@ -1,9 +1,12 @@
 import Chat from './Chat'
 import { showChat, updateChat } from '../http/chat'
 import { getMessages, storeMessage } from '../http/message'
+import { messageService } from '../services'
 import isEmpty from '@/lib/isEmpty'
 
 export default class ClientsChat extends Chat {
+
+  #LAST_MESSAGE_READ = 'last-message-read'
 
   constructor(options) {
     const { channelName, chatRequest, user } = options
@@ -78,6 +81,13 @@ export default class ClientsChat extends Chat {
         }).catch((e) => {
           this.backendErrors.push(e)
         })
+    })
+  }
+
+  watchReadAt() {
+    messageService.listenLastMessageRead(this.channelName, this.#LAST_MESSAGE_READ, () => {
+      // this.messages.map((message) => message.read_at = Date.now())
+      this.read_at = Date.now()
     })
   }
 }

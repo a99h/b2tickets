@@ -25,6 +25,7 @@
                     v-if="isOwnMessage" 
                     medium
                   > 
+                    <!-- {{ message.read_at >= message.timestamp ? 'mdi-check-all' : 'mdi-check' }} -->
                     {{ read_at >= message.timestamp ? 'mdi-check-all' : 'mdi-check' }}
                   </v-icon>
                 </template>
