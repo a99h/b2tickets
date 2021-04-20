@@ -21,6 +21,7 @@
             :user="user"
             class="my-4 d-flex"
             :loading="loading.messages"
+            :read_at="read_at"
           />
         </transition-group>
       </div>
@@ -65,6 +66,8 @@ import channelTitle from '@/apps/chat/filters/channelTitle'
 import { mapActions, mapGetters } from 'vuex'
 import { messageService, channelService } from '@/apps/chat/services'
 
+import Echo from '@/plugins/echo'
+
 /*
 |---------------------------------------------------------------------
 | Chat Channel Page Component
@@ -106,6 +109,7 @@ export default {
       // channel information and messages
       channel: '',
       messages: [],
+      read_at: 0,
 
       // Instance of Chat class
       chatInstance: {}
@@ -118,6 +122,9 @@ export default {
   },
   mounted() {
     this.startChannel(this.$route.params.id)
+    Echo.private('App.User.' + this.channel).listenForWhisper('last-message-read', () => {
+      this.read_at = Date.now()
+    })
   },
   beforeDestroy() {
     this.unregisterListeners()

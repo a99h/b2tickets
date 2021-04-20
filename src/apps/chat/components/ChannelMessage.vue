@@ -19,9 +19,14 @@
                 offset-y="-5"
                 color="transparent"
               >
-                <template v-slot:badge="">
+                <template v-slot:badge="" >
                   <span class="caption">{{ message.timestamp | getTime }}</span>
-                  <v-icon medium>mdi-check-all</v-icon>
+                  <v-icon 
+                    v-if="isOwnMessage" 
+                    medium
+                  > 
+                    {{ read_at >= message.timestamp ? 'mdi-check-all' : 'mdi-check' }}
+                  </v-icon>
                 </template>
                 {{ message.text }}
               </v-badge>
@@ -71,6 +76,10 @@ export default {
     message: {
       type: Object,
       default: () => ({})
+    },
+    read_at: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
