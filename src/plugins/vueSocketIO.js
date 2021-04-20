@@ -9,7 +9,7 @@ const options = {
 
 const socketInstance = new VueSocketIO({
   debug: true,
-  connection: SocketIO('http://localhost:4000', options), //options object is Optional
+  connection: SocketIO(process.env.VUE_APP_CHAT_MANAGER_HOST, options), //options object is Optional
   vuex: {
     store,
     actionPrefix: 'SOCKET_',
