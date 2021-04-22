@@ -39,13 +39,22 @@ export default {
 
     Echo.private('App.User.' + chat.channelName)
       .listen('MessageSent', (event) => {
-        chat.addMessage(event.message)
+
+        const message = { ...event.message }
+
+        if (chat.user.id === event.message.user.id) {
+          message.read_at = null
+        }
+
+        chat.addMessage(message)
+
         chat.setTyping({
           user: event.message.user,
           message: event.message,
           typing: false
         })
       })
+
       .listenForWhisper('operators-message', (event) => {
         chat.addMessage(event.message)
         chat.setTyping({
@@ -53,6 +62,7 @@ export default {
           typing: false
         })
       })
+      
       .listenForWhisper('typing', (data) => {
         const { typing } = data
 

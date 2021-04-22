@@ -21,7 +21,6 @@
             :user="user"
             class="my-4 d-flex"
             :loading="loading.messages"
-            :read_at="chat.read_at"
           />
         </transition-group>
       </div>

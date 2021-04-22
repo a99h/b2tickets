@@ -85,9 +85,10 @@ export default class ClientsChat extends Chat {
   }
 
   watchReadAt() {
-    messageService.listenLastMessageRead(this.channelName, this.#LAST_MESSAGE_READ, () => {
-      // this.messages.map((message) => message.read_at = Date.now())
-      this.read_at = Date.now()
+    messageService.listenLastMessageRead(this.channelName, this.#LAST_MESSAGE_READ, (e) => {
+      this.messages.map((message) => {
+        if (message.read_at === null) message.read_at = e.read_at
+      })
     })
   }
 }

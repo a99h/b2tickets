@@ -24,9 +24,8 @@
                   <v-icon 
                     v-if="isOwnMessage" 
                     medium
-                  > 
-                    <!-- {{ message.read_at >= message.timestamp ? 'mdi-check-all' : 'mdi-check' }} -->
-                    {{ read_at >= message.timestamp ? 'mdi-check-all' : 'mdi-check' }}
+                  >
+                    {{ message.read_at >= message.timestamp ? 'mdi-check-all' : 'mdi-check' }}
                   </v-icon>
                 </template>
                 {{ message.text }}
@@ -77,10 +76,6 @@ export default {
     message: {
       type: Object,
       default: () => ({})
-    },
-    read_at: {
-      type: Number,
-      default: 0
     }
   },
   computed: {
