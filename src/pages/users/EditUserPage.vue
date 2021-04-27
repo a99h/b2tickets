@@ -56,7 +56,7 @@
                 {{ $t('b2tickets.user.pages.editUser.thisUserDisable') }}
               </v-card-subtitle>
               <v-card-actions>
-                <v-btn @click="userEnabled = true" color="success">
+                <v-btn color="success" @click="userEnabled = true">
                   <v-icon left small>mdi-account-check</v-icon>{{ $t('b2tickets.user.pages.editUser.userEnable') }}
                 </v-btn>
               </v-card-actions>
