@@ -3,12 +3,12 @@ import mutations from './mutations'
 
 // state initial values
 const state = {
-  chatRequests: []
+  ChatRequestCollection: {}
 }
 
 const getters = {
   getChatRequests(state) {
-    return state.chatRequests
+    return state.ChatRequestCollection.all()
   }
 }
 

@@ -1,4 +1,5 @@
 import axios from '@/plugins/axios'
+import ChatRequestCollection from '@/apps/chat/models/ChatRequestCollection'
 
 const fetchChatRequests = ({ dispatch }) => {
   return dispatch('main')
@@ -6,22 +7,15 @@ const fetchChatRequests = ({ dispatch }) => {
 
 const main = ({ commit }) => {
   return axios.get(route('api.ticketsystem.chat.chatrequest.index')).then((response) => {
-    commit('SET_CHAT_REQUESTS', response.data.data)
-  }).catch(() => {
-    commit('SET_CHAT_REQUESTS', [])
-  })
-}
+    const collection = new ChatRequestCollection({ data: response.data.data })
 
-const showChatRequest = ({ commit }, id) => {
-  return new Promise((resolve, reject) => {
-    axios.get(route('api.ticketsystem.chat.chatrequest.show', id))
-      .then((response) => resolve(response.data))
-      .catch((err) => reject(err))
+    commit('SET_CHAT_REQUEST_COLLECTION', collection)
+  }).catch(() => {
+    commit('SET_CHAT_REQUEST_COLLECTION', null)
   })
 }
 
 export default {
   main,
-  fetchChatRequests,
-  showChatRequest
+  fetchChatRequests
 }

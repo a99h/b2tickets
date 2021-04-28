@@ -1,5 +1,5 @@
 export default {
-  SET_CHAT_REQUESTS(state, value) {
-    state.chatRequests = value
+  SET_CHAT_REQUEST_COLLECTION(state, value) {
+    state.ChatRequestCollection = value
   }
 }
