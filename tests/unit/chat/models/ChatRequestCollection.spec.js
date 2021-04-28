@@ -14,7 +14,7 @@ test('new works', () => {
 
 test('extends model structure', () => {
   expect(new ChatRequestCollection).toBeInstanceOf(ModelCollection)
-  
+
   expect(createModelCollection()).toEqual(expect.objectContaining({
     $collection: expect.any(Array),
     $options: expect.objectContaining({
