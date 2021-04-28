@@ -1,4 +1,4 @@
-export default class Model {
+export default class ModelCollection {
   constructor(options = {}) {
     const data = options.data || []
 
@@ -10,8 +10,8 @@ export default class Model {
   }
 
   record(data) {
-    const mappedData = data.map(entry => {
-      if(!entry[this.$options.primaryKey]) entry[this.$options.primaryKey] = Date.now()
+    const mappedData = data.map((entry) => {
+      if (!entry[this.$options.primaryKey]) entry[this.$options.primaryKey] = Date.now()
 
       return entry
     })
@@ -19,10 +19,10 @@ export default class Model {
     this.$collection.push( ...mappedData)
   }
   all() {
-    return this.$collection.map(entry => Object.assign({}, entry))
+    return this.$collection.map((entry) => Object.assign({}, entry))
   }
   update(key, data) {
-    const entryIndex = this.$collection.findIndex(entry => entry[this.$options.primaryKey] === key)
+    const entryIndex = this.$collection.findIndex((entry) => entry[this.$options.primaryKey] === key)
 
     if (entryIndex < 0) return false
 
@@ -33,7 +33,7 @@ export default class Model {
     )
   }
   find(key) {
-    const entry = this.$collection.find(entry => entry[this.$options.primaryKey] === key)
+    const entry = this.$collection.find((entry) => entry[this.$options.primaryKey] === key)
 
     return entry ? Object.assign({}, entry) : null
   }

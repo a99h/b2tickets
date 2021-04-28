@@ -1,18 +1,18 @@
-import Model from '@/lib/Model'
+import ModelCollection from '@/lib/ModelCollection'
 
-function createModel(data = [], options = {}) {
-  return new Model({
+function createModelCollection(data = [], options = {}) {
+  return new ModelCollection({
     ...options,
     data
   })
 }
 
 test('new works', () => {
-  expect(createModel()).toBeInstanceOf(Model)
+  expect(createModelCollection()).toBeInstanceOf(ModelCollection)
 })
 
 test('model structure', () => {
-  expect(createModel()).toEqual(expect.objectContaining({
+  expect(createModelCollection()).toEqual(expect.objectContaining({
     $collection: expect.any(Array),
     $options: expect.objectContaining({
       primaryKey: 'id'
@@ -26,11 +26,11 @@ test('model structure', () => {
 
 describe('customizations', () => {
   test('we can customize the primaryKey', () => {
-    const model = createModel([],{
+    const modelCollection = createModelCollection([],{
       primaryKey: 'name'
     })
 
-    expect(model.$options.primaryKey).toBe('name')
+    expect(modelCollection.$options.primaryKey).toBe('name')
   })
 })
 
@@ -42,10 +42,10 @@ describe('record', () => {
   }]
 
   test('can add data to the collection', () => {
-    const model = createModel()
+    const modelCollection = createModelCollection()
 
-    model.record(heroes)
-    expect(model.$collection).toEqual([
+    modelCollection.record(heroes)
+    expect(modelCollection.$collection).toEqual([
       heroes[0],
       {
         id: expect.any(Number),
@@ -55,12 +55,12 @@ describe('record', () => {
   })
 
   test('gets called when data is passed to Model', () => {
-    const spy = jest.spyOn(Model.prototype, 'record')
-    const model = createModel(heroes)
+    const spy = jest.spyOn(ModelCollection.prototype, 'record')
+    const modelCollection = createModelCollection(heroes)
 
     expect(spy).toHaveBeenCalled()
 
-    expect(model.$collection).toEqual(heroes)
+    expect(modelCollection.$collection).toEqual(heroes)
 
     spy.mockRestore()
   })
@@ -68,14 +68,14 @@ describe('record', () => {
 
 describe('all', () => {
   test('returns empty model', () => {
-    const model = createModel()
+    const modelCollection = createModelCollection()
 
-    expect(model.all()).toEqual([])
+    expect(modelCollection.all()).toEqual([])
   })
 
   test('returns model data', () => {
-    const model = createModel([{
-      name: 'Batman'}, {
+    const model = createModelCollection([{
+      name: 'Batman' }, {
       name: 'Joker'
     }])
 
@@ -83,11 +83,11 @@ describe('all', () => {
   })
 
   test('original data stays intact', () => {
-    const model = createModel([{ name: 'Batman' }])
-    const data = model.all()
+    const modelCollection = createModelCollection([{ name: 'Batman' }])
+    const data = modelCollection.all()
 
     data[0].name = 'Joker'
-    expect(model.$collection[0].name).toBe('Batman')
+    expect(modelCollection.$collection[0].name).toBe('Batman')
   })
 })
 
@@ -101,44 +101,44 @@ describe('find', () => {
   }]
 
   test('returns null if nothing matches', () => {
-    const model = createModel()
+    const modelCollection = createModelCollection()
 
-    expect(model.find(heroes[0].id)).toEqual(null)
+    expect(modelCollection.find(heroes[0].id)).toEqual(null)
   })
 
   test('find returns a matching entry', () => {
-    const model = createModel(heroes)
+    const modelCollection = createModelCollection(heroes)
 
-    expect(model.find(heroes[0].id)).toEqual(heroes[0])
+    expect(modelCollection.find(heroes[0].id)).toEqual(heroes[0])
   })
 })
 
 describe('update', () => {
   const heroesAndVillains = [{ id: 1, name: 'Batman' }]
-  let model
+  let modelCollection
 
   beforeEach(() => {
     const dataset = JSON.parse(JSON.stringify(heroesAndVillains))
 
-    model = createModel(dataset)
+    modelCollection = createModelCollection(dataset)
   })
 
   test('an entry by id', () => {
     const hero = { name: 'Joker' }
 
-    model.update(1, hero)
-    expect(model.find(1).name).toBe(hero.name)
+    modelCollection.update(1, hero)
+    expect(modelCollection.find(1).name).toBe(hero.name)
   })
 
   test('extend an entry by id', () => {
-    model.update(1, { cape: true })
-    expect(model.find(1)).toEqual(expect.objectContaining({
+    modelCollection.update(1, { cape: true })
+    expect(modelCollection.find(1)).toEqual(expect.objectContaining({
       name: 'Batman',
       cape: true
     }))
   })
 
   test('return false if no entry matches', () => {
-    expect(model.update(2, {})).toBe(false)
+    expect(modelCollection.update(2, {})).toBe(false)
   })
 })
