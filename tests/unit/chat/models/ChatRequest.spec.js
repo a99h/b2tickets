@@ -23,3 +23,19 @@ test('extends model structure', () => {
     update: expect.any(Function)
   }))
 })
+
+describe('customizations', () => {
+  test('primary key must be id', () => {
+    const model = createModel()
+
+    expect(model.$options.primaryKey).toBe('id')
+  })
+
+  test('we can\'t customize the primaryKey', () => {
+    const model = createModel([],{
+      primaryKey: 'name'
+    })
+
+    expect(model.$options.primaryKey).toBe('id')
+  })
+})
