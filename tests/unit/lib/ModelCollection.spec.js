@@ -37,7 +37,7 @@ describe('customizations', () => {
 describe('record', () => {
   const heroes = [{
     id: 1,
-    name: 'Batman'}, {
+    name: 'Batman' }, {
     name: 'Black Panther'
   }]
 
