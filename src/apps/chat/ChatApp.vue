@@ -199,6 +199,8 @@ export default {
 
         const chat = this.createChat(options)
 
+        console.log(chat)
+
         channelService.subscribeChannel(chat)
 
         this.storeOpenedChat(chat)

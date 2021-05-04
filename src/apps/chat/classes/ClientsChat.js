@@ -3,6 +3,7 @@ import { showChat, updateChat } from '../http/chat'
 import { getMessages, storeMessage } from '../http/message'
 import { messageService } from '../services'
 import isEmpty from '@/js/lib/isEmpty'
+import Client from '@/js/models/Client'
 
 export default class ClientsChat extends Chat {
 
@@ -16,7 +17,7 @@ export default class ClientsChat extends Chat {
     this.chatRequest = chatRequest
     this.channelName = chatRequest.show().channel_name
     this.chat = chatRequest.show().chat
-    this._client = chatRequest.show().user
+    this._client = new Client({ data: chatRequest.show().chat.chatClient })
     getMessages(chatRequest.show().id).then((res) => {
       this.messages = res.data
     }).catch((e) => {
