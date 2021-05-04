@@ -22,8 +22,6 @@ describe('Class ChatRequestCollection', () => {
 })
 
 describe('collection', () => {
-  const client = new Client
-
   test('Call with empty data end expect empty array', () => {
     expect(createModelCollection()).toEqual(expect.objectContaining({
       $collection: expect.arrayContaining([])

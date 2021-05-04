@@ -4,7 +4,7 @@ import Client from '@/apps/chat/models/Client'
 import ModelEntity from '@/lib/ModelEntity'
 
 function createChatRequest(options = {}) {
-  const client = new Client()
+  const client = new Client({ data: {} })
   const data = options.data || {
     id: Date.now(),
     channel_name: '7178e6f1-f72e-38cd-a6aa-fd4f84257940',
@@ -17,7 +17,7 @@ function createChatRequest(options = {}) {
 
   return new ChatRequest({
     data,
-    options
+    ...options
   })
 }
 
