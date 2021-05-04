@@ -182,17 +182,10 @@ export default {
     },
     // Add and join the channel on creation
     addOpenedChat(data) {
-      console.log(data.chatRequest.show())
-
-      if (!(data.chatRequest instanceof ChatRequest)) return
-
       const options = {
         user: this.user,
-        channelName: data.chatRequest.show().channel_name,
-        chatRequest: data.chatRequest
+        ...data
       }
-
-      console.log(options)
 
       const { channelName, user } = options
 
@@ -206,8 +199,6 @@ export default {
         this.loading.addOpenedChat = true
 
         const chat = this.createChat(options)
-
-        console.log(chat)
 
         channelService.subscribeChannel(chat)
 

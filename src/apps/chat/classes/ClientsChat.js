@@ -11,8 +11,6 @@ export default class ClientsChat extends Chat {
   constructor(options) {
     const { channelName, chatRequest, user } = options
 
-    console.log(options)
-
     super({ channelName, user })
 
     this.chatRequest = chatRequest
