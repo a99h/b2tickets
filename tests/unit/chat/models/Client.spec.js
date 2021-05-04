@@ -29,15 +29,15 @@ describe('Class Client', () => {
     console.log(createClient())
   })
 
-  // test('extends model structure', () => {
-  //   expect(createChatRequest()).toBeInstanceOf(ModelEntity)
-  // })
-  //
-  // test('Throws error if no data', () => {
-  //   expect(() => {
-  //     new ChatRequest()
-  //   }).toThrow('Data must be defined')
-  // })
+  test('extends model structure', () => {
+    expect(createClient()).toBeInstanceOf(ModelEntity)
+  })
+
+  test('Throws error if no data', () => {
+    expect(() => {
+      new Client()
+    }).toThrow('Data must be defined')
+  })
 })
 //
 // describe('fields', () => {
