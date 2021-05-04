@@ -1,5 +1,8 @@
 import ChatRequestCollection from '@/apps/chat/models/ChatRequestCollection'
+import ChatRequest from '@/apps/chat/models/ChatRequest'
+
 import ModelCollection from '@/lib/ModelCollection'
+import Client from '@/apps/chat/models/Client'
 
 function createModelCollection(data = [], options = {}) {
   return new ChatRequestCollection({
@@ -8,23 +11,24 @@ function createModelCollection(data = [], options = {}) {
   })
 }
 
-test('new works', () => {
-  expect(new ChatRequestCollection).toBeInstanceOf(ChatRequestCollection)
+describe('Class ChatRequestCollection', () => {
+  test('new works', () => {
+    expect(createModelCollection()).toBeInstanceOf(ChatRequestCollection)
+  })
+
+  test('Extends model structure', () => {
+    expect(createModelCollection()).toBeInstanceOf(ModelCollection)
+  })
 })
 
-test('extends model structure', () => {
-  expect(new ChatRequestCollection).toBeInstanceOf(ModelCollection)
+describe('collection', () => {
+  const client = new Client
 
-  expect(createModelCollection()).toEqual(expect.objectContaining({
-    $collection: expect.any(Array),
-    $options: expect.objectContaining({
-      primaryKey: 'id'
-    }),
-    record: expect.any(Function),
-    all: expect.any(Function),
-    find: expect.any(Function),
-    update: expect.any(Function)
-  }))
+  test('Call with empty data end expect empty array', () => {
+    expect(createModelCollection()).toEqual(expect.objectContaining({
+      $collection: expect.arrayContaining([])
+    }))
+  })
 })
 
 describe('customizations', () => {

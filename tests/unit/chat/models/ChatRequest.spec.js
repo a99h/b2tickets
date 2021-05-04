@@ -21,40 +21,34 @@ function createChatRequest(options = {}) {
   })
 }
 
-test('new works', () => {
-  expect(createChatRequest()).toBeInstanceOf(ChatRequest)
+describe('Class ChatRequest', () => {
+  test('new works', () => {
+    expect(createChatRequest()).toBeInstanceOf(ChatRequest)
+  })
+
+  test('extends model structure', () => {
+    expect(createChatRequest()).toBeInstanceOf(ModelEntity)
+  })
+
+  test('Throws error if no data', () => {
+    expect(() => {
+      new ChatRequest()
+    }).toThrow('Data must be defined')
+  })
 })
 
-test('extends model structure', () => {
-  expect(createChatRequest()).toBeInstanceOf(ModelEntity)
+describe('fields', () => {
+  test('Chat Request structure', () => {
+    expect(createChatRequest()).toEqual(expect.objectContaining({
+      $fields: expect.objectContaining({
+        id: expect.any(Number),
+        channel_name: expect.any(String),
+        message: expect.any(String),
+        operators_online: expect.any(Number),
+        updated_at: expect.any(String),
+        created_at: expect.any(String),
+        client: expect.any(Client)
+      })
+    }))
+  })
 })
-
-test('Chat Request structure', () => {
-  expect(createChatRequest()).toEqual(expect.objectContaining({
-    $fields: expect.objectContaining({
-      id: expect.any(Number),
-      channel_name: expect.any(String),
-      message: expect.any(String),
-      operators_online: expect.any(Number),
-      updated_at: expect.any(String),
-      created_at: expect.any(String),
-      client: expect.any(Client)
-    })
-  }))
-})
-
-// describe('customizations', () => {
-//   test('primary key must be id', () => {
-//     const modelCollection = createModelCollection()
-//
-//     expect(modelCollection.$options.primaryKey).toBe('id')
-//   })
-//
-//   test('we can\'t customize the primaryKey', () => {
-//     const modelCollection = createModelCollection([],{
-//       primaryKey: 'name'
-//     })
-//
-//     expect(modelCollection.$options.primaryKey).toBe('id')
-//   })
-// })
