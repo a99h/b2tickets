@@ -3,12 +3,12 @@ import mutations from './mutations'
 
 // state initial values
 const state = {
-  clientCollection: {}
+  ClientCollection: {}
 }
 
 const getters = {
   getClients(state) {
-    return state.clientCollection.all()
+    return state.ClientCollection.all()
   }
 }
 
