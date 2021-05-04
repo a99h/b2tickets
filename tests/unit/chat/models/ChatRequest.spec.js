@@ -1,5 +1,5 @@
 import ChatRequest from '@/apps/chat/models/ChatRequest'
-import Client from '@/apps/chat/models/Client'
+import Client from '@/js/models/Client'
 
 import ModelEntity from '@/js/lib/ModelEntity'
 

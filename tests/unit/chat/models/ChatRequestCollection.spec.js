@@ -2,7 +2,7 @@ import ChatRequestCollection from '@/apps/chat/models/ChatRequestCollection'
 import ChatRequest from '@/apps/chat/models/ChatRequest'
 
 import ModelCollection from '@/js/lib/ModelCollection'
-import Client from '@/apps/chat/models/Client'
+import Client from '@/js/models/Client'
 
 function createModelCollection(data = [], options = {}) {
   return new ChatRequestCollection({

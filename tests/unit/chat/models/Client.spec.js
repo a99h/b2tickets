@@ -1,4 +1,4 @@
-import Client from '@/apps/chat/models/Client'
+import Client from '@/js/models/Client'
 import RoleCollection from '@/js/models/RoleCollection'
 
 import ModelEntity from '@/js/lib/ModelEntity'
