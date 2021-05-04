@@ -1,4 +1,4 @@
-import ModelEntity from '@/lib/ModelEntity'
+import ModelEntity from '@/js/lib/ModelEntity'
 
 export default class ChatRequest extends ModelEntity {
   constructor(options = {}) {

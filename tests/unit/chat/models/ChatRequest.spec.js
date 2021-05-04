@@ -1,7 +1,7 @@
 import ChatRequest from '@/apps/chat/models/ChatRequest'
 import Client from '@/apps/chat/models/Client'
 
-import ModelEntity from '@/lib/ModelEntity'
+import ModelEntity from '@/js/lib/ModelEntity'
 
 function createChatRequest(options = {}) {
   const client = new Client({ data: {} })

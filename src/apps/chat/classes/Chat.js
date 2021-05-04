@@ -1,4 +1,4 @@
-import isEmpty from '@/lib/isEmpty'
+import isEmpty from '@/js/lib/isEmpty'
 
 export default class Chat {  
   messages = [];

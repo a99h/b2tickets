@@ -1,4 +1,4 @@
-import ModelCollection from '@/lib/ModelCollection'
+import ModelCollection from '@/js/lib/ModelCollection'
 
 function createModelCollection(data = [], options = {}) {
   return new ModelCollection({

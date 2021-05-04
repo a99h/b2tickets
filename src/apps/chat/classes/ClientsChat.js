@@ -2,7 +2,7 @@ import Chat from './Chat'
 import { showChat, updateChat } from '../http/chat'
 import { getMessages, storeMessage } from '../http/message'
 import { messageService } from '../services'
-import isEmpty from '@/lib/isEmpty'
+import isEmpty from '@/js/lib/isEmpty'
 
 export default class ClientsChat extends Chat {
 

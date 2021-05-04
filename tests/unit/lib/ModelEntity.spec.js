@@ -1,4 +1,4 @@
-import ModelEntity from '@/lib/ModelEntity'
+import ModelEntity from '@/js/lib/ModelEntity'
 
 function createModelEntity(data = {}, options = {}) {
   return new ModelEntity({

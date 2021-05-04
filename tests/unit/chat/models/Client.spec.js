@@ -1,7 +1,7 @@
 import Client from '@/apps/chat/models/Client'
 import RoleCollection from '@/js/models/RoleCollection'
 
-import ModelEntity from '@/lib/ModelEntity'
+import ModelEntity from '@/js/lib/ModelEntity'
 
 function createClient(options = {}) {
   // const client = new Client()

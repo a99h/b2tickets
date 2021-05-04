@@ -1,7 +1,7 @@
 import ChatRequestCollection from '@/apps/chat/models/ChatRequestCollection'
 import ChatRequest from '@/apps/chat/models/ChatRequest'
 
-import ModelCollection from '@/lib/ModelCollection'
+import ModelCollection from '@/js/lib/ModelCollection'
 import Client from '@/apps/chat/models/Client'
 
 function createModelCollection(data = [], options = {}) {
