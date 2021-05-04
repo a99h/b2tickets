@@ -11,11 +11,15 @@ export default class ClientsChat extends Chat {
   constructor(options) {
     const { channelName, chatRequest, user } = options
 
+    console.log(options)
+
     super({ channelName, user })
 
     this.chatRequest = chatRequest
-    this.chat = chatRequest.chat
-    getMessages(chatRequest.id).then((res) => {
+    this.channelName = chatRequest.show().channel_name
+    this.chat = chatRequest.show().chat
+    this._client = chatRequest.show().user
+    getMessages(chatRequest.show().id).then((res) => {
       this.messages = res.data
     }).catch((e) => {
       this.backendErrors.push(e)
@@ -36,19 +40,7 @@ export default class ClientsChat extends Chat {
       if (isEmpty(value)) {
         this._chatRequest = undefined
       } else {
-        const { id, channel_name, created_at, updated_at, chat, user, message, operators_online } = value
-
-        this._chatRequest = {
-          id: id,
-          channel_name: channel_name,
-          message: message,
-          operators_online: operators_online,
-          created_at: created_at,
-          updated_at: updated_at
-        }
-        this.chat = chat
-        this.channelName = channel_name
-        this._client = user
+        this._chatRequest = value
       }
     }
   }

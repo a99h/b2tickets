@@ -113,6 +113,7 @@ import ChatToolbar from '@/apps/chat/components/Toolbar'
 
 import { mapActions, mapGetters } from 'vuex'
 import lastMessage from '@/apps/chat/filters/lastMessage'
+import ChatRequest from '@/apps/chat/models/ChatRequest'
 
 export default {
   components: {
@@ -180,8 +181,18 @@ export default {
       if (this.$route.params.id !== chat.channelName) this.$router.push(`/apps/chat/channel/${chat.channelName}`)
     },
     // Add and join the channel on creation
-    addOpenedChat(options) {
-      options.user = this.user
+    addOpenedChat(data) {
+      console.log(data.chatRequest.show())
+
+      if (!(data.chatRequest instanceof ChatRequest)) return
+
+      const options = {
+        user: this.user,
+        channelName: data.chatRequest.show().channel_name,
+        chatRequest: data.chatRequest
+      }
+
+      console.log(options)
 
       const { channelName, user } = options
 
@@ -195,6 +206,8 @@ export default {
         this.loading.addOpenedChat = true
 
         const chat = this.createChat(options)
+
+        console.log(chat)
 
         channelService.subscribeChannel(chat)
 

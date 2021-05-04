@@ -103,6 +103,7 @@ import ChatForm from '@/apps/chat/components/ChatForm'
 import ChatInfo from '@/apps/chat/components/ChatInfo/ChatInfo'
 import { showChat } from '@/apps/chat/http/chat'
 import { showChatRequest } from '@/apps/chat/http/chatRequest'
+import ChatRequest from '@/apps/chat/models/ChatRequest'
 
 export default {
   name: 'Chats',
@@ -178,17 +179,17 @@ export default {
     },
     addChatByChatRequest(chatRequestId) {
       showChatRequest(chatRequestId).then((res) => {
-        this.emitAddChatEvent(res.data)
+        this.emitAddChatEvent((new ChatRequest({ data: res.data })))
       }).catch((err) => {
         this.backendErrors = err.response.data.message
       })
     },
     emitAddChatEvent(chatRequest) {
-      this.loading.chatBtn = chatRequest.id
+      this.loading.chatBtn = chatRequest.show().id
 
       const data = {
         chatRequest: chatRequest,
-        channelName: chatRequest.channel_name
+        channelName: chatRequest.show().channel_name
       }
 
       this.$emit('add-chat', data)
