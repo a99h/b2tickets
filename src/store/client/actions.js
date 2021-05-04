@@ -1,4 +1,5 @@
 import axios from '@/plugins/axios'
+import ClientCollection from '@/js/models/ClientCollection'
 
 const fetchClients = ({ dispatch }) => {
   return dispatch('clients')
@@ -10,9 +11,11 @@ const clients = ({ commit }) => {
       role: 'client'
     }
   }).then((response) => {
-    commit('SET_CLIENTS', response.data.data)
+    const collection = new ClientCollection({ data: response.data.data })
+
+    commit('SET_CLIENT_COLLECTION', collection)
   }).catch(() => {
-    commit('SET_CLIENTS', [])
+    commit('SET_CLIENT_COLLECTION', [])
   })
 }
 

@@ -1,5 +1,5 @@
 export default {
-  SET_CLIENTS(state, value) {
-    state.clients = value
+  SET_CLIENT_COLLECTION(state, value) {
+    state.clientCollection = value
   }
 }
