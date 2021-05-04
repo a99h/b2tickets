@@ -3,7 +3,8 @@ import mutations from './mutations'
 
 // state initial values
 const state = {
-  ClientCollection: {}
+  ClientCollection: {},
+  backendErrors: []
 }
 
 const getters = {

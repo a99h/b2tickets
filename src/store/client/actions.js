@@ -19,11 +19,20 @@ const clients = ({ commit }) => {
   })
 }
 
-const showClient = ({ commit }, user) => {
+const showClient = ({ commit }, client) => {
   return new Promise((resolve, reject) => {
-    axios.get(route('api.ticketsystem.chat.user.show',user.id))
-      .then((response) => resolve(response.data))
-      .catch((err) => reject(err))
+    axios.get(route('api.ticketsystem.chat.user.show', client.id))
+      .then((res) => {
+        commit('UPDATE_CLIENT', res.data.data)
+        commit('FLUSH_BACKEND_ERRORS')
+
+        resolve(res.data)
+      })
+      .catch((err) => {
+        commit('SET_BACKEND_ERRORS', err)
+
+        reject(err)
+      })
   })
 }
 
