@@ -113,7 +113,6 @@ import ChatToolbar from '@/apps/chat/components/Toolbar'
 
 import { mapActions, mapGetters } from 'vuex'
 import lastMessage from '@/apps/chat/filters/lastMessage'
-import ChatRequest from '@/apps/chat/models/ChatRequest'
 
 export default {
   components: {
