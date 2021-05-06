@@ -213,7 +213,8 @@ export default {
     ...mapGetters({
       getChatRequests: 'chatRequest/getChatRequests',
       getOperators: 'user/getOperators',
-      getStatuses: 'ticketStatus/getStatuses'
+      getStatuses: 'ticketStatus/getStatuses',
+      findTicketById: 'ticket/findTicketById'
     }),
     formTitle() {
       let title = ''
@@ -324,7 +325,7 @@ export default {
       this.loading.dialogForm = false
     },
     openDialog(item) {
-      this.editedIndex = this.tickets.indexOf(item)
+      this.editedIndex = this.findTicketById(item.id).id
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
@@ -347,19 +348,15 @@ export default {
       this.backendErrors = null
 
       if (this.editedIndex > -1) {
-        await this.updateTicket(this.filteredItem(this.editedItem)).then((response) => {
-          Object.assign(this.tickets[this.editedIndex], response.data)
+        await this.updateTicket(this.filteredItem(this.editedItem)).then(() => {
           this.closeDialog()
-        }).catch((err) => {
-          this.backendErrors = err.response.data
+        }).catch(() => {
           this.dialogInitialize()
         })
       } else {
-        await this.createTicket(this.filteredItem(this.editedItem)).then((response) => {
-          this.tickets.unshift(response.data)
+        await this.createTicket(this.filteredItem(this.editedItem)).then(() => {
           this.closeDialog()
-        }).catch((err) => {
-          this.backendErrors = err.response.data
+        }).catch(() => {
           this.dialogInitialize()
         })
       }

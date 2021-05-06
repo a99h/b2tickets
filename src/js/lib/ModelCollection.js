@@ -9,14 +9,14 @@ export default class ModelCollection {
       this.record(data)
   }
 
-  record(data) {
+  record(data, unshift = false) {
     const mappedData = data.map((entry) => {
-      if (!entry[this.$options.primaryKey]) entry[this.$options.primaryKey] = Date.now()
+      if (!entry[this.$options.primaryKey]) throw new Error('Primary key must be defined!')
 
       return entry
     })
 
-    this.$collection.push( ...mappedData)
+    unshift ? this.$collection.unshift( ...mappedData) : this.$collection.push( ...mappedData)
   }
   all() {
     return this.$collection.map((entry) => Object.assign({}, entry))

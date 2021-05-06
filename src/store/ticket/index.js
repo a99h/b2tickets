@@ -4,12 +4,18 @@ import mutations from './mutations'
 // state initial values
 const state = {
   TicketCollection: {},
-  backendErrors: []
+  backendErrors: null
 }
 
 const getters = {
   getTickets(state) {
     return state.TicketCollection.all()
+  },
+  getBackendErrors(state) {
+    return state.backendErrors
+  },
+  findTicketById: (state) => (id) => {
+    return state.TicketCollection.find(id)
   }
 }
 

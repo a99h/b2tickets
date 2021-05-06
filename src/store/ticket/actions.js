@@ -23,10 +23,21 @@ const main = ({ commit }) => {
 //   })
 // }
 const storeTicket = ({ commit }, ticket) => {
+  console.log(ticket)
+
   return new Promise((resolve, reject) => {
     axios.post(route('api.ticketsystem.ticket.ticket.store'), ticket)
-      .then((response) => resolve(response.data))
-      .catch((err) => reject(err))
+      .then((res) => {
+        commit('STORE_TICKET', [res.data.data])
+        commit('FLUSH_BACKEND_ERRORS')
+
+        resolve(res.data)
+      })
+      .catch((err) => {
+        commit('SET_BACKEND_ERRORS', err)
+
+        reject(err)
+      })
   })
 }
 const updateTicket = ({ commit }, ticket) => {
@@ -40,7 +51,11 @@ const updateTicket = ({ commit }, ticket) => {
 
         resolve(res.data)
       })
-      .catch((err) => reject(err))
+      .catch((err) => {
+        commit('SET_BACKEND_ERRORS', err)
+
+        reject(err)
+      })
   })
 }
 const showTicket = ({ commit }, ticket) => {
@@ -52,11 +67,22 @@ const showTicket = ({ commit }, ticket) => {
 
         resolve(res.data)
       })
-      .catch((err) => reject(err))
+      .catch((err) => {
+        commit('SET_BACKEND_ERRORS', err)
+
+        reject(err)
+      })
   })
 }
 const deleteTicket = ({ commit }, ticket) => {
-  axios.post(route('api.ticketsystem.ticket.ticket.delete',ticket.id), { _method: 'delete' })
+  axios.post(route('api.ticketsystem.ticket.ticket.delete', ticket.id), { _method: 'delete' })
+    .then(() => {
+      commit('DELETE_TICKET', ticket.id)
+      commit('FLUSH_BACKEND_ERRORS')
+    })
+    .catch((err) => {
+      commit('SET_BACKEND_ERRORS', err)
+    })
 }
 
 export default {

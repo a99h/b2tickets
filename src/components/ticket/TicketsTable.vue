@@ -10,18 +10,39 @@
           <v-row :elevation="hover ? 24 : 2">
             <v-col cols="12">
               <v-alert
-                v-if="backendErrors"
+                v-if="getTicketBackendErrors"
                 dismissible
                 border="left"
                 color="error"
                 class="mt-2"
                 type="error"
               >
-                {{ backendErrors.message }}
+                {{ getTicketBackendErrors.message }}
               </v-alert>
+              <v-dialog
+                v-model="loading.dataTable"
+                persistent
+                :width="300"
+                transition="scale-transition"
+              >
+                <v-card
+                  v-if="loading.dataTable"
+                  color="surface"
+                >
+                  <v-card-text>
+                    {{ $t('b2tickets.common.loading') }}
+                    <v-progress-linear
+                      indeterminate
+                      color="white"
+                      class="mb-0"
+                    ></v-progress-linear>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
               <v-data-table
+                v-if="!loading.dataTable"
                 :headers="headers"
-                :items="tickets"
+                :items="getTickets"
                 :loading="loading.dataTable"
                 :search="search"
                 fixed
@@ -48,7 +69,7 @@
                     <v-spacer></v-spacer>
                     <TicketForm
                       ref="dialog"
-                      :tickets="tickets"
+                      :tickets="getTickets"
                       @closeDialog="onCloseDialog"
                       @ticketFormBackendErrors="(err) => backendErrors = err"
                       @refreshState="dataTableInitialize"
@@ -137,7 +158,8 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      getTickets: 'ticket/getTickets'
+      getTickets: 'ticket/getTickets',
+      getTicketBackendErrors: 'ticket/getBackendErrors'
     }),
     headers() { return [
       {
@@ -164,19 +186,19 @@ export default {
     ...mapActions({
       fetchTickets: 'ticket/fetchTickets',
       showTicket: 'ticket/showTicket',
+      updateTicket: 'ticket/updateTicket',
       deleteTicket: 'ticket/deleteTicket'
     }),
     async dataTableInitialize() {
       this.loading.dataTable = 'info'
 
       await this.fetchTickets().then(() => {
-        this.tickets = this.$route.params.chatId !== undefined
-          ? this.filterTickets(this.getTickets, { chatId: this.$route.params.chatId })
-          : this.getTickets
+        // this.tickets = this.$route.params.chatId !== undefined
+        //   ? this.filterTickets(this.getTickets, { chatId: this.$route.params.chatId })
+        //   : this.getTickets
+        this.loading.dataTable = false
+        this.backendErrors = null
       })
-
-      this.loading.dataTable = false
-      this.backendErrors = null
     },
     filterTickets(tickets, options) {
       const { chatId } = options
@@ -201,22 +223,16 @@ export default {
     },
     async editItem(item) {
       this.backendErrors = null
-      await this.showTicket(item).then((response) => {
-        Object.assign(this.tickets[this.tickets.indexOf(item)], response.data)
-        this.$refs.dialog.edit(this.tickets[this.tickets.indexOf(item)])
-      }).catch((err) => {
+      await this.showTicket(item).then((res) => {
+        this.$refs.dialog.edit(res.data)
+      }).catch(() => {
         this.$refs.dialog.dialogInitialize()
-        this.backendErrors = err.response.data.message
       })
     },
     async deleteItem(item) {
       this.backendErrors = null
       confirm('Are you sure you want to delete this item?') &&
-      await this.deleteTicket(item).then(() => {
-        this.tickets.splice(this.tickets.indexOf(item), 1)
-      }).catch((err) => {
-        this.backendErrors = err.response.data.message
-      })
+      await this.deleteTicket(item)
     }
   }
 }

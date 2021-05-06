@@ -1,6 +1,6 @@
 import ModelCollection from '@/js/lib/ModelCollection'
 
-function createModelCollection(data = [], options = {}) {
+function createModelCollection(data = [], options = { primaryKey: 'id' }) {
   return new ModelCollection({
     ...options,
     data
@@ -38,6 +38,7 @@ describe('record', () => {
   const heroes = [{
     id: 1,
     name: 'Batman' }, {
+    id: 2,
     name: 'Black Panther'
   }]
 
@@ -64,6 +65,14 @@ describe('record', () => {
 
     spy.mockRestore()
   })
+
+  test('Throws error if primary key in data is not defined', () => {
+    expect(() => {
+      const modelCollection = createModelCollection()
+
+      modelCollection.record([{ name: 'Bamblbee' }])
+    }).toThrow('Primary key must be defined!')
+  })
 })
 
 describe('all', () => {
@@ -75,7 +84,9 @@ describe('all', () => {
 
   test('returns model data', () => {
     const model = createModelCollection([{
+      id: 1,
       name: 'Batman' }, {
+      id: 2,
       name: 'Joker'
     }])
 
@@ -83,7 +94,7 @@ describe('all', () => {
   })
 
   test('original data stays intact', () => {
-    const modelCollection = createModelCollection([{ name: 'Batman' }])
+    const modelCollection = createModelCollection([{ id:1, name: 'Batman' }])
     const data = modelCollection.all()
 
     data[0].name = 'Joker'
