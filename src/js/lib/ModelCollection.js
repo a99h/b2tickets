@@ -37,4 +37,16 @@ export default class ModelCollection {
 
     return entry ? Object.assign({}, entry) : null
   }
+  delete(key) {
+    const entryIndex = this.$collection.findIndex((entry) => entry[this.$options.primaryKey] === key)
+
+    if (entryIndex < 0) return false
+
+    this.$collection.splice(
+      entryIndex,
+      1
+    )
+
+    return true
+  }
 }

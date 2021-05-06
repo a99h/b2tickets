@@ -142,3 +142,20 @@ describe('update', () => {
     expect(modelCollection.update(2, {})).toBe(false)
   })
 })
+
+describe('delete', () => {
+  const heroesAndVillains = [{ id: 1, name: 'Batman' }]
+  let modelCollection
+
+  beforeEach(() => {
+    const dataset = JSON.parse(JSON.stringify(heroesAndVillains))
+
+    modelCollection = createModelCollection(dataset)
+  })
+
+  test('can delete an entry by id', () => {
+    modelCollection.delete(1)
+
+    expect(modelCollection.find(1)).toBeNull()
+  })
+})
