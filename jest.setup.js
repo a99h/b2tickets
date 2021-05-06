@@ -1,0 +1,1 @@
+import expects from '@/js/lib/tests/expects'
