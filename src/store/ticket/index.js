@@ -3,12 +3,13 @@ import mutations from './mutations'
 
 // state initial values
 const state = {
-  tickets: []
+  TicketCollection: {},
+  backendErrors: []
 }
 
 const getters = {
   getTickets(state) {
-    return state.tickets
+    return state.TicketCollection.all()
   }
 }
 
