@@ -1,10 +1,8 @@
 import ChatRequest from '@/apps/chat/models/ChatRequest'
-import Client from '@/js/models/Client'
 
 import ModelEntity from '@/js/lib/ModelEntity'
 
 function createChatRequest(options = {}) {
-  const client = new Client({ data: {} })
   const data = options.data || {
     id: Date.now(),
     channel_name: '7178e6f1-f72e-38cd-a6aa-fd4f84257940',
@@ -12,7 +10,18 @@ function createChatRequest(options = {}) {
     operators_online: 1,
     created_at: '2021-05-03T05:45:57.000000Z',
     updated_at: '2021-05-03T05:45:57.000000Z',
-    client: client
+    client: {
+      id: Date.now(),
+      name: 'Ethyl Sanford',
+      email: 'tfahey@example.org',
+      created_at: '2021-05-03T05:45:57.000000Z',
+      updated_at: '2021-05-03T05:45:57.000000Z',
+      userRoles: [{
+        id: 1,
+        hasPermissions: [],
+        name: 'Client'
+      }]
+    }
   }
 
   return new ChatRequest({
@@ -47,7 +56,18 @@ describe('fields', () => {
         operators_online: expect.any(Number),
         updated_at: expect.any(String),
         created_at: expect.any(String),
-        client: expect.any(Client)
+        client: expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          email: expect.any(String),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+          userRoles: expect.arrayContaining([expect.objectContaining({
+            id: expect.any(Number),
+            name: expect.any(String),
+            hasPermissions: expect.any(Array)
+          })])
+        })
       })
     }))
   })

@@ -1,30 +1,32 @@
-import Client from '@/js/models/Client'
+import Ticket from '@/js/models/Ticket'
 
 import ModelEntity from '@/js/lib/ModelEntity'
 
 function createModel(options = {}) {
-  const data = options.data || {
-    id: Date.now(),
-    name: 'Ethyl Sanford',
-    email: 'tfahey@example.org',
-    created_at: '2021-05-03T05:45:57.000000Z',
-    updated_at: '2021-05-03T05:45:57.000000Z',
-    userRoles: [{
-      id: 1,
-      hasPermissions: [],
-      name: 'Client'
-    }]
-  }
+  // const data = options.data || {
+  //   id: Date.now(),
+  //   name: 'Ethyl Sanford',
+  //   email: 'tfahey@example.org',
+  //   created_at: '2021-05-03T05:45:57.000000Z',
+  //   updated_at: '2021-05-03T05:45:57.000000Z',
+  //   userRoles: [{
+  //     id: 1,
+  //     hasPermissions: [],
+  //     name: 'Client'
+  //   }]
+  // }
 
-  return new Client({
+  const data = options.data || {}
+
+  return new Ticket({
     data,
     ...options
   })
 }
 
-describe('Class Client', () => {
+describe('Class Ticket', () => {
   test('new works', () => {
-    expect(createModel()).toBeInstanceOf(Client)
+    expect(createModel()).toBeInstanceOf(Ticket)
   })
 
   test('extends model structure', () => {
@@ -33,22 +35,25 @@ describe('Class Client', () => {
 
   test('Throws error if no data', () => {
     expect(() => {
-      new Client()
+      new Ticket()
     }).toThrow('Data must be defined')
   })
 })
 
 describe('fields', () => {
-  test('Client structure', () => {
+  test('Ticket structure', () => {
     expect(createModel()).toEqual(expect.objectContaining({
       $fields: expect.objectContaining({
         id: expect.any(Number),
+        issue: expect.any(String),
+        description: expect.any(String),
         name: expect.any(String),
         email: expect.any(String),
         created_at: expect.any(String),
         updated_at: expect.any(String),
-        userRoles: expect.arrayContaining([expect.objectContaining({
+        ticketChatRequests: expect.arrayContaining([expect.objectContaining({
           id: expect.any(Number),
+          message: expect.any(String),
           name: expect.any(String),
           hasPermissions: expect.any(Array)
         })])
