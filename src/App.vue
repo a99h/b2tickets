@@ -1,7 +1,7 @@
 <template>
   <v-app v-if="user">
     <!-- Layout component -->
-    <component :is="currentLayout" v-if="user && isRouterLoaded">
+    <component :is="currentLayout" v-if="getUser && isRouterLoaded">
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
@@ -59,22 +59,7 @@ export default {
       return layout + 'Layout'
     }
   },
-  created() {
-    //config.theme.globalTheme === 'dark' ? this.$vuetify.theme.dark = true : this.$vuetify.theme.dark = false
-    this.signInSpa().then(
-      this.user = this.getUser
-    )
-  },
-  mounted() {
-    //config.theme.globalTheme === 'dark' ? this.$vuetify.theme.dark = true : this.$vuetify.theme.dark = false
-    this.signInSpa().then(
-      this.user = this.getUser
-    )
-  },
   methods: {
-    ...mapActions({
-      signInSpa: 'auth/signInSpa'
-    }),
     ...mapGetters({
       getUser: 'auth/getUser'
     })

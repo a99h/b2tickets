@@ -95,7 +95,7 @@
 import Echo from '@/plugins/echo'
 import axios from '@/plugins/axios'
 import { mapGetters } from 'vuex'
-import VueSocketIO from '@/plugins/vueSocketIO'
+// import VueSocketIO from '@/plugins/vueSocketIO'
 
 /*
 |---------------------------------------------------------------------
@@ -141,12 +141,9 @@ export default {
   },
   created() {
     this.initialize()
-    this.interval = setInterval(() => this.$forceUpdate(), 1000 * 60)
+    // this.interval = setInterval(() => this.$forceUpdate(), 1000 * 60)
 
     this.$socket.emit('new-operator', this.user)
-    this.$socket.on('some event', () => {
-      console.log('event from server')
-    })
   },
   beforeDestroy() {
     clearInterval(this.interval)
