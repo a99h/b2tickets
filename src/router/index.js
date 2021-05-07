@@ -7,7 +7,6 @@ import PagesRoutes from './pages.routes'
 
 // Middlewares
 import auth from './middleware/auth'
-import guest from './middleware/guest'
 import middlewarePipeline from './middleware/middlewarePipeline'
 import store from '@/store'
 

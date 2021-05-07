@@ -19,26 +19,7 @@
               >
                 {{ getTicketBackendErrors.message }}
               </v-alert>
-              <v-dialog
-                v-model="loading.dataTable"
-                persistent
-                :width="300"
-                transition="scale-transition"
-              >
-                <v-card
-                  v-if="loading.dataTable"
-                  color="surface"
-                >
-                  <v-card-text>
-                    {{ $t('b2tickets.common.loading') }}
-                    <v-progress-linear
-                      indeterminate
-                      color="white"
-                      class="mb-0"
-                    ></v-progress-linear>
-                  </v-card-text>
-                </v-card>
-              </v-dialog>
+              <AppLoading :loading="loading.dataTable"/>
               <v-data-table
                 v-if="!loading.dataTable"
                 :headers="headers"

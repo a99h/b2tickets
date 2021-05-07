@@ -1,7 +1,8 @@
 <template>
   <v-app>
+    <AppLoading :loading="!isRouterLoaded"/>
     <!-- Layout component -->
-    <component :is="currentLayout">
+    <component :is="currentLayout" v-if="isRouterLoaded">
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
@@ -50,6 +51,9 @@ export default {
   },
   computed: {
     ...mapState('app', ['toast']),
+    isRouterLoaded: function() {
+      return this.$route.name !== null
+    },
     currentLayout: function() {
       const layout = this.$route.meta.layout || 'default'
 

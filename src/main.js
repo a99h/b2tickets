@@ -43,6 +43,10 @@ import 'animate.css/animate.min.css'
 // Avatars
 // import './assets/images/avatars'
 
+// Global components
+import AppLoading from '@/components/AppLoading'
+Vue.component('AppLoading', AppLoading)
+
 // Set this to false to prevent the production tip on Vue startup.
 Vue.config.productionTip = false
 
