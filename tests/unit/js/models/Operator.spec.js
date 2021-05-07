@@ -83,7 +83,7 @@ describe('fields', () => {
           content_layout: expect.any(Number),
           menu_theme: expect.any(Number),
           primary_color: expect.any(String),
-          time_format: expect.nullOrAny(String),
+          time_format: null,
           avatar: expect.any(String)
         })
       })
