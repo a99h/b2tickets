@@ -26,7 +26,7 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 export default {
   data() {
     return {
-      show: false
+      show: true
     }
   },
   computed: {
@@ -36,9 +36,9 @@ export default {
     })
   },
   mounted() {
-    this.signInSpa().then(() => {
-      this.getUser !== null ? this.$router.push({ name: 'home' }) : this.show = true
-    })
+    // this.signInSpa().then(() => {
+    //   this.getUser !== null ? this.$router.push({ name: 'home' }) : this.show = true
+    // })
   },
   methods: {
     ...mapActions({

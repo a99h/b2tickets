@@ -58,9 +58,9 @@ Vue.config.productionTip = false
 */
 export default new Vue({
   i18n,
+  store,
   vuetify,
   vuelidate,
   router,
-  store,
   render: (h) => h(App)
 }).$mount('#app')

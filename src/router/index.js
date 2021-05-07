@@ -7,6 +7,7 @@ import PagesRoutes from './pages.routes'
 
 // Middlewares
 import auth from './middleware/auth'
+import guest from './middleware/guest'
 import middlewarePipeline from './middleware/middlewarePipeline'
 import store from '@/store'
 
@@ -19,11 +20,6 @@ export const routes = [{
 }, {
   path: '/dashboard/analytics',
   name: 'dashboard-analytics',
-  meta: {
-    middleware: [
-      auth
-    ]
-  },
   component: () => import(/* webpackChunkName: "dashboard" */ '@/pages/dashboard/DashboardPage.vue')
 },
 ...AppsRoutes,
@@ -59,34 +55,8 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (!to.meta.middleware) {
     to = {
-      ...to, meta: {
-        middleware: [
-          auth
-        ]
-      }
-    }
-  }
-  const { middleware } = to.meta
-  const context = {
-    to,
-    from,
-    next,
-    store
-  }
-
-  return middleware[0]({
-    ...context,
-    next: middlewarePipeline(context, middleware, 1)
-  })
-})
-
-/**
- * Before the navigation is confirmed,
- */
-router.beforeResolve((to, from, next) => {
-  if (!to.meta.middleware) {
-    to = {
-      ...to, meta: {
+      ...to,
+      meta: {
         middleware: [
           auth
         ]

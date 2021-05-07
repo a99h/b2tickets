@@ -1,7 +1,7 @@
 <template>
-  <v-app v-if="user">
+  <v-app>
     <!-- Layout component -->
-    <component :is="currentLayout" v-if="getUser && isRouterLoaded">
+    <component :is="currentLayout">
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 import config from './configs'
 
@@ -43,26 +43,18 @@ export default {
     authLayout,
     errorLayout
   },
-  data() {
+  data: () => {
     return {
-      user: {}
+      userIsChecked: false
     }
   },
   computed: {
     ...mapState('app', ['toast']),
-    isRouterLoaded: function() {
-      return this.$route.name !== null
-    },
     currentLayout: function() {
       const layout = this.$route.meta.layout || 'default'
 
       return layout + 'Layout'
     }
-  },
-  methods: {
-    ...mapGetters({
-      getUser: 'auth/getUser'
-    })
   },
   head: {
     link: [
