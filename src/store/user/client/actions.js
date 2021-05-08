@@ -14,8 +14,9 @@ const clients = ({ commit }) => {
     const collection = new ClientCollection({ data: response.data.data })
 
     commit('SET_CLIENT_COLLECTION', collection)
+    commit('FLUSH_BACKEND_ERRORS')
   }).catch((err) => {
-    commit('SET_CLIENT_COLLECTION', [])
+    commit('SET_CLIENT_COLLECTION', {})
     commit('SET_BACKEND_ERRORS', err)
   })
 }

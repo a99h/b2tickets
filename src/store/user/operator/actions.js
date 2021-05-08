@@ -1,7 +1,24 @@
 import axios from '@/plugins/axios'
+import OperatorCollection from '@/js/models/OperatorCollection'
 
 const fetchOperators = ({ dispatch }) => {
   return dispatch('operators')
+}
+
+const operators = ({ commit }) => {
+  return axios.get(route('api.user.index'), {
+    params: {
+      role: 'operator'
+    }
+  }).then((res) => {
+    const collection = new OperatorCollection({ data: res.data.data })
+
+    commit('SET_OPERATOR_COLLECTION', collection)
+    commit('FLUSH_BACKEND_ERRORS')
+  }).catch((err) => {
+    commit('SET_OPERATOR_COLLECTION', {})
+    commit('SET_BACKEND_ERRORS', err)
+  })
 }
 
 const showSettings = ({ commit }, id) => {
@@ -18,17 +35,6 @@ const updateSettings = ({ commit }, settings) => {
     axios.post(route('api.user.settings.update',settings.id), settings)
       .then((response) => resolve(response.data))
       .catch((err) => reject(err))
-  })
-}
-const operators = ({ commit }) => {
-  return axios.get(route('api.user.index'), {
-    params: {
-      role: 'operator'
-    }
-  }).then((response) => {
-    commit('SET_OPERATORS', response.data.data)
-  }).catch(() => {
-    commit('SET_OPERATORS', [])
   })
 }
 
