@@ -34,8 +34,6 @@ function createModel(options = {}) {
     }
   }
 
-  // const data = options.data || {}
-
   return new Operator({
     data,
     ...options
