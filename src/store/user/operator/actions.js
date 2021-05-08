@@ -38,6 +38,23 @@ const showOperator = ({ commit }, user) => {
   })
 }
 
+const storeOperator = ({ commit }, operator) => {
+  return new Promise((resolve, reject) => {
+    axios.post(route('api.user.store'), operator)
+      .then((res) => {
+        commit('STORE_OPERATOR', [res.data.data])
+        commit('FLUSH_BACKEND_ERRORS')
+
+        resolve(res.data)
+      })
+      .catch((err) => {
+        commit('SET_BACKEND_ERRORS', err)
+
+        reject(err)
+      })
+  })
+}
+
 const updateOperator = ({ commit }, operator) => {
   operator._method = 'put'
 
@@ -74,20 +91,12 @@ const updateSettings = ({ commit }, settings) => {
   })
 }
 
-const storeUser = ({ commit }, user) => {
-  return new Promise((resolve, reject) => {
-    axios.post(route('api.user.store'), user)
-      .then((response) => resolve(response.data))
-      .catch((err) => reject(err))
-  })
-}
-
 export default {
   fetchOperators,
   showSettings,
   updateSettings,
   operators,
-  storeUser,
+  storeOperator,
   updateOperator,
   showOperator
 }

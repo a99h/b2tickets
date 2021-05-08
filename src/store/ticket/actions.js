@@ -15,16 +15,7 @@ const main = ({ commit }) => {
     commit('SET_BACKEND_ERRORS', err)
   })
 }
-// const listTicket = ({ commit }) => {
-//   return new Promise((resolve, reject) => {
-//     axios.get(route('api.ticketsystem.ticket.ticket.index'))
-//       .then((response) => resolve(response.data))
-//       .catch((err) => reject(err))
-//   })
-// }
 const storeTicket = ({ commit }, ticket) => {
-  console.log(ticket)
-
   return new Promise((resolve, reject) => {
     axios.post(route('api.ticketsystem.ticket.ticket.store'), ticket)
       .then((res) => {
@@ -88,7 +79,6 @@ const deleteTicket = ({ commit }, ticket) => {
 export default {
   fetchTickets,
   main,
-  // listTicket,
   storeTicket,
   updateTicket,
   showTicket,

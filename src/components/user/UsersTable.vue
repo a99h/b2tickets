@@ -22,7 +22,6 @@
               <AppLoading :loading="loading.dataTable" />
               <v-data-table
                 v-if="!loading.dataTable"
-                v-model="users"
                 :headers="headers"
                 :items="users"
                 :loading="loading.dataTable"
@@ -130,8 +129,6 @@ export default {
     },
     backendErrors: null,
     search: '',
-    clients: [],
-    operators: [],
     userTypes: [
       'clients',
       'operators'

@@ -26,7 +26,7 @@ export default {
   name: 'AppLoading',
   props: {
     loading: {
-      type: Boolean,
+      type: [Boolean , String],
       required: true
     },
     // eslint-disable-next-line vue/require-default-prop

@@ -167,7 +167,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      createUser: 'operator/storeUser',
+      createOperator: 'operator/storeOperator',
       updateOperator: 'operator/updateOperator'
     }),
     async dialogInitialize() {
@@ -203,7 +203,7 @@ export default {
           this.closeDialog()
         })
       } else {
-        await this.createUser(this.editedItem).then(() => {
+        await this.createOperator(this.editedItem).then(() => {
           this.closeDialog()
         }).catch((err) => {
           this.$emit('userFormBackendErrors', err.response.data.message)
