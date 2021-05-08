@@ -20,9 +20,9 @@
                 {{ backendErrors }}
               </v-alert>
               <v-data-table
-                v-model="users"
+                v-model="items[`${filterBy}`]"
                 :headers="headers"
-                :items="users"
+                :items="items[`${filterBy}`]"
                 :loading="loading.dataTable"
                 :search="search"
                 fixed
@@ -49,7 +49,6 @@
                       :items="userTypes"
                       value="email"
                       :label="$t('b2tickets.user.actions.selectType')"
-                      @input="dataTableInitialize"
                     ></v-select>
                     <v-spacer></v-spacer>
                     <v-text-field
@@ -60,13 +59,16 @@
                       hide-details
                     ></v-text-field>
                     <v-spacer></v-spacer>
+
                     <UserForm
+                      v-if="items[`${filterBy}`]"
                       ref="dialog"
-                      :users="users"
+                      :users="items[`${filterBy}`]"
                       @closeDialog="onCloseDialog"
                       @userFormBackendErrors="(err) => backendErrors = err"
                       @refreshState="dataTableInitialize"
                     ></UserForm>
+
                   </v-toolbar>
                 </template>
                 <template v-slot:item.created_at="{ item }">
@@ -126,64 +128,61 @@ export default {
     },
     backendErrors: null,
     search: '',
-    users: [],
+    items: {},
     userTypes: [
       'clients',
       'operators'
     ],
-    filterBy: 'operators'
+    filterBy: 'clients'
   }),
   computed: {
     ...mapGetters({
-      getOperators: 'user/getOperators',
+      getOperators: 'operator/getOperators',
       getClients: 'client/getClients'
     }),
-    headers() { return [
-      {
-        text: 'ID',
-        align: 'start',
-        value: 'id'
-      },
-      { text: this.$t('b2tickets.user.fields.name'), value: 'name' },
-      { text: this.$t('b2tickets.user.fields.email'), value: 'email' },
-      { text: this.$t('b2tickets.user.fields.userRoles'), value: 'userRoles' },
-      { text: this.$t('b2tickets.common.fields.created_at'), value: 'created_at' },
-      { text: this.$t('b2tickets.common.fields.updated_at'), value: 'updated_at' },
-      { text: '', value: 'actions', sortable: false }
-    ]}
-  },
-  watch: {
-    filterBy(val) {
-      this.loadUsers(val)
+    headers() {
+      return [
+        {
+          text: 'ID',
+          align: 'start',
+          value: 'id'
+        },
+        { text: this.$t('b2tickets.user.fields.name'), value: 'name' },
+        { text: this.$t('b2tickets.user.fields.email'), value: 'email' },
+        { text: this.$t('b2tickets.user.fields.userRoles'), value: 'userRoles' },
+        { text: this.$t('b2tickets.common.fields.created_at'), value: 'created_at' },
+        { text: this.$t('b2tickets.common.fields.updated_at'), value: 'updated_at' },
+        { text: '', value: 'actions', sortable: false }
+      ]
     }
   },
   mounted() {
-    this.dataTableInitialize(this.filterBy)
+    this.dataTableInitialize()
   },
   methods: {
     ...mapActions({
-      fetchOperators: 'user/fetchOperators',
+      fetchOperators: 'operator/fetchOperators',
       fetchClients: 'client/fetchClients',
       showClient: 'client/showClient',
-      showUser: 'user/showUser'
+      showUser: 'operator/showUser'
     }),
-    async dataTableInitialize(type) {
+    async dataTableInitialize() {
       this.loading.dataTable = 'info'
 
-      await this.loadUsers(type).then(() => {
+      await this.loadUsers().then(() => {
         this.loading.dataTable = false
-        this.backendErrors = null
       })
     },
-    async loadUsers(type) {
-      switch (type) {
-      case 'clients': await this.fetchClients().then(() => {
-        this.users = this.getClients
-      }); break
-      case 'operators': await this.fetchOperators().then(() => {
-        this.users = this.getOperators
-      }); break
-      }
+    async loadUsers() {
+      return Promise.all([this.fetchClients(), this.fetchOperators()])
+        .then(() => {
+          this.items.clients = this.getClients
+          this.items.operators = this.getOperators
+          this.backendErrors = null
+        })
+        .catch((err) => {
+          this.backendErrors = err
+        })
     },
     onCloseDialog() {
       this.backendErrors = null
