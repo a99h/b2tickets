@@ -190,7 +190,7 @@ export default {
   methods: {
     ...mapMutations('app', ['setMenuTheme', 'setGlobalTheme', 'setToolbarTheme', 'setContentBoxed', 'setTimeZone', 'setTimeFormat', 'setRTL', 'setToolbarDetached']),
     ...mapActions({
-      updateSettings: 'user/updateSettings',
+      updateSettings: 'auth/updateSettings',
       updateWhoAmIState: 'auth/signInSpa'
     }),
     setSettings(userSettings) {

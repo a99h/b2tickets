@@ -74,27 +74,8 @@ const updateOperator = ({ commit }, operator) => {
   })
 }
 
-const showSettings = ({ commit }, id) => {
-  return new Promise((resolve, reject) => {
-    axios.get(route('api.user.settings.show',id))
-      .then((response) => resolve(response.data))
-      .catch((err) => reject(err))
-  })
-}
-const updateSettings = ({ commit }, settings) => {
-  settings._method = 'put'
-
-  return new Promise((resolve, reject) => {
-    axios.post(route('api.user.settings.update',settings.id), settings)
-      .then((response) => resolve(response.data))
-      .catch((err) => reject(err))
-  })
-}
-
 export default {
   fetchOperators,
-  showSettings,
-  updateSettings,
   operators,
   storeOperator,
   updateOperator,
