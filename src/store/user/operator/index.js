@@ -3,12 +3,16 @@ import mutations from './mutations'
 
 // state initial values
 const state = {
-  OperatorCollection: {}
+  OperatorCollection: {},
+  backendErrors: []
 }
 
 const getters = {
   getOperators(state) {
     return state.OperatorCollection.all()
+  },
+  getBackendErrors(state) {
+    return state.backendErrors
   }
 }
 

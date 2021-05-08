@@ -3,12 +3,16 @@ import mutations from './mutations'
 
 // state initial values
 const state = {
-  user: null
+  User: null,
+  backendErrors: []
 }
 
 const getters = {
   getUser(state) {
-    return state.user
+    return state.User ? state.User.show() : state.User
+  },
+  getBackendErrors(state) {
+    return state.backendErrors
   }
 }
 

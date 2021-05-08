@@ -10,6 +10,9 @@ const state = {
 const getters = {
   getClients(state) {
     return state.ClientCollection.all()
+  },
+  getBackendErrors(state) {
+    return state.backendErrors
   }
 }
 

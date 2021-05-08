@@ -1,4 +1,5 @@
 import axios from '@/plugins/axios'
+import Operator from '@/js/models/Operator'
 
 const signIn = async ({ dispatch }, credentials) => {
   await axios.get(process.env.VUE_APP_API_BASE_URL + '/sanctum/csrf-cookie')
@@ -21,9 +22,13 @@ const signInSpa = ({ dispatch }) => {
 
 const main = async ({ commit } ) => {
   await axios.get(route('api.user.whoami')).then((response) => {
-    commit('SET_USER', response.data.data)
-  }).catch(() => {
+    const user = new Operator({ data: response.data.data })
+
+    commit('SET_USER', user)
+    commit('FLUSH_BACKEND_ERRORS')
+  }).catch((err) => {
     commit('SET_USER', null)
+    commit('SET_BACKEND_ERRORS', err)
   })
 }
 
