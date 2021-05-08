@@ -168,7 +168,7 @@ export default {
   methods: {
     ...mapActions({
       createUser: 'operator/storeUser',
-      updateUser: 'operator/updateUser'
+      updateOperator: 'operator/updateOperator'
     }),
     async dialogInitialize() {
       this.loading.dialogForm = 'accent'
@@ -178,7 +178,7 @@ export default {
       this.loading.dialogForm = false
     },
     openDialog(item) {
-      this.editedIndex = this.users.indexOf(item)
+      this.editedIndex = item.id
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
@@ -199,16 +199,11 @@ export default {
     },
     async saveUser() {
       if (this.editedIndex > -1) {
-        await this.updateUser(this.editedItem).then((response) => {
-          Object.assign(this.users[this.editedIndex], response.data)
+        await this.updateOperator(this.editedItem).then(() => {
           this.closeDialog()
-        }).catch((err) => {
-          this.$emit('userFormBackendErrors', err.response.data.message)
-          this.$emit('refreshState')
         })
       } else {
-        await this.createUser(this.editedItem).then((response) => {
-          this.users.unshift(response.data)
+        await this.createUser(this.editedItem).then(() => {
           this.closeDialog()
         }).catch((err) => {
           this.$emit('userFormBackendErrors', err.response.data.message)

@@ -19,10 +19,12 @@
               >
                 {{ backendErrors }}
               </v-alert>
+              <AppLoading :loading="loading.dataTable" />
               <v-data-table
-                v-model="items[`${filterBy}`]"
+                v-if="!loading.dataTable"
+                v-model="users"
                 :headers="headers"
-                :items="items[`${filterBy}`]"
+                :items="users"
                 :loading="loading.dataTable"
                 :search="search"
                 fixed
@@ -61,9 +63,9 @@
                     <v-spacer></v-spacer>
 
                     <UserForm
-                      v-if="items[`${filterBy}`]"
+                      v-if="users"
                       ref="dialog"
-                      :users="items[`${filterBy}`]"
+                      :users="users"
                       @closeDialog="onCloseDialog"
                       @userFormBackendErrors="(err) => backendErrors = err"
                       @refreshState="dataTableInitialize"
@@ -128,7 +130,8 @@ export default {
     },
     backendErrors: null,
     search: '',
-    items: {},
+    clients: [],
+    operators: [],
     userTypes: [
       'clients',
       'operators'
@@ -154,6 +157,12 @@ export default {
         { text: this.$t('b2tickets.common.fields.updated_at'), value: 'updated_at' },
         { text: '', value: 'actions', sortable: false }
       ]
+    },
+    users() {
+      if (this.filterBy === 'clients') return this.getClients
+      if (this.filterBy === 'operators') return this.getOperators
+
+      return this.getOperators
     }
   },
   mounted() {
@@ -175,14 +184,6 @@ export default {
     },
     async loadUsers() {
       return Promise.all([this.fetchClients(), this.fetchOperators()])
-        .then(() => {
-          this.items.clients = this.getClients
-          this.items.operators = this.getOperators
-          this.backendErrors = null
-        })
-        .catch((err) => {
-          this.backendErrors = err
-        })
     },
     onCloseDialog() {
       this.backendErrors = null
@@ -209,26 +210,12 @@ export default {
     async editItem(item) {
       this.backendErrors = null
 
-      switch (this.filterBy) {
-
-      case 'clients':
-        await this.showClient(item).then((response) => {
-          Object.assign(this.users[this.users.indexOf(item)], response.data)
-          this.$refs.dialog.edit(this.users[this.users.indexOf(item)])
-        }).catch((err) => {
-          this.$refs.dialog.dialogInitialize()
-          this.backendErrors = err.response.data.message
-        }); break
-      case 'operators':
-        await this.showUser(item).then((response) => {
-          Object.assign(this.users[this.users.indexOf(item)], response.data)
-          this.$refs.dialog.edit(this.users[this.users.indexOf(item)])
-        }).catch((err) => {
-          this.$refs.dialog.dialogInitialize()
-          this.backendErrors = err.response.data.message
-        }); break
-
-      }
+      await this.showUser(item).then((response) => {
+        this.$refs.dialog.edit(response.data)
+      }).catch((err) => {
+        this.$refs.dialog.dialogInitialize()
+        this.backendErrors = err.response.data.message
+      })
     }
   }
 }

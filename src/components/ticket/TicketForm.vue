@@ -212,7 +212,7 @@ export default {
   computed: {
     ...mapGetters({
       getChatRequests: 'chatRequest/getChatRequests',
-      getOperators: 'user/getOperators',
+      getOperators: 'operator/getOperators',
       getStatuses: 'ticketStatus/getStatuses',
       findTicketById: 'ticket/findTicketById'
     }),
@@ -299,7 +299,7 @@ export default {
   methods: {
     ...mapActions({
       fetchChatRequests: 'chatRequest/fetchChatRequests',
-      fetchOperators: 'user/fetchOperators',
+      fetchOperators: 'operator/fetchOperators',
       fetchStatuses: 'ticketStatus/fetchStatuses',
       createTicket: 'ticket/storeTicket',
       updateTicket: 'ticket/updateTicket'
