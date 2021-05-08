@@ -21,6 +21,23 @@ const operators = ({ commit }) => {
   })
 }
 
+const showOperator = ({ commit }, user) => {
+  return new Promise((resolve, reject) => {
+    axios.get(route('api.user.show',user.id))
+      .then((res) => {
+        commit('UPDATE_OPERATOR', res.data.data)
+        commit('FLUSH_BACKEND_ERRORS')
+
+        resolve(res.data)
+      })
+      .catch((err) => {
+        commit('SET_BACKEND_ERRORS', err)
+
+        reject(err)
+      })
+  })
+}
+
 const showSettings = ({ commit }, id) => {
   return new Promise((resolve, reject) => {
     axios.get(route('api.user.settings.show',id))
@@ -54,13 +71,6 @@ const updateUser = ({ commit }, user) => {
       .catch((err) => reject(err))
   })
 }
-const showUser = ({ commit }, user) => {
-  return new Promise((resolve, reject) => {
-    axios.get(route('api.user.show',user.id))
-      .then((response) => resolve(response.data))
-      .catch((err) => reject(err))
-  })
-}
 
 export default {
   fetchOperators,
@@ -69,5 +79,5 @@ export default {
   operators,
   storeUser,
   updateUser,
-  showUser
+  showOperator
 }

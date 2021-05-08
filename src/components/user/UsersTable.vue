@@ -164,7 +164,7 @@ export default {
       fetchOperators: 'operator/fetchOperators',
       fetchClients: 'client/fetchClients',
       showClient: 'client/showClient',
-      showUser: 'operator/showUser'
+      showOperator: 'operator/showOperator'
     }),
     async dataTableInitialize() {
       this.loading.dataTable = 'info'
@@ -187,28 +187,30 @@ export default {
     onCloseDialog() {
       this.backendErrors = null
     },
+    showUser(item) {
+      switch (this.filterBy) {
+
+      case 'clients': return this.showClient(item)
+      case 'operators': return this.showOperator(item)
+      default: return this.showClient(item)
+
+      }
+    },
     async showItem(item) {
       this.backendErrors = null
-      switch (this.filterBy) {
-      case 'clients':
-        await this.showClient(item).then((response) => {
-          this.$refs.dialog.show(response.data)
-        }).catch((err) => {
-          this.$refs.dialog.dialogInitialize()
-          this.backendErrors = err.response.data.message
-        }); break
-      case 'operators':
-        await this.showUser(item).then((response) => {
-          this.$refs.dialog.show(response.data)
-        }).catch((err) => {
-          this.$refs.dialog.dialogInitialize()
-          this.backendErrors = err.response.data.message
-        }); break
-      }
+
+      await this.showUser(item).then((response) => {
+        this.$refs.dialog.show(response.data)
+      }).catch((err) => {
+        this.$refs.dialog.dialogInitialize()
+        this.backendErrors = err.response.data.message
+      })
     },
     async editItem(item) {
       this.backendErrors = null
+
       switch (this.filterBy) {
+
       case 'clients':
         await this.showClient(item).then((response) => {
           Object.assign(this.users[this.users.indexOf(item)], response.data)
@@ -225,6 +227,7 @@ export default {
           this.$refs.dialog.dialogInitialize()
           this.backendErrors = err.response.data.message
         }); break
+
       }
     }
   }

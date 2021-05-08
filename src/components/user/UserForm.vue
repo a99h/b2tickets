@@ -167,8 +167,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      createUser: 'user/storeUser',
-      updateUser: 'user/updateUser'
+      createUser: 'operator/storeUser',
+      updateUser: 'operator/updateUser'
     }),
     async dialogInitialize() {
       this.loading.dialogForm = 'accent'

@@ -7,5 +7,8 @@ export default {
   },
   FLUSH_BACKEND_ERRORS(state) {
     state.backendErrors = []
+  },
+  UPDATE_OPERATOR(state, value) {
+    state.OperatorCollection.update(value.id, value)
   }
 }
