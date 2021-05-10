@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import ChatRequestTable from '../components/ChatRequestTable'
+import ChatRequestTable from '../components/tables/ChatRequestTable'
 
 /*
 |---------------------------------------------------------------------

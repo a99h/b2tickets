@@ -19,6 +19,7 @@
       </template>
     </v-breadcrumbs>
     <TicketForm
+      v-if="!loading.ticketForm"
       ref="ticketForm"
       :tickets="getTickets"
       :activator-hidden="true"
@@ -110,7 +111,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      showChatRequest: 'chatRequest/showChatRequest',
       getMessages: 'message/fetchMessages',
       storeMessage: 'message/storeMessage',
       fetchTickets: 'ticket/fetchTickets'
@@ -124,8 +124,9 @@ export default {
       }
     },
     ticketFormInitialize() {
-      this.refreshTickets()
-      this.setTicketFormDefaultValues()
+      this.refreshTickets().then(() => {
+        this.setTicketFormDefaultValues()
+      })
     },
     async refreshTickets() {
       this.loading.ticketForm = true
