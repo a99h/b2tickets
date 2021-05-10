@@ -1,4 +1,4 @@
-import { indexChat } from '@/apps/chat/http/chat'
+import { indexChat } from '@/apps/chat/js/http/chat'
 
 const addOpenedChat = ({ commit }, value) => {
   commit('ADD_OPENED_CHAT', value)

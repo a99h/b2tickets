@@ -101,9 +101,9 @@
 import { mapGetters, mapActions } from 'vuex'
 import ChatForm from '@/apps/chat/components/ChatForm'
 import ChatInfo from '@/apps/chat/components/ChatInfo/ChatInfo'
-import { showChat } from '@/apps/chat/http/chat'
-import { showChatRequest } from '@/apps/chat/http/chatRequest'
-import ChatRequest from '@/apps/chat/models/ChatRequest'
+import { showChat } from '@/apps/chat/js/http/chat'
+import { showChatRequest } from '@/apps/chat/js/http/chatRequest'
+import ChatRequest from '@/apps/chat/js/models/ChatRequest'
 
 export default {
   name: 'Chats',

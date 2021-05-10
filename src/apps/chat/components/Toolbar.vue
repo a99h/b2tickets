@@ -47,8 +47,8 @@
 <script>
 import TicketForm from '@/components/ticket/TicketForm'
 import { mapActions, mapGetters } from 'vuex'
-import channelTitle from '@/apps/chat/filters/channelTitle'
-import Chat from '@/apps/chat/classes/Chat'
+import channelTitle from '@/apps/chat/js/filters/channelTitle'
+import Chat from '@/apps/chat/js/classes/Chat'
 
 export default {
   name: 'ChatToolbar',

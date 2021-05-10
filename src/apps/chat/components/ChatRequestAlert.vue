@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { showChatRequest } from '@/apps/chat/http/chatRequest'
+import { showChatRequest } from '@/apps/chat/js/http/chatRequest'
 import { mapGetters } from 'vuex'
 
 export default {

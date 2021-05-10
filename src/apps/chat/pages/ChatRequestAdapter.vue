@@ -1,6 +1,6 @@
 <script>
 import ChatsTable from '../components/ChatsTable'
-import { showChatRequest } from '../http/chatRequest'
+import { showChatRequest } from '../js/http/chatRequest'
 
 export default {
   components: { ChatsTable },

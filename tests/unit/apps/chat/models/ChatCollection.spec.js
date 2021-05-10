@@ -1,17 +1,17 @@
-import ChatRequestCollection from '@/apps/chat/js/models/ChatRequestCollection'
+import ChatCollection from '@/apps/chat/js/models/ChatCollection'
 
 import ModelCollection from '@/js/lib/ModelCollection'
 
 function createModelCollection(data = [], options = {}) {
-  return new ChatRequestCollection({
+  return new ChatCollection({
     ...options,
     data
   })
 }
 
-describe('Class ChatRequestCollection', () => {
+describe('Class ChatCollection', () => {
   test('new works', () => {
-    expect(createModelCollection()).toBeInstanceOf(ChatRequestCollection)
+    expect(createModelCollection()).toBeInstanceOf(ChatCollection)
   })
 
   test('Extends model structure', () => {

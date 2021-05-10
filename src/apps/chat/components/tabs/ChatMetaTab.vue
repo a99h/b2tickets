@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import ClientsChat from '@/apps/chat/classes/ClientsChat'
+import ClientsChat from '@/apps/chat/js/classes/ClientsChat'
 
 export default {
   name: 'ChatMetaTab',

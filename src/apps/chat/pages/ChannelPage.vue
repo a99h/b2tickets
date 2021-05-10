@@ -60,10 +60,10 @@ import InputBox from '../components/InputBox'
 import UserAvatar from '../components/UserAvatar'
 import ChannelMessage from '../components/ChannelMessage'
 
-import channelTitle from '@/apps/chat/filters/channelTitle'
+import channelTitle from '@/apps/chat/js/filters/channelTitle'
 
 import { mapActions, mapGetters } from 'vuex'
-import { messageService, channelService } from '@/apps/chat/services'
+import { messageService, channelService } from '@/apps/chat/js/services'
 
 /*
 |---------------------------------------------------------------------

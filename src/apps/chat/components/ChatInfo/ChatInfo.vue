@@ -101,8 +101,8 @@ import UserMetaTab from '@/components/user/tabs/UserMetaTab'
 import ChatMetaTab from '@/apps/chat/components/tabs/ChatMetaTab'
 import ChannelMessage from '@/apps/chat/components/ChannelMessage'
 import { mapActions, mapGetters } from 'vuex'
-import ClientsChat from '@/apps/chat/classes/ClientsChat'
-import { showChatRequest } from '@/apps/chat/http/chatRequest'
+import ClientsChat from '@/apps/chat/js/classes/ClientsChat'
+import { showChatRequest } from '@/apps/chat/js/http/chatRequest'
 
 export default {
   name: 'ChatInfo',

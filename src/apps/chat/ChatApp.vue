@@ -105,14 +105,14 @@
 | Navigation drawer with channels for the chat application
 |
 */
-import ClientsChat from '@/apps/chat/classes/ClientsChat'
-import OperatorsChat from '@/apps/chat/classes/OperatorsChat'
-import channelService from '@/apps/chat/services/channelService'
-import channelTitle from '@/apps/chat/filters/channelTitle'
+import ClientsChat from '@/apps/chat/js/classes/ClientsChat'
+import OperatorsChat from '@/apps/chat/js/classes/OperatorsChat'
+import channelService from '@/apps/chat/js/services/channelService'
+import channelTitle from '@/apps/chat/js/filters/channelTitle'
 import ChatToolbar from '@/apps/chat/components/Toolbar'
 
 import { mapActions, mapGetters } from 'vuex'
-import lastMessage from '@/apps/chat/filters/lastMessage'
+import lastMessage from '@/apps/chat/js/filters/lastMessage'
 
 export default {
   components: {
@@ -198,8 +198,6 @@ export default {
         this.loading.addOpenedChat = true
 
         const chat = this.createChat(options)
-
-        console.log(chat)
 
         channelService.subscribeChannel(chat)
 

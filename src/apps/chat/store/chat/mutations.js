@@ -1,4 +1,4 @@
-import Chat from '@/apps/chat/classes/Chat'
+import Chat from '@/apps/chat/js/classes/Chat'
 
 export default {
   ADD_OPENED_CHAT(state, value) {

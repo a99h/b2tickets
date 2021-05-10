@@ -1,16 +1,15 @@
-import ChatRequest from '@/apps/chat/models/ChatRequest'
+import ChatRequest from '@/apps/chat/js/models/ChatRequest'
 
 import ModelEntity from '@/js/lib/ModelEntity'
 
-function createChatRequest(options = {}) {
+function createModel(options = {}) {
   const data = options.data || {
     id: Date.now(),
-    channel_name: '7178e6f1-f72e-38cd-a6aa-fd4f84257940',
-    message: 'Jest test message',
-    operators_online: 1,
+    active: 1,
+    chat_request_id: 1,
     created_at: '2021-05-03T05:45:57.000000Z',
     updated_at: '2021-05-03T05:45:57.000000Z',
-    client: {
+    chatClient: {
       id: Date.now(),
       name: 'Ethyl Sanford',
       email: 'tfahey@example.org',
@@ -30,13 +29,13 @@ function createChatRequest(options = {}) {
   })
 }
 
-describe('Class ChatRequest', () => {
+describe('Class', () => {
   test('new works', () => {
-    expect(createChatRequest()).toBeInstanceOf(ChatRequest)
+    expect(createModel()).toBeInstanceOf(ChatRequest)
   })
 
   test('extends model structure', () => {
-    expect(createChatRequest()).toBeInstanceOf(ModelEntity)
+    expect(createModel()).toBeInstanceOf(ModelEntity)
   })
 
   test('Throws error if no data', () => {
@@ -47,16 +46,15 @@ describe('Class ChatRequest', () => {
 })
 
 describe('fields', () => {
-  test('Chat Request structure', () => {
-    expect(createChatRequest()).toEqual(expect.objectContaining({
+  test('Chat structure', () => {
+    expect(createModel()).toEqual(expect.objectContaining({
       $fields: expect.objectContaining({
         id: expect.any(Number),
-        channel_name: expect.any(String),
-        message: expect.any(String),
-        operators_online: expect.any(Number),
+        active: expect.any(Number),
+        chat_request_id: expect.any(Number),
         updated_at: expect.any(String),
         created_at: expect.any(String),
-        client: expect.objectContaining({
+        chatClient: expect.objectContaining({
           id: expect.any(Number),
           name: expect.any(String),
           email: expect.any(String),

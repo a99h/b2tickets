@@ -1,5 +1,5 @@
 import axios from '@/plugins/axios'
-import ChatRequestCollection from '@/apps/chat/models/ChatRequestCollection'
+import ChatRequestCollection from '@/apps/chat/js/models/ChatRequestCollection'
 
 const fetchChatRequests = ({ dispatch }) => {
   return dispatch('main')
