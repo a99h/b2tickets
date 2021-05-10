@@ -1,11 +1,12 @@
-import Chat from './Chat'
+import ChatFacade from './Chat'
 import { showChat, updateChat } from '../http/chat'
 import { getMessages, storeMessage } from '../http/message'
 import { messageService } from '../services'
 import isEmpty from '@/js/lib/isEmpty'
 import Client from '@/js/models/Client'
+import Chat from '@/apps/chat/js/models/Chat'
 
-export default class ClientsChat extends Chat {
+export default class ClientsChat extends ChatFacade {
 
   #LAST_MESSAGE_READ = 'last-message-read'
 
@@ -15,10 +16,10 @@ export default class ClientsChat extends Chat {
     super({ channelName, user })
 
     this.chatRequest = chatRequest
-    this.channelName = chatRequest.show().channel_name
-    this.chat = chatRequest.show().chat
-    this._client = new Client({ data: chatRequest.show().chat.chatClient })
-    getMessages(chatRequest.show().id).then((res) => {
+    this.channelName = this.chatRequest.show().channel_name
+    this.chat = new Chat({ data: this.chatRequest.show().chat })
+    this._client = new Client({ data: this.chat.show().chatClient })
+    getMessages(this.chatRequest.show().id).then((res) => {
       this.messages = res.data
     }).catch((e) => {
       this.backendErrors.push(e)
@@ -62,13 +63,13 @@ export default class ClientsChat extends Chat {
   }
 
   setActive(value) {
-    showChat(this.chat.id).then((res) => {
+    showChat(this.chat.show().id).then((res) => {
       if (res.data.active !== value)
         updateChat({
-          ...this.chat,
+          ...this.chat.show(),
           active: value
         }).then((resp) => {
-          this.chat.active = resp.data.active
+          this.chat.show().active = resp.data.active
         }).catch((e) => {
           this.backendErrors.push(e)
         })
