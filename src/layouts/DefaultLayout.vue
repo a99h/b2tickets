@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="getUser"
     v-shortkey="['ctrl', '/']"
     class="d-flex flex-grow-1"
     @shortkey="onKeyup"
@@ -124,7 +125,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 // import VueSocketIO from '@/plugins/vueSocketIO'
 
 // navigation menu configurations
@@ -157,7 +158,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('app', ['product', 'isContentBoxed', 'menuTheme', 'toolbarTheme', 'isToolbarDetached'])
+    ...mapState('app', ['product', 'isContentBoxed', 'menuTheme', 'toolbarTheme', 'isToolbarDetached']),
+    ...mapGetters({
+      getUser: 'auth/getUser'
+    })
   },
   methods: {
     onKeyup(e) {

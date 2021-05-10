@@ -2,7 +2,7 @@
   <v-app>
     <AppLoading :loading="!isRouterLoaded"/>
     <!-- Layout component -->
-    <component :is="currentLayout" v-if="isRouterLoaded && getUser">
+    <component :is="currentLayout" v-if="isRouterLoaded">
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>

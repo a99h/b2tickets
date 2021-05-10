@@ -1,5 +1,5 @@
 <template>
-  <div v-if="show" class="d-flex text-center flex-column flex-md-row flex-grow-1">
+  <div class="d-flex text-center flex-column flex-md-row flex-grow-1">
     <v-sheet class="layout-side mx-auto mx-md-1 d-none d-md-flex flex-md-column justify-space-between px-2">
       <div class="mt-3 mt-md-10 pa-2">
         <div class="display-2 font-weight-bold primary--text">
@@ -21,24 +21,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
-  data() {
-    return {
-      show: true
-    }
-  },
   computed: {
-    ...mapState('app', ['product']),
-    ...mapGetters({
-      getUser: 'auth/getUser'
-    })
-  },
-  mounted() {
-    // this.signInSpa().then(() => {
-    //   this.getUser !== null ? this.$router.push({ name: 'home' }) : this.show = true
-    // })
+    ...mapState('app', ['product'])
   },
   methods: {
     ...mapActions({

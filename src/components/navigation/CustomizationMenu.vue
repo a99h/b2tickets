@@ -24,32 +24,32 @@
 
       <div class="pa-2">
         <div class="font-weight-bold my-1">Global Theme</div>
-        <v-btn-toggle v-model="userSettings.theme" color="primary" mandatory class="mb-2">
+        <v-btn-toggle v-model="userSettings.global_theme" color="primary" mandatory class="mb-2">
           <v-btn x-large>Light</v-btn>
           <v-btn x-large>Dark</v-btn>
         </v-btn-toggle>
 
         <div class="font-weight-bold my-1">Toolbar Theme</div>
-        <v-btn-toggle v-model="userSettings.toolbarTheme" color="primary" mandatory class="mb-2">
+        <v-btn-toggle v-model="userSettings.toolbar_theme" color="primary" mandatory class="mb-2">
           <v-btn x-large>Global</v-btn>
           <v-btn x-large>Light</v-btn>
           <v-btn x-large>Dark</v-btn>
         </v-btn-toggle>
 
         <div class="font-weight-bold my-1">Toolbar Style</div>
-        <v-btn-toggle v-model="userSettings.toolbarStyle" color="primary" mandatory class="mb-2">
+        <v-btn-toggle v-model="userSettings.toolbar_style" color="primary" mandatory class="mb-2">
           <v-btn x-large>Full</v-btn>
           <v-btn x-large>Solo</v-btn>
         </v-btn-toggle>
 
         <div class="font-weight-bold my-1">Content Layout</div>
-        <v-btn-toggle v-model="userSettings.contentBoxed" color="primary" mandatory class="mb-2">
+        <v-btn-toggle v-model="userSettings.content_layout" color="primary" mandatory class="mb-2">
           <v-btn x-large>Fluid</v-btn>
           <v-btn x-large>Boxed</v-btn>
         </v-btn-toggle>
 
         <div class="font-weight-bold my-1">Menu Theme</div>
-        <v-btn-toggle v-model="userSettings.menuTheme" color="primary" mandatory class="mb-2">
+        <v-btn-toggle v-model="userSettings.menu_theme" color="primary" mandatory class="mb-2">
           <v-btn x-large>Global</v-btn>
           <v-btn x-large>Light</v-btn>
           <v-btn x-large>Dark</v-btn>
@@ -58,7 +58,7 @@
         <div class="font-weight-bold my-1">Primary Color</div>
 
         <v-color-picker
-          v-model="userSettings.color"
+          v-model="userSettings.primary_color"
           class="primary"
           hide-mode-switch
           hide-inputs
@@ -99,15 +99,16 @@ import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 export default {
   data() {
     return {
-      right: false,
-      userSettings: {
-        theme: 0,
-        toolbarTheme: 0,
-        toolbarStyle: 0,
-        contentBoxed: 0,
-        menuTheme: 0,
-        color: this.getPrimaryColor()
+      defaultSettings: {
+        global_theme: 0,
+        toolbar_theme: 0,
+        toolbar_style: 0,
+        content_boxed: 0,
+        menu_theme: 0,
+        primary_color: this.getPrimaryColor()
       },
+      userSettings: {},
+      right: false,
       timeout: null,
       swatches: [[
         this.$vuetify.theme.themes.dark.primary,
@@ -139,6 +140,7 @@ export default {
   computed: {
     ...mapState('app', ['time', 'globalTheme']),
     ...mapGetters({
+      getUserSettings: 'auth/getUserSettings',
       whoAmI: 'auth/getUser'
     })
   },
@@ -146,40 +148,32 @@ export default {
     right(val) {
       val || this.close()
     },
-    'userSettings.color': function (val) {
+    'userSettings.primary_color': function (val) {
       this.globalTheme === 'dark' ? this.$vuetify.theme.themes.dark.primary = val : this.$vuetify.theme.themes.light.primary = val
     },
-    'userSettings.theme': function (val) {
+    'userSettings.global_theme': function (val) {
       this.setGlobalTheme((val === 0 ? 'light' : 'dark'))
-      this.userSettings.color = this.getPrimaryColor()
+      this.userSettings.primary_color = this.getPrimaryColor()
     },
-    'userSettings.toolbarTheme': function (val) {
+    'userSettings.toolbar_theme': function (val) {
       const theme = val === 0 ? 'global' : (val === 1 ? 'light' : 'dark')
 
       this.setToolbarTheme(theme)
     },
-    'userSettings.toolbarStyle': function (val) {
+    'userSettings.toolbar_style': function (val) {
       this.setToolbarDetached(val === 1)
     },
-    'userSettings.menuTheme': function (val) {
+    'userSettings.menu_theme': function (val) {
       const theme = val === 0 ? 'global' : (val === 1 ? 'light' : 'dark')
 
       this.setMenuTheme(theme)
     },
-    'userSettings.contentBoxed': function (val) {
+    'userSettings.content_boxed': function (val) {
       this.setContentBoxed(val === 1)
     }
   },
   mounted() {
-    this.userSettings = {
-      id: this.whoAmI.userSettings.id,
-      theme: this.whoAmI.userSettings.global_theme,
-      toolbarTheme: this.whoAmI.userSettings.toolbar_theme,
-      toolbarStyle: this.whoAmI.userSettings.toolbar_style,
-      contentBoxed: this.whoAmI.userSettings.content_layout,
-      menuTheme: this.whoAmI.userSettings.menu_theme,
-      color: this.whoAmI.userSettings.primary_color
-    }
+    this.getUserSettings ? this.userSettings = this.getUserSettings : this.userSettings = this.defaultSettings
     this.setSettings(this.userSettings)
 
     this.animate()
@@ -188,28 +182,20 @@ export default {
     if (this.timeout) clearTimeout(this.timeout)
   },
   methods: {
-    ...mapMutations('app', ['setMenuTheme', 'setGlobalTheme', 'setToolbarTheme', 'setContentBoxed', 'setTimeZone', 'setTimeFormat', 'setRTL', 'setToolbarDetached']),
+    ...mapMutations('app', ['setMenuTheme', 'setGlobalTheme', 'setToolbarTheme', 'setContentBoxed', 'setTimeZone', 'setTimeFormat', 'setToolbarDetached']),
     ...mapActions({
       updateSettings: 'auth/updateSettings',
       updateWhoAmIState: 'auth/signInSpa'
     }),
     setSettings(userSettings) {
-      this.setGlobalTheme((userSettings.theme === 0 ? 'light' : 'dark'))
-      this.setToolbarTheme((userSettings.toolbarTheme === 0 ? 'global' : (userSettings.toolbar_theme === 1 ? 'light' : 'dark')))
-      this.setToolbarDetached((userSettings.toolbarStyle !== 0))
-      this.setMenuTheme((userSettings.menuTheme === 0 ? 'global' : (userSettings.menu_theme === 1 ? 'light' : 'dark')))
-      this.setContentBoxed((userSettings.contentBoxed !== 0))
+      this.setGlobalTheme((userSettings.global_theme === 0 ? 'light' : 'dark'))
+      this.setToolbarTheme((userSettings.toolbar_theme === 0 ? 'global' : (userSettings.toolbar_theme === 1 ? 'light' : 'dark')))
+      this.setToolbarDetached((userSettings.toolbar_style !== 0))
+      this.setMenuTheme((userSettings.menu_theme === 0 ? 'global' : (userSettings.menu_theme === 1 ? 'light' : 'dark')))
+      this.setContentBoxed((userSettings.content_layout !== 0))
     },
     close() {
-      this.updateSettings({
-        id: this.userSettings.id,
-        global_theme: this.userSettings.theme,
-        toolbar_theme: this.userSettings.toolbarTheme,
-        toolbar_style: this.userSettings.toolbarStyle,
-        content_layout: this.userSettings.contentBoxed,
-        menu_theme: this.userSettings.menuTheme,
-        primary_color: this.userSettings.color
-      }).then(() => {
+      this.updateSettings(this.userSettings).then(() => {
         this.updateWhoAmIState()
       }).catch((e) => {
         console.log(e)
