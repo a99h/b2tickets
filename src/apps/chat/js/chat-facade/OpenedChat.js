@@ -1,6 +1,6 @@
 import isEmpty from '@/js/lib/isEmpty'
 
-export default class Chat {  
+export default class OpenedChat {
   messages = [];
   participants = [];
   backendErrors = [];

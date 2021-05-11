@@ -1,9 +1,9 @@
 import Echo from '@/plugins/echo'
-import Chat from '../classes/Chat'
+import OpenedChat from '../chat-facade/OpenedChat'
 
 export default {
   unsubscribeChannel(chat) {
-    if (!(chat instanceof Chat)) return
+    if (!(chat instanceof OpenedChat)) return
 
     this.unwatchParticipants(chat)
   },
@@ -35,7 +35,7 @@ export default {
     Echo.leave('App.User.' + chat.channelName)
   },
   subscribeChannel(chat) {
-    if (!(chat instanceof Chat)) return
+    if (!(chat instanceof OpenedChat)) return
 
     Echo.private('App.User.' + chat.channelName)
       .listen('MessageSent', (event) => {

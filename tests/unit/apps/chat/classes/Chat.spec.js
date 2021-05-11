@@ -1,4 +1,4 @@
-import Chat from '@/apps/chat/js/classes/Chat'
+import OpenedChat from '@/apps/chat/js/chat-facade/OpenedChat'
 
 const expected = {
   messages: [],
@@ -47,11 +47,11 @@ const expected = {
 }
 
 describe('Chat', () => {
-  let _ = new Chat(expected)
+  let _ = new OpenedChat(expected)
 
   test('instance', () => {
-    const _inst = new Chat(expected.channelName, expected.user)
-    expect(_inst).toBeInstanceOf(Chat)
+    const _inst = new OpenedChat(expected.channelName, expected.user)
+    expect(_inst).toBeInstanceOf(OpenedChat)
   })
 
   test('structure', () => {
@@ -83,7 +83,7 @@ describe('Chat', () => {
   })
 
   test.skip('constructor structure', () => {
-    const _ops = new Chat(expected)
+    const _ops = new OpenedChat(expected)
     expect(_ops).toEqual(expect.objectContaining({
       user: expect.any(Array),
       channelName: expect.any(String),

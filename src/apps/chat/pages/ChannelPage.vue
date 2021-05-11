@@ -62,7 +62,7 @@ import ChannelMessage from '../components/ChannelMessage'
 
 import channelTitle from '@/apps/chat/js/filters/channelTitle'
 
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import { messageService, channelService } from '@/apps/chat/js/services'
 
 /*
@@ -125,7 +125,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      showChatRequest: 'chatRequest/showChatRequest',
       getMessages: 'message/fetchMessages',
       storeMessage: 'message/storeMessage',
       fetchTickets: 'ticket/fetchTickets'

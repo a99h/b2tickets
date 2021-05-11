@@ -105,8 +105,8 @@
 | Navigation drawer with channels for the chat application
 |
 */
-import ClientsChat from '@/apps/chat/js/classes/ClientsChat'
-import OperatorsChat from '@/apps/chat/js/classes/OperatorsChat'
+import OpenedRecordedChat from '@/apps/chat/js/chat-facade/OpenedRecordedChat'
+import OpenedOperatorsChat from '@/apps/chat/js/chat-facade/OpenedOperatorsChat'
 import channelService from '@/apps/chat/js/services/channelService'
 import channelTitle from '@/apps/chat/js/filters/channelTitle'
 import ChatToolbar from '@/apps/chat/components/Toolbar'
@@ -225,8 +225,8 @@ export default {
     createChat(options) {
       const { chatRequest } = options
 
-      if (!chatRequest) return new OperatorsChat(options)
-      else return new ClientsChat(options)
+      if (!chatRequest) return new OpenedOperatorsChat(options)
+      else return new OpenedRecordedChat(options)
     },
     openedChatExists(channelName) {
       return this.openedChats.some((chat) => chat.channelName === channelName)

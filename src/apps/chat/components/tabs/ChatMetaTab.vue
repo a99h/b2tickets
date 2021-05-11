@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import ClientsChat from '@/apps/chat/js/classes/ClientsChat'
+import OpenedRecordedChat from '@/apps/chat/js/chat-facade/OpenedRecordedChat'
 
 export default {
   name: 'ChatMetaTab',
@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     chatIsValid(chat) {
-      return chat instanceof ClientsChat
+      return chat instanceof OpenedRecordedChat
     }
   }
 }

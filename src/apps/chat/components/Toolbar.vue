@@ -49,7 +49,7 @@
 import TicketForm from '@/components/ticket/TicketForm'
 import { mapActions, mapGetters } from 'vuex'
 import channelTitle from '@/apps/chat/js/filters/channelTitle'
-import Chat from '@/apps/chat/js/classes/Chat'
+import OpenedChat from '@/apps/chat/js/chat-facade/OpenedChat'
 
 export default {
   name: 'ChatToolbar',
@@ -61,7 +61,7 @@ export default {
   },
   props: {
     chat: {
-      type: Chat,
+      type: OpenedChat,
       required: true
     }
   },
