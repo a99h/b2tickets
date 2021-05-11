@@ -1,5 +1,7 @@
 import isEmpty from '@/js/lib/isEmpty'
 
+import Operator from '@/js/models/Operator'
+
 export default class OpenedChat {
   messages = [];
   participants = [];
@@ -11,32 +13,17 @@ export default class OpenedChat {
     const { channelName, user } = options
 
     this.channelName = channelName
-    this.user = user
-    this.participants.push(user)
+    this.user = new Operator({ data: user })
+    this.addParticipant(this.user)
   }
 
   set user(value) {
     this._user = value
   }
   get user() {
-    return this._user
+    return this._user.show()
   }
 
-  set channelName(value) {
-    this._channelName = value
-  }
-  get channelName() {
-    return this._channelName
-  }
-
-  set messages(value) {
-    if (value) {
-      this._messages = value
-    }
-  }
-  get messages() {
-    return this._messages
-  }
   addMessage(value) {
     if (value) {
       this.messages.push(value)
