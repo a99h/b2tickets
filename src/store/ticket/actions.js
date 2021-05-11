@@ -11,7 +11,7 @@ const main = ({ commit }) => {
 
     commit('SET_TICKET_COLLECTION', collection)
   }).catch((err) => {
-    commit('SET_TICKET_COLLECTION', [])
+    commit('SET_TICKET_COLLECTION', {})
     commit('SET_BACKEND_ERRORS', err)
   })
 }

@@ -20,8 +20,9 @@
                 {{ backendErrors.message }}
               </v-alert>
               <v-data-table
+                v-if="!loading.dataTable"
                 :headers="headers"
-                :items="chats"
+                :items="getChats"
                 :loading="loading.dataTable"
                 :search="search"
                 fixed
@@ -78,7 +79,6 @@
                     <v-btn
                       :dark="!$vuetify.theme.dark"
                       small
-                      :disabled="$refs.chatInfo.dialogLoader"
                       @click="showItem(item)"
                     >
                       {{ $t('b2tickets.chat.form.show') }}
@@ -99,14 +99,12 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import ChatForm from '@/apps/chat/components/ChatForm'
 import ChatInfo from '@/apps/chat/components/ChatInfo/ChatInfo'
 import { showChat } from '@/apps/chat/js/http/chat'
 import { showChatRequest } from '@/apps/chat/js/http/chatRequest'
-import ChatRequest from '@/apps/chat/js/models/ChatRequest'
 
 export default {
-  name: 'Chats',
+  name: 'ChatsTable',
   components: { ChatInfo },
   data: () => ({
     loading: {
@@ -115,7 +113,6 @@ export default {
     },
     backendErrors: null,
     search: '',
-    chats: [],
     currentItem: {}
   }),
   computed: {
@@ -149,20 +146,15 @@ export default {
       this.loading.dataTable = 'info'
 
       await this.fetchChats().then(() => {
-        this.chats = this.getChats
+        this.loading.dataTable = false
       })
-
-      this.loading.dataTable = false
-      this.backendErrors = null
     },
     onCloseDialog() {
       this.backendErrors = null
     },
     showItem(item) {
-      const chat = this.chats[this.chats.indexOf(item)]
-
-      showChatRequest(chat.chat_request_id).then((res) => {
-        this.currentItem = { ...chat, chatRequest: res.data }
+      showChatRequest(item.chat_request_id).then((res) => {
+        this.currentItem = { ...item, chatRequest: res.data }
 
         this.$refs.chatInfo.dialogLoader = true
       })
@@ -193,12 +185,6 @@ export default {
       }
 
       this.$emit('add-chat', data)
-    },
-    async setChatRequest() {
-      await showChatRequest(this.chat.chat_request_id).then((res) => {
-        this.chatRequest = res.data
-      }).catch(() => {
-      })
     }
   }
 }

@@ -1,4 +1,5 @@
 import { indexChat } from '@/apps/chat/js/http/chat'
+import ChatCollection from '@/apps/chat/js/models/ChatCollection'
 
 const addOpenedChat = ({ commit }, value) => {
   commit('ADD_OPENED_CHAT', value)
@@ -9,7 +10,7 @@ const removeOpenedChat = ({ commit }, value) => {
 }
 
 const truncateOpenedChats = ({ commit }) => {
-  commit('TRUNCATE_OPENED_CHATS')
+  commit('FLUSH_OPENED_CHATS')
 }
 
 const setCurrentChat = ({ commit }, value) => {
@@ -21,10 +22,14 @@ const fetchChats = ({ dispatch }) => {
 }
 
 const main = ({ commit }) => {
-  return indexChat().then((response) => {
-    commit('SET_CHATS', response.data)
-  }).catch(() => {
-    commit('SET_CHATS', [])
+  return indexChat().then((res) => {
+    const collection = new ChatCollection({ data: res.data })
+
+    commit('SET_CHAT_COLLECTION', collection)
+    commit('FLUSH_BACKEND_ERRORS')
+  }).catch((err) => {
+    commit('SET_CHAT_COLLECTION', {})
+    commit('SET_BACKEND_ERRORS', err)
   })
 }
 

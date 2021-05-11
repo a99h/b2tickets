@@ -14,13 +14,21 @@ export default {
 
     if (value instanceof OpenedChat && index > -1) state.openedChats.splice(index,1)
   },
-  TRUNCATE_OPENED_CHATS(state) {
+  FLUSH_OPENED_CHATS(state) {
     state.openedChats = []
   },
   SET_CURRENT_CHAT_INDEX(state, value) {
     state.currentChatIndex = value
   },
-  SET_CHATS(state, value) {
-    state.chats = value
+  SET_CHAT_COLLECTION(state, value) {
+    state.ChatCollection = value
+  },
+  SET_BACKEND_ERRORS(state, value) {
+    if (state.backendErrors === null) state.backendErrors = []
+
+    state.backendErrors.push(value)
+  },
+  FLUSH_BACKEND_ERRORS(state) {
+    state.backendErrors = null
   }
 }

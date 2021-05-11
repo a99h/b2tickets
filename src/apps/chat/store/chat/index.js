@@ -3,20 +3,27 @@ import mutations from './mutations'
 
 // state initial values
 const state = {
-  chats: [],
+  ChatCollection: {},
   openedChats: [],
-  currentChatIndex: -1
+  currentChatIndex: -1,
+  backendErrors: null
 }
 
 const getters = {
   getChats(state) {
-    return state.chats
+    return state.ChatCollection.all()
+  },
+  getBackendErrors(state) {
+    return state.backendErrors
   },
   getOpenedChats(state) {
     return state.openedChats
   },
   getCurrentChat(state) {
     return state.openedChats[state.currentChatIndex]
+  },
+  findChatById: (state) => (id) => {
+    return state.ChatCollection.find(id)
   }
 }
 
