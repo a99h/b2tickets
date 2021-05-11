@@ -179,17 +179,17 @@ export default {
     },
     addChatByChatRequest(chatRequestId) {
       showChatRequest(chatRequestId).then((res) => {
-        this.emitAddChatEvent((new ChatRequest({ data: res.data })))
+        this.emitAddChatEvent(res.data)
       }).catch((err) => {
         this.backendErrors = err.response.data.message
       })
     },
     emitAddChatEvent(chatRequest) {
-      this.loading.chatBtn = chatRequest.show().id
+      this.loading.chatBtn = chatRequest.id
 
       const data = {
         chatRequest: chatRequest,
-        channelName: chatRequest.show().channel_name
+        channelName: chatRequest.channel_name
       }
 
       this.$emit('add-chat', data)

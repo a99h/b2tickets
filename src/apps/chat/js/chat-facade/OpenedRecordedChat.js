@@ -6,6 +6,7 @@ import { messageService } from '../services'
 // Models
 import Client from '@/js/models/Client'
 import Chat from '@/apps/chat/js/models/Chat'
+import ChatRequest from '@/apps/chat/js/models/ChatRequest'
 
 export default class OpenedRecordedChat extends OpenedChat {
 
@@ -16,7 +17,7 @@ export default class OpenedRecordedChat extends OpenedChat {
 
     super({ channelName, user })
 
-    this.chatRequest = chatRequest
+    this.chatRequest = new ChatRequest({ data: chatRequest })
     this.channelName = this.chatRequest.show().channel_name
     this.chat = new Chat({ data: this.chatRequest.show().chat })
     this.client = new Client({ data: this.chat.show().chatClient })
