@@ -15,7 +15,7 @@ export default {
         chat.toggleActive()
       })
       .joining((user) => {
-        if (!(chat.participants.some((us) => us.email === user.email))) chat.addParticipant(user)
+        if (!(chat.participants.some((us) => us.email === user.email))) chat.addParticipant.push(user)
 
         chat.toggleActive()
       })

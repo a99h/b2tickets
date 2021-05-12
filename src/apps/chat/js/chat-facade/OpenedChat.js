@@ -1,9 +1,10 @@
 import isEmpty from '@/js/lib/isEmpty'
 
 import Operator from '@/js/models/Operator'
+import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 
 export default class OpenedChat {
-  messages = [];
+  messages = {};
   participants = [];
   backendErrors = [];
   typingMessageId = Symbol('typing');
@@ -14,7 +15,9 @@ export default class OpenedChat {
 
     this.channelName = channelName
     this.user = new Operator({ data: user })
-    this.addParticipant(this.user)
+    this.participants.push(this.user)
+    this.typingMessage = {}
+    this.messages = new MessageCollection({ data: [] })
   }
 
   set user(value) {
@@ -26,9 +29,9 @@ export default class OpenedChat {
 
   addMessage(value) {
     if (value) {
-      this.messages.push(value)
+      this.messages.record([value])
 
-      if (!this.isTypingMessage(value)) this.unreadMessagesCount = this.unreadMessagesCount + 1
+      if (!this.isTypingMessage(value.id) && (value.user !== this.user)) this.unreadMessagesCount = this.unreadMessagesCount + 1
     }
   }
   addTypingMessage(data) {
@@ -39,36 +42,16 @@ export default class OpenedChat {
       text: typing ? message : ''
     }
 
-    const typingMessages = this.typingMessages()
-
-    if (isEmpty(typingMessages)) this.addMessage(filteredMessage)
+    if (isEmpty(this.typingMessage)) this.addMessage(filteredMessage)
     else {
-      typingMessages.forEach((index) => this.updateMessage(index, filteredMessage))
+      this.messages.update(this.typingMessage.id, filteredMessage)
     }
-  }
-  updateMessage(messageIndex, value) {
-    this.messages[messageIndex] = value
-  }
-  removeMessage(messageIndex) {
-    if (messageIndex > -1) this.messages.splice(messageIndex, 1)
-  }
-
-  set participants(value) {
-    if (value) {
-      this._participants = value
-    }
-  }
-  get participants() {
-    return this._participants
-  }
-  addParticipant(value) {
-    this.participants.push(value)
   }
 
   setTyping(data) {
     const { user, typing } = data
 
-    typing ? this.addTypingMessage(data) : this.removeTypingMessage(data)
+    typing ? this.addTypingMessage(data) : this.removeTypingMessage()
 
     this.participants.some((participant) => {
       if (participant.email === user.email) {
@@ -83,35 +66,19 @@ export default class OpenedChat {
     })
   }
 
-  typingMessages() {
-    const { typingMessageId } = this
-    const typingMessages = []
-
-    this.messages.some((msg) => {
-      if (msg.id === typingMessageId) {
-        typingMessages.push(this.messages.indexOf(msg))
-
-        return true
-      } else return false
-    })
-
-    return typingMessages
-  }
-
-  removeTypingMessage(data) {
-    const typingMessages = this.typingMessages()
-
-    if (!isEmpty(typingMessages)) typingMessages.forEach((index) => {
-      if (this.messages[index].user.email === data.user.email) this.removeMessage(index)
-    })
+  removeTypingMessage() {
+    if (!isEmpty(this.typingMessage)) {
+      this.messages.delete(this.typingMessage.id)
+      this.typingMessage = {}
+    }
   }
 
   toggleActive() {
     Object.values(this.participants).length > 1 ? this.setActive(1) : this.setActive(0)
   }
 
-  isTypingMessage(message) {
-    return typeof message.id === 'symbol'
+  isTypingMessage(id) {
+    return typeof id === 'symbol'
   }
 
   setActive(value) {}

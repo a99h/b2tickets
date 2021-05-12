@@ -57,7 +57,6 @@
     <v-card class="flex-grow-1">
 
       <ChatToolbar
-        :chat="currentChat"
         @leave-channel="leaveChat"
         @toggle-menu="drawer = !drawer"
       />
@@ -65,7 +64,6 @@
       <router-view
         :key="$route.fullPath"
         :user="user"
-        :chat="currentChat"
         @add-chat="addChatAndEnter"
       ></router-view>
 
@@ -105,6 +103,7 @@
 | Navigation drawer with channels for the chat application
 |
 */
+import OpenedChat from '@/apps/chat/js/chat-facade/OpenedChat'
 import OpenedRecordedChat from '@/apps/chat/js/chat-facade/OpenedRecordedChat'
 import OpenedOperatorsChat from '@/apps/chat/js/chat-facade/OpenedOperatorsChat'
 import channelService from '@/apps/chat/js/services/channelService'
@@ -153,7 +152,7 @@ export default {
     this.addDefaultChannels(this.defaultChannels)
   },
   mounted() {
-    // this.changeChannel(this.currentChat)
+    this.changeChannel(this.currentChat)
   },
   methods: {
     ...mapActions({
@@ -165,6 +164,8 @@ export default {
       defaultChannels.forEach((channelName) => {
         this.addOpenedChat({ channelName: channelName, user: this.user })
       })
+
+      this.setCurrentChat(this.openedChats.indexOf(this.openedChats[0]))
     },
     newChat() {
       this.addChatAndEnter({ channelName: this.newChannel, user: this.user })

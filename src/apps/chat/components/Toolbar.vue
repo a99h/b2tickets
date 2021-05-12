@@ -2,11 +2,12 @@
   <!-- channel toolbar -->
   <v-app-bar flat height="64">
     <v-app-bar-nav-icon class="hidden-lg-and-up" @click="$emit('toggle-menu')"></v-app-bar-nav-icon>
-    <div class="title font-weight-bold">{{ chat | channelTitle }}</div>
+    <div class="title font-weight-bold">{{ currentChat | channelTitle }}</div>
 
     <v-breadcrumbs :items="breadcrumbs">
       <template v-slot:item="{ item }">
         <v-breadcrumbs-item
+          v-if="!loading.ticketForm || item.text !== $t('b2tickets.ticket.actions.createTicket')"
           :to="item.to"
           :disabled="item.disabled"
           @click="breadcrumbsOnClick(item)"
@@ -19,11 +20,11 @@
       </template>
     </v-breadcrumbs>
     <TicketForm
-      v-if="!loading.ticketForm"
+      v-if="!loading.currentChat"
       ref="ticketForm"
       :tickets="getTickets"
       :activator-hidden="true"
-      :chat-id="chat.chat.id"
+      :chat-id="currentChat.chat.show().id"
       @closeDialog="backendErrors = null"
       @ticketFormBackendErrors="(err) => backendErrors = err"
       @refreshState="refreshTickets"
@@ -50,6 +51,7 @@ import TicketForm from '@/components/ticket/TicketForm'
 import { mapActions, mapGetters } from 'vuex'
 import channelTitle from '@/apps/chat/js/filters/channelTitle'
 import OpenedChat from '@/apps/chat/js/chat-facade/OpenedChat'
+import isEmpty from '@/js/lib/isEmpty'
 
 export default {
   name: 'ChatToolbar',
@@ -59,16 +61,17 @@ export default {
   filters: {
     channelTitle: channelTitle
   },
-  props: {
-    chat: {
-      type: OpenedChat,
-      required: true
-    }
-  },
+  // props: {
+  //   chat: {
+  //     type: OpenedChat,
+  //     required: true
+  //   }
+  // },
   data() {
     return {
       loading: {
-        ticketForm: true
+        ticketForm: true,
+        currentChat: true
       },
       // App bar navigation
       breadcrumbs: [
@@ -84,25 +87,33 @@ export default {
         }, {
           text: this.$t('b2tickets.ticket.actions.createTicket'),
           disabled: true,
-          to: { name: 'apps-chat-channel-create-ticket', params: { id: this.chat.channelName } }
+          to: { name: 'apps-chat-channel-create-ticket', params: { id: this.currentChat ? this.currentChat.channelName : 'general' } }
         }
       ]
     }
   },
   computed: {
     ...mapGetters({
-      getTickets: 'ticket/getTickets'
+      getTickets: 'ticket/getTickets',
+      currentChat: 'chat/getCurrentChat'
     })
   },
   watch: {
     '$route.name'(val) {
-      const disabled = this.chat.chatRequest === undefined
+      const disabled = this.currentChat.chatRequest === undefined
 
       if (val === 'apps-chat-channel' && !disabled) {
         this.ticketFormInitialize()
         this.breadcrumbs.find(
           (item) => item.text === this.$t('b2tickets.ticket.actions.createTicket')
         ).disabled = disabled
+      }
+    },
+    currentChat(val) {
+      if (!isEmpty(val)) {
+        // this.ticketFormInitialize()
+        this.loading.currentChat = false
+        this.setTicketFormDefaultValues()
       }
     }
   },
@@ -124,9 +135,7 @@ export default {
       }
     },
     ticketFormInitialize() {
-      this.refreshTickets().then(() => {
-        this.setTicketFormDefaultValues()
-      })
+      this.refreshTickets()
     },
     async refreshTickets() {
       this.loading.ticketForm = true
@@ -135,7 +144,7 @@ export default {
       })
     },
     setTicketFormDefaultValues() {
-      this.$refs.ticketForm.editedItem.ticketChatRequests = [this.chat.chatRequest]
+      this.$refs.ticketForm.editedItem.ticketChatRequests = [this.chat.chatRequest.show()]
       this.$refs.ticketForm.editedItem.ticketOperators = [this.chat.user]
     },
     isCreateTicketBtn(item) {

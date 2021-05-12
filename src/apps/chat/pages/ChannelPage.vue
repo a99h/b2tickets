@@ -10,13 +10,12 @@
       rounded
       height="6"
     ></v-progress-linear>
-    <div v-if="!loading.messages" class="channel-page">
+    <div v-if="currentChat" class="channel-page">
       <div id="messages" ref="messages" class="messages mx-2">
         <transition-group name="list">
           <channel-message
-            v-for="message in chat.messages"
+            v-for="message in currentChat.messages.all()"
             :key="message.id"
-            v-model="chat.messages"
             :message="message"
             :user="user"
             class="my-4 d-flex"
@@ -39,9 +38,9 @@
     >
       <v-list dense>
         <v-subheader class="mx-1 overline">
-          {{ $t('chat.online', { count: chat.participants.length }) }}
+          {{ $t('chat.online', { count: currentChat.participants.length }) }}
         </v-subheader>
-        <v-list-item v-for="item in chat.participants" :key="item.id" class="mb-1">
+        <v-list-item v-for="item in currentChat.participants" :key="item.id" class="mb-1">
           <user-avatar :user="item" class="mx-1" />
           <v-list-item-content>
             <v-list-item-title :class="{ 'primary--text': item.email === user.email }">{{ item.name }}</v-list-item-title>
@@ -62,7 +61,7 @@ import ChannelMessage from '../components/ChannelMessage'
 
 import channelTitle from '@/apps/chat/js/filters/channelTitle'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { messageService, channelService } from '@/apps/chat/js/services'
 
 /*
@@ -87,10 +86,6 @@ export default {
     user: {
       type: Object,
       default: () => ({})
-    },
-    chat: {
-      type: Object,
-      default: () => ({})
     }
   },
   data() {
@@ -105,51 +100,58 @@ export default {
 
       // channel information and messages
       channel: '',
-      messages: [],
 
       // Instance of Chat class
       chatInstance: {}
     }
   },
+  computed: {
+    ...mapGetters({
+      currentChat: 'chat/getCurrentChat'
+    })
+  },
   watch: {
     '$route.params.id'() {
       this.startChannel(this.$route.params.id)
+    },
+    currentChat(val) {
+      if (val) this.loading.messages = false
     }
   },
   mounted() {
     this.startChannel(this.$route.params.id)
-    this.chat.watchReadAt()
+    // this.chat.watchReadAt()
+    this.loading.messages = false
   },
   beforeDestroy() {
     this.unregisterListeners()
   },
   methods: {
     ...mapActions({
-      getMessages: 'message/fetchMessages',
       storeMessage: 'message/storeMessage',
       fetchTickets: 'ticket/fetchTickets'
     }),
 
     startChannel(channelId) {
       this.registerListeners()
-      this.chat.unreadMessagesCount = 0
+      this.currentChat.unreadMessagesCount = 0
 
       this.channel = channelId
     },
     leaveChannel() {
       this.unregisterListeners()
-      this.$emit('leave-channel', this.chat)
+      this.$emit('leave-channel', this.currentChat)
     },
     registerListeners() {
       window.addEventListener('channel-page-update-users-drawer', this.updateUsersDrawer)
-      channelService.watchParticipants(this.chat)
+      channelService.watchParticipants(this.currentChat)
     },
     unregisterListeners() {
       window.removeEventListener('channel-page-update-users-drawer',this.updateUsersDrawer)
     },
     // Send message to channel
     sendMessage(messageText) {
-      this.chat.sendMessage(messageText)
+      this.currentChat.sendMessage(messageText)
       this.scrollToBottom()
     },
     scrollToBottom() {
@@ -158,7 +160,7 @@ export default {
       })
     },
     sendTyping(typing) {
-      messageService.sendTyping(this.chat.channelName, this.chat.user, typing)
+      messageService.sendTyping(this.currentChat.channelName, this.currentChat.user, typing)
     },
     updateUsersDrawer() {
       this.$forceUpdate()

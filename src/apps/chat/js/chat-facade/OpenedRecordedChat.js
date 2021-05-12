@@ -7,6 +7,7 @@ import { messageService } from '../services'
 import Client from '@/js/models/Client'
 import Chat from '@/apps/chat/js/models/Chat'
 import ChatRequest from '@/apps/chat/js/models/ChatRequest'
+import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 
 export default class OpenedRecordedChat extends OpenedChat {
 
@@ -22,7 +23,7 @@ export default class OpenedRecordedChat extends OpenedChat {
     this.client = new Client({ data: this.chat.show().chatClient })
 
     getMessages(this.chatRequest.show().id).then((res) => {
-      this.messages = res.data
+      this.messages = new MessageCollection({ data: res.data })
     }).catch((e) => {
       this.backendErrors.push(e)
     })
