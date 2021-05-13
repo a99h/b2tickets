@@ -10,7 +10,10 @@ export default {
       text: typing ? message : ''
     }
 
-    if (isEmpty(openedChat.typingMessage)) openedChat.addMessage(filteredMessage)
+    if (isEmpty(openedChat.typingMessage)) {
+      openedChat.typingMessage = filteredMessage
+      openedChat.addMessage(openedChat.typingMessage)
+    }
     else {
       openedChat.messages.update(openedChat.typingMessageKey, filteredMessage)
     }

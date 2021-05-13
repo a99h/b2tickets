@@ -7,9 +7,7 @@ export default class OpenedChat {
   messages = {};
   participants = [];
   backendErrors = [];
-  typingMessageKey = Symbol('typing');
   unreadMessagesCount = 0;
-  typingMessage = {};
 
   constructor(options) {
     const { channelName, user } = options
@@ -17,7 +15,6 @@ export default class OpenedChat {
     this.channelName = channelName
     this.user = new Operator({ data: user })
     this.participants.push(this.user)
-    this.typingMessage = {}
     this.messages = new MessageCollection({ data: [] })
   }
 
@@ -32,17 +29,12 @@ export default class OpenedChat {
     if (value) {
       this.messages.record([value])
 
-      if (!this.isTypingMessage(value.id)) this.unreadMessagesCount = this.unreadMessagesCount + 1
-      else this.typingMessage = value
+      if ((value.user !== this.user) && (typeof value.id === 'number')) this.unreadMessagesCount = this.unreadMessagesCount + 1
     }
   }
 
   toggleActive() {
     Object.values(this.participants).length > 1 ? this.setActive(1) : this.setActive(0)
-  }
-
-  isTypingMessage(id) {
-    return typeof id === 'symbol'
   }
 
   setActive(value) {}
