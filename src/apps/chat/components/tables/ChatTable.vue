@@ -62,7 +62,7 @@
                     <v-icon left>
                       mdi-wechat
                     </v-icon>
-                    <span v-if="loading.chatBtn === item.id">
+                    <span v-if="loading.chatBtn === item.chat_request_id">
                       <v-progress-circular indeterminate color="primary" size="20"></v-progress-circular>
                     </span>
                     <span v-else>{{ $tc('b2tickets.chat.title', 1) }}</span>
@@ -170,21 +170,17 @@ export default {
       })
     },
     addChatByChatRequest(chatRequestId) {
+      this.loading.chatBtn = chatRequestId
       showChatRequest(chatRequestId).then((res) => {
-        this.emitAddChatEvent(res.data)
+        this.$emit('add-chat', {
+          chatRequest: res.data,
+          channelName: res.data.channel_name
+        })
+
+        this.loading.chatBtn = -1
       }).catch((err) => {
         this.backendErrors = err.response.data.message
       })
-    },
-    emitAddChatEvent(chatRequest) {
-      this.loading.chatBtn = chatRequest.id
-
-      const data = {
-        chatRequest: chatRequest,
-        channelName: chatRequest.channel_name
-      }
-
-      this.$emit('add-chat', data)
     }
   }
 }
