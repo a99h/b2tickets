@@ -105,7 +105,7 @@
 */
 import OpenedRecordedChat from '@/apps/chat/js/chat-facade/OpenedRecordedChat'
 import OpenedOperatorsChat from '@/apps/chat/js/chat-facade/OpenedOperatorsChat'
-import channelService from '@/apps/chat/js/services/channelService'
+import channelService from '@/apps/chat/js/services/echoChannelService'
 import channelTitle from '@/apps/chat/js/filters/channelTitle'
 import ChatToolbar from '@/apps/chat/components/Toolbar'
 

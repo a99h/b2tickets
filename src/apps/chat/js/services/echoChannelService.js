@@ -1,12 +1,8 @@
 import Echo from '@/plugins/echo'
-import OpenedChat from '../chat-facade/OpenedChat'
+import OpenedChat from '@/apps/chat/js/chat-facade/OpenedChat'
+import typingMessageService from '@/apps/chat/js/services/typingMessageService'
 
 export default {
-  unsubscribeChannel(chat) {
-    if (!(chat instanceof OpenedChat)) return
-
-    this.unwatchParticipants(chat)
-  },
   watchParticipants(chat) {
     Echo.join('App.User.' + chat.channelName)
       .here((users) => {
@@ -38,16 +34,15 @@ export default {
 
     Echo.private('App.User.' + chat.channelName)
       .listen('MessageSent', (event) => {
-
         const message = { ...event.message }
 
-        if (chat.user.id === event.message.user.id) {
-          message.read_at = null
-        }
+        // if (chat.user.id === event.message.user.id) {
+        //   message.read_at = null
+        // }
 
         chat.addMessage(message)
 
-        chat.setTyping({
+        typingMessageService.setTyping(chat, {
           user: event.message.user,
           message: event.message,
           typing: false
@@ -56,7 +51,7 @@ export default {
 
       .listenForWhisper('operators-message', (event) => {
         chat.addMessage(event.message)
-        chat.setTyping({
+        typingMessageService.setTyping(chat,{
           user: event.message.user,
           typing: false
         })
@@ -67,7 +62,12 @@ export default {
 
         if (typing === undefined) data.typing = true
 
-        chat.setTyping(data)
+        typingMessageService.setTyping(chat, data)
       })
+  },
+  unsubscribeChannel(chat) {
+    if (!(chat instanceof OpenedChat)) return
+
+    this.unwatchParticipants(chat)
   }
 }
