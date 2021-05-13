@@ -19,7 +19,7 @@ export default class OpenedOperatorsChat extends OpenedChat {
 
     messageService.whisperMessage(this.channelName, this.#eventName, data)
 
-    this.messages.push(data.message)
+    this.messages.record([data.message])
   }
 
   prepareMessageData(message) {

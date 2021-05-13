@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="dialog" max-width="1000px">
-    <template v-slot:activator="{ on, attrs }">
+    <template v-if="!activatorHidden" v-slot:activator="{ on, attrs }">
       <v-btn
         id="ticketFormActivator"
         :hidden="activatorHidden"
@@ -8,7 +8,6 @@
         class="mb-2"
         v-bind="attrs"
         v-on="on"
-        @click="$route.name === 'apps-chat-channel' ? $emit('setTicketFormDefaultValues') : ''"
       >{{ $t('b2tickets.ticket.actions.createTicket') }}</v-btn>
     </template>
     <v-card :loading="loading.dialogForm">
@@ -157,7 +156,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { required, maxLength, minLength } from 'vuelidate/lib/validators'
+import { required, maxLength } from 'vuelidate/lib/validators'
+import isEmpty from '@/js/lib/isEmpty'
 
 export default {
   name: 'TicketForm',
@@ -168,10 +168,6 @@ export default {
     },
     activatorHidden: {
       type: Boolean,
-      required: false
-    },
-    chatId: {
-      type: Number,
       required: false
     }
   },
@@ -214,7 +210,8 @@ export default {
       getChatRequests: 'chatRequest/getChatRequests',
       getOperators: 'operator/getOperators',
       getStatuses: 'ticketStatus/getStatuses',
-      findTicketById: 'ticket/findTicketById'
+      findTicketById: 'ticket/findTicketById',
+      currentChat: 'chat/getCurrentChat'
     }),
     formTitle() {
       let title = ''
@@ -377,7 +374,7 @@ export default {
       if (ticketOperators !== []) Object.assign(filteredData, { ticketOperators: data.ticketOperators.map((item) => item.id) })
       if (ticketStatus) Object.assign(filteredData, { ticketStatus: data.ticketStatus.id })
 
-      if (this.chatId) Object.assign(filteredData, { ticketChat: this.chatId })
+      if (!isEmpty(this.currentChat)) Object.assign(filteredData, { ticketChat: this.chatId })
 
       return filteredData
     }

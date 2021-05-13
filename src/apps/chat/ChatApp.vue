@@ -103,7 +103,6 @@
 | Navigation drawer with channels for the chat application
 |
 */
-import OpenedChat from '@/apps/chat/js/chat-facade/OpenedChat'
 import OpenedRecordedChat from '@/apps/chat/js/chat-facade/OpenedRecordedChat'
 import OpenedOperatorsChat from '@/apps/chat/js/chat-facade/OpenedOperatorsChat'
 import channelService from '@/apps/chat/js/services/channelService'

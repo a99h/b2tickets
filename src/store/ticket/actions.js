@@ -10,6 +10,7 @@ const main = ({ commit }) => {
     const collection = new TicketCollection({ data: response.data.data })
 
     commit('SET_TICKET_COLLECTION', collection)
+    commit('FLUSH_BACKEND_ERRORS')
   }).catch((err) => {
     commit('SET_TICKET_COLLECTION', {})
     commit('SET_BACKEND_ERRORS', err)
