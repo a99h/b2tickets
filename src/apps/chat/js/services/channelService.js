@@ -20,7 +20,6 @@ export default {
         chat.toggleActive()
       })
       .leaving((user) => {
-
         // eslint-disable-next-line array-callback-return
         chat.participants.some((us) => {
           if (us.email === user.email) {

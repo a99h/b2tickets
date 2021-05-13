@@ -21,6 +21,7 @@ export default class ModelCollection {
   all() {
     return this.$collection.map((entry) => Object.assign({}, entry))
   }
+  // eslint-disable-next-line consistent-return
   update(key, data) {
     const entryIndex = this.$collection.findIndex((entry) => entry[this.$options.primaryKey] === key)
 
@@ -29,7 +30,7 @@ export default class ModelCollection {
     this.$collection.splice(
       entryIndex,
       1,
-      Object.assign(this.$collection[entryIndex], data)
+      Object.assign(this.$collection[`${entryIndex}`], data)
     )
   }
   find(key) {

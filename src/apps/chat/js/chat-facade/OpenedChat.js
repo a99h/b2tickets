@@ -9,6 +9,7 @@ export default class OpenedChat {
   backendErrors = [];
   typingMessageId = Symbol('typing');
   unreadMessagesCount = 0;
+  typingMessage = {};
 
   constructor(options) {
     const { channelName, user } = options
@@ -31,7 +32,8 @@ export default class OpenedChat {
     if (value) {
       this.messages.record([value])
 
-      if (!this.isTypingMessage(value.id) && (value.user !== this.user)) this.unreadMessagesCount = this.unreadMessagesCount + 1
+      if (!this.isTypingMessage(value.id)) this.unreadMessagesCount = this.unreadMessagesCount + 1
+      else this.typingMessage = value
     }
   }
   addTypingMessage(data) {
@@ -44,14 +46,17 @@ export default class OpenedChat {
 
     if (isEmpty(this.typingMessage)) this.addMessage(filteredMessage)
     else {
-      this.messages.update(this.typingMessage.id, filteredMessage)
+      this.messages.update(this.typingMessageId, filteredMessage)
     }
   }
 
   setTyping(data) {
     const { user, typing } = data
 
-    typing ? this.addTypingMessage(data) : this.removeTypingMessage()
+    if (typing) this.addTypingMessage(data)
+    else {
+      if (user.email === this.typingMessage.user.email) this.removeTypingMessage()
+    }
 
     this.participants.some((participant) => {
       if (participant.email === user.email) {
