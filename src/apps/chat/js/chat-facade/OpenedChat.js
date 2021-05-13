@@ -7,7 +7,7 @@ export default class OpenedChat {
   messages = {};
   participants = [];
   backendErrors = [];
-  typingMessageId = Symbol('typing');
+  typingMessageKey = Symbol('typing');
   unreadMessagesCount = 0;
   typingMessage = {};
 

@@ -5,14 +5,14 @@ export default {
     const { user, message, typing } = data
 
     const filteredMessage = {
-      id: openedChat.typingMessageId,
+      id: openedChat.typingMessageKey,
       user: user,
       text: typing ? message : ''
     }
 
     if (isEmpty(openedChat.typingMessage)) openedChat.addMessage(filteredMessage)
     else {
-      openedChat.messages.update(openedChat.typingMessageId, filteredMessage)
+      openedChat.messages.update(openedChat.typingMessageKey, filteredMessage)
     }
   },
   setTyping(openedChat, data) {
