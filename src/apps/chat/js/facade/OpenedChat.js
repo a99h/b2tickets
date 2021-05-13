@@ -1,5 +1,3 @@
-import isEmpty from '@/js/lib/isEmpty'
-
 import Operator from '@/js/models/Operator'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 
@@ -9,8 +7,11 @@ export default class OpenedChat {
   backendErrors = [];
   unreadMessagesCount = 0;
 
-  constructor(options) {
-    const { channelName, user } = options
+  constructor(data = {}) {
+    const { channelName, user } = data
+
+    if (user === undefined) throw new Error('User must be defined')
+    if (channelName === undefined) throw new Error('Channel name must be defined')
 
     this.channelName = channelName
     this.user = new Operator({ data: user })

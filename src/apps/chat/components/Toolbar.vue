@@ -48,7 +48,7 @@ import TicketForm from '@/components/ticket/TicketForm'
 import { mapActions, mapGetters } from 'vuex'
 import channelTitle from '@/apps/chat/js/filters/channelTitle'
 import isEmpty from '@/js/lib/isEmpty'
-import OpenedRecordedChat from '@/apps/chat/js/chat-facade/OpenedRecordedChat'
+import OpenedRecordedChat from '@/apps/chat/js/facade/OpenedRecordedChat'
 
 export default {
   name: 'ChatToolbar',

@@ -1,4 +1,4 @@
-import OpenedChat from '@/apps/chat/js/chat-facade/OpenedChat'
+import OpenedChat from '@/apps/chat/js/facade/OpenedChat'
 
 export default {
   ADD_OPENED_CHAT(state, value) {

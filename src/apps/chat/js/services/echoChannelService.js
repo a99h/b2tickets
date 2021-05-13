@@ -1,5 +1,5 @@
 import Echo from '@/plugins/echo'
-import OpenedChat from '@/apps/chat/js/chat-facade/OpenedChat'
+import OpenedChat from '@/apps/chat/js/facade/OpenedChat'
 import typingMessageService from '@/apps/chat/js/services/typingMessageService'
 
 export default {

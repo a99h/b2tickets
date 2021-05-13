@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import OpenedRecordedChat from '@/apps/chat/js/chat-facade/OpenedRecordedChat'
+import OpenedRecordedChat from '@/apps/chat/js/facade/OpenedRecordedChat'
 
 export default {
   name: 'ChatMetaTab',
