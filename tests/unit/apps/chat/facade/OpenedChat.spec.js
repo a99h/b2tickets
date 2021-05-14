@@ -1,6 +1,8 @@
 import OpenedChat from '@/apps/chat/js/facade/OpenedChat'
 import isEmpty from '@/js/lib/isEmpty'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
+import Operator from '@/js/models/Operator'
+import Client from '@/js/models/Client'
 
 const user = {
   id: 6,
@@ -73,5 +75,51 @@ describe('fields', () => {
       backendErrors: expect.any(Array),
       unreadMessagesCount: 0
     }))
+  })
+})
+
+describe('getters and setters', () => {
+  const openedChat = createModel()
+  const newUser = {
+    id: 6,
+    name: 'Getters and setters test operator',
+    email: 'operator1@example.com',
+    email_verified_at: '2021-05-13T19:15:10.000000Z',
+    created_at: '2021-05-13T19:15:10.000000Z',
+    updated_at: '2021-05-13T19:15:10.000000Z',
+    userRoles: [{
+      id: 2,
+      name: 'operator',
+      hasPermissions: [{
+        name: 'show users',
+        guard_name: 'api',
+        created_at: '2021-05-13T19:15:10.000000Z'
+      }]
+    }]
+  }
+  const newClient = {
+    id: Date.now(),
+    name: 'Ethyl Sanford',
+    email: 'tfahey@example.org',
+    created_at: '2021-05-03T05:45:57.000000Z',
+    updated_at: '2021-05-03T05:45:57.000000Z',
+    userRoles: [{
+      id: 1,
+      hasPermissions: [],
+      name: 'Client'
+    }]
+  }
+
+  test('Set Operator instance and expect user object in getter', () => {
+    openedChat.user = new Operator({ data: newUser })
+
+    expect(openedChat.user).toEqual(expect.objectContaining(newUser))
+  })
+  test('Set other instance and expect error', () => {
+    expect(() => {
+      openedChat.user = new Client({ data: newClient })
+    }).toThrow('User must be instance of Operator')
+
+    expect(openedChat.user).toEqual(expect.objectContaining(newUser))
   })
 })

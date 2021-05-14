@@ -20,6 +20,7 @@ export default class OpenedChat {
   }
 
   set user(value) {
+    if (!(value instanceof Operator)) throw new Error('User must be instance of Operator')
     this._user = value
   }
   get user() {
