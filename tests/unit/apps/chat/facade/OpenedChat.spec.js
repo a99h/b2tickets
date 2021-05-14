@@ -1,31 +1,29 @@
 import OpenedChat from '@/apps/chat/js/facade/OpenedChat'
 import isEmpty from '@/js/lib/isEmpty'
+import MessageCollection from '@/apps/chat/js/models/MessageCollection'
+
+const user = {
+  id: 6,
+  name: 'Operator 1',
+  email: 'operator1@example.com',
+  email_verified_at: '2021-05-13T19:15:10.000000Z',
+  created_at: '2021-05-13T19:15:10.000000Z',
+  updated_at: '2021-05-13T19:15:10.000000Z',
+  userRoles: [{
+    id: 2,
+    name: 'operator',
+    hasPermissions: [{
+      name: 'show users',
+      guard_name: 'api',
+      created_at: '2021-05-13T19:15:10.000000Z'
+    }]
+  }]
+}
 
 function createModel(data) {
   if (isEmpty(data)) data = {
-    id: Date.now(),
     channelName: 'general',
-    active: 1,
-    chat_request_id: 1,
-    created_at: '2021-05-03T05:45:57.000000Z',
-    updated_at: '2021-05-03T05:45:57.000000Z',
-    user: {
-      id: 6,
-      name: 'Operator 1',
-      email: 'operator1@example.com',
-      email_verified_at: '2021-05-13T19:15:10.000000Z',
-      created_at: '2021-05-13T19:15:10.000000Z',
-      updated_at: '2021-05-13T19:15:10.000000Z',
-      userRoles: [{
-        id: 2,
-        name: 'operator',
-        hasPermissions: [{
-          name: 'show users',
-          guard_name: 'api',
-          created_at: '2021-05-13T19:15:10.000000Z'
-        }]
-      }]
-    }
+    user: user
   }
 
   return new OpenedChat(data)
@@ -42,129 +40,38 @@ describe('Class OpenedChat', () => {
     }).toThrow('User must be defined')
   })
 
-  test('Throws error if no channel_name', () => {
+  test('Throws error if no channelName', () => {
     expect(() => {
-      new OpenedChat({
-        user: {
-          id: 6,
-          name: 'Operator 1',
-          email: 'operator1@example.com',
-          email_verified_at: '2021-05-13T19:15:10.000000Z',
-          created_at: '2021-05-13T19:15:10.000000Z',
-          updated_at: '2021-05-13T19:15:10.000000Z',
-          userRoles: [{
-            id: 2,
-            name: 'operator',
-            hasPermissions: [{
-              name: 'show users',
-              guard_name: 'api',
-              created_at: '2021-05-13T19:15:10.000000Z'
-            }]
-          }]
-        }
-      })
+      new OpenedChat({ user: user })
     }).toThrow('Channel name must be defined')
   })
 })
 
-// const expected = {
-//   messages: [],
-//   participants: [{
-//     created_at: '2021-02-30T07:54:24.000000Z',
-//     email: 'v@test.com',
-//     id: '4',
-//     name: 'Rick',
-//     updated_at: '2021-02-30T07:54:24.000000Z',
-//     userRoles: [Array],
-//     userSettings: [Object]
-//   }],
-//   backendErrors: [],
-//   typingMessageId: Symbol('typing'),
-//   unreadMessagesCount: 0,
-//   user: {
-//     created_at: '2021-02-30T07:54:24.000000Z',
-//     email: 'v@test.com',
-//     id: '4',
-//     name: 'Rick',
-//     updated_at: '2021-02-30T07:54:24.000000Z',
-//     userRoles: [{
-//       hasPermissions: [{
-//         name: 'show users',
-//         guard_name: 'api',
-//         created_at: '2021-04-05T08:01:48.000000Z'
-//       }],
-//       id: 2,
-//       name: 'operator'
-//     }],
-//     userSettings: {
-//       avatar: '/images/avatars/avat.svg',
-//       content_layout: 0,
-//       created_at: '2021-02-30T07:54:24.000000Z',
-//       global_theme: 0,
-//       id: 2,
-//       menu_theme: 2,
-//       primary_color: '#558c14',
-//       time_format: null,
-//       toolbar_style: 1,
-//       toolbar_theme: 2,
-//       updated_at: '2021-03-30T07:54:24.000000Z'
-//     }
-//   },
-//   channelName: '7147de3a-c588-4f10-9dd5-41dab3b417asd5'
-// }
-//
-// describe('Chat', () => {
-//   let _ = new OpenedChat(expected)
-//
-//   test('instance', () => {
-//     const _inst = new OpenedChat(expected.channelName, expected.user)
-//
-//     expect(_inst).toBeInstanceOf(OpenedChat)
-//   })
-//
-//   test('structure', () => {
-//     // console.log('_', _)
-//     expect(_).toEqual(expect.objectContaining({
-//       addMessage: expect.any(Function),
-//       addTypingMessage: expect.any(Function),
-//       updateMessage: expect.any(Function),
-//       removeMessage: expect.any(Function),
-//       addParticipant: expect.any(Function),
-//       setTyping: expect.any(Function),
-//       typingMessages: expect.any(Function),
-//       removeTypingMessage: expect.any(Function),
-//       toggleActive: expect.any(Function),
-//       isTypingMessage: expect.any(Function),
-//       setActive: expect.any(Function),
-//       sendMessage: expect.any(Function)
-//     }))
-//   })
-//
-//   test('optins structure', () => {
-//     expect(_).toEqual(expect.objectContaining({
-//       messages: expect.any(Array),
-//       participants: expect.any(Array),
-//       backendErrors: expect.any(Array),
-//       // typingMessageId: expect.any(Symbol(typing)),
-//       unreadMessagesCount: expect.any(Number)
-//     }))
-//   })
-//
-//   test.skip('constructor structure', () => {
-//     const _ops = new OpenedChat(expected)
-//
-//     expect(_ops).toEqual(expect.objectContaining({
-//       user: expect.any(Array),
-//       channelName: expect.any(String),
-//       // participants: expect.any(Array)
-//     }))
-//   })
-//
-//   test('user optinons', () => {
-//     expect(_.user).toEqual(expected.user)
-//   })
-//
-//   test('channelName', () => {
-//     expect(_.channelName).toBe(expected.channelName)
-//   })
-// })
+describe('fields', () => {
+  test('OpenedChat structure', () => {
+    expect(createModel()).toEqual(expect.objectContaining({
+      channelName: expect.any(String),
+      user: expect.objectContaining({
+        id: expect.any(Number),
+        name: expect.any(String),
+        email: expect.any(String),
+        email_verified_at: expect.any(String),
+        created_at: expect.any(String),
+        updated_at: expect.any(String),
+        userRoles: expect.arrayContaining([expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          hasPermissions: expect.arrayContaining([expect.objectContaining({
+            name: expect.any(String),
+            guard_name: expect.any(String),
+            created_at: expect.any(String)
+          })])
+        })])
+      }),
+      messages: expect.any(MessageCollection),
+      participants: expect.arrayContaining([user]),
+      backendErrors: expect.any(Array),
+      unreadMessagesCount: 0
+    }))
+  })
+})
