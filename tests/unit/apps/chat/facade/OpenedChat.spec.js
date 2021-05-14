@@ -123,3 +123,34 @@ describe('getters and setters', () => {
     expect(openedChat.user).toEqual(expect.objectContaining(newUser))
   })
 })
+
+describe('addMessage method', () => {
+  const message = {
+    id: 1,
+    text: 'Fugiat illum.',
+    user: {
+      id: 1,
+      name: 'Clovis Eichmann',
+      email: 'gust.stracke@example.org',
+      userSettings: {
+        avatar: '/images/avatars/avatar1.svg'
+      }
+    },
+    timestamp: 1621026592000
+  }
+
+  test('Can add message to collection', () => {
+    const openedChat = createModel()
+
+    openedChat.addMessage(message)
+
+    expect(openedChat.messages.all()[0]).toEqual(expect.objectContaining(message))
+  })
+  test('Counts unread messages', () => {
+    const openedChat = createModel()
+
+    openedChat.addMessage(message)
+
+    expect(openedChat.unreadMessagesCount).toBe(1)
+  })
+})
