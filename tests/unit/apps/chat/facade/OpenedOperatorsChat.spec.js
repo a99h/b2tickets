@@ -1,7 +1,8 @@
 import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
 import OpenedOperatorsChat from '@/apps/chat/js/facade/OpenedOperatorsChat'
-import { user } from './OpenedChatTestCase'
+import { user, message } from './OpenedChatTestCase'
 import isEmpty from '@/js/lib/isEmpty'
+import messageService from '@/apps/chat/js/services/echoMessageService'
 
 function createModel(data) {
   if (isEmpty(data)) data = {
@@ -21,26 +22,44 @@ describe('Class OpenedOperatorsChat', () => {
   })
 })
 
-//
-// describe('toggleActive method', () => {
-//   test('toggle works', () => {
-//     const spy = jest.spyOn(AbstractOpenedChat.prototype, 'setActive')
-//     const openedChat = createModel()
-//
-//     expect(openedChat.participants.length).toBe(1)
-//
-//     openedChat.toggleActive()
-//
-//     expect(spy).lastCalledWith(0)
-//
-//     openedChat.participants.push(newUser)
-//
-//     expect(openedChat.participants.length).toBe(2)
-//
-//     openedChat.toggleActive()
-//
-//     expect(spy).lastCalledWith(1)
-//
-//     spy.mockRestore()
-//   })
-// })
+describe('sendMessage method', () => {
+  const operatorsChat = createModel()
+
+  test('called with prepareMessageData', () => {
+    const spy = jest.spyOn(OpenedOperatorsChat.prototype, 'prepareMessageData')
+
+    operatorsChat.sendMessage(message.text)
+
+    expect(spy).lastCalledWith(message.text)
+    expect(spy).lastReturnedWith(spy.mock.results[0].value)
+
+    spy.mockRestore()
+  })
+
+  test('called with messageService.whisperMessage', () => {
+    const spyWhisperMessage = jest.spyOn(messageService, 'whisperMessage')
+    const spyPrepareMessageData = jest.spyOn(OpenedOperatorsChat.prototype, 'prepareMessageData')
+    const eventName = 'operators-message'
+
+    operatorsChat.sendMessage(message.text)
+    expect(spyWhisperMessage).lastCalledWith(
+      operatorsChat.channelName,
+      eventName,
+      spyPrepareMessageData.mock.results[0].value
+    )
+
+    spyWhisperMessage.mockRestore()
+    spyPrepareMessageData.mockRestore()
+  })
+
+  test('message is recorded', () => {
+    const spy = jest.spyOn(OpenedOperatorsChat.prototype, 'prepareMessageData')
+
+    operatorsChat.sendMessage(message.text)
+    const preparedMessageData = spy.mock.results[0].value.message
+
+    expect(operatorsChat.messages.find(preparedMessageData.id)).toEqual(preparedMessageData)
+
+    spy.mockRestore()
+  })
+})

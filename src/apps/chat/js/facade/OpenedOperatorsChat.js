@@ -25,7 +25,14 @@ export default class OpenedOperatorsChat extends AbstractOpenedChat {
       message: {
         id: parseInt(this.user.id.toString() + createdAt),
         text: message,
-        user: this.user,
+        user: {
+          id: this.user.id,
+          name: this.user.name,
+          email: this.user.email,
+          userSettings: {
+            avatar: this.user.userSettings.avatar
+          }
+        },
         timestamp: (new Date()).getTime()
       }
     }

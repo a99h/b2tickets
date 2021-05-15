@@ -13,7 +13,10 @@ const user = {
       guard_name: 'api',
       created_at: '2021-05-13T19:15:10.000000Z'
     }]
-  }]
+  }],
+  userSettings: {
+    avatar: '/images/avatars/avatar1.svg'
+  }
 }
 const newUser = {
   id: 7,
@@ -30,7 +33,10 @@ const newUser = {
       guard_name: 'api',
       created_at: '2021-05-13T19:15:10.000000Z'
     }]
-  }]
+  }],
+  userSettings: {
+    avatar: '/images/avatars/avatar1.svg'
+  }
 }
 const message = {
   id: 1,
