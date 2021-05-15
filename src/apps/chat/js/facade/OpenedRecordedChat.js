@@ -12,7 +12,6 @@ import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 export default class OpenedRecordedChat extends AbstractOpenedChat {
 
   #LAST_MESSAGE_READ = 'last-message-read'
-  typingMessageKey = Symbol('typing');
   typingMessage = {};
 
   constructor(options) {

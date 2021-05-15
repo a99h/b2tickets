@@ -2,10 +2,11 @@ import isEmpty from '@/js/lib/isEmpty'
 
 export default {
   addTypingMessage(openedChat, data) {
+    const typingMessageKey = Symbol('typing')
     const { user, message, typing } = data
 
     const filteredMessage = {
-      id: openedChat.typingMessageKey,
+      id: typingMessageKey,
       user: user,
       text: typing ? message : ''
     }
@@ -15,7 +16,7 @@ export default {
       openedChat.addMessage(openedChat.typingMessage)
     }
     else {
-      openedChat.messages.update(openedChat.typingMessageKey, filteredMessage)
+      openedChat.messages.update(openedChat.typingMessage.id, filteredMessage)
     }
   },
   setTyping(openedChat, data) {
