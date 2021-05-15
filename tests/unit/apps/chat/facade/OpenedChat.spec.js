@@ -38,6 +38,19 @@ const newUser = {
     }]
   }]
 }
+const message = {
+  id: 1,
+  text: 'Fugiat illum.',
+  user: {
+    id: 1,
+    name: 'Clovis Eichmann',
+    email: 'gust.stracke@example.org',
+    userSettings: {
+      avatar: '/images/avatars/avatar1.svg'
+    }
+  },
+  timestamp: 1621026592000
+}
 
 function createModel(data) {
   if (isEmpty(data)) data = {
@@ -125,20 +138,6 @@ describe('getters and setters', () => {
 })
 
 describe('addMessage method', () => {
-  const message = {
-    id: 1,
-    text: 'Fugiat illum.',
-    user: {
-      id: 1,
-      name: 'Clovis Eichmann',
-      email: 'gust.stracke@example.org',
-      userSettings: {
-        avatar: '/images/avatars/avatar1.svg'
-      }
-    },
-    timestamp: 1621026592000
-  }
-
   test('Can add message to collection', () => {
     const openedChat = createModel()
 
@@ -178,7 +177,24 @@ describe('toggleActive method', () => {
   })
 })
 
-// describe('setActive', () => {
-//   expect(openedChat.chat.show().active).toBe(0)
-//   expect(openedChat.chat.show().active).toBe(1)
-// })
+describe('setActive method', () => {
+  test('setting active field to chat model works', () => {
+    const openedChat = createModel()
+
+    expect(openedChat.chat.show().active).toBe(0)
+
+    openedChat.setActive(1)
+
+    expect(openedChat.chat.show().active).toBe(1)
+  })
+})
+
+describe('sendMessage method', () => {
+  test('throw error if undefined', () => {
+    const openedChat = createModel()
+
+    expect(() => {
+      openedChat.sendMessage(message)
+    }).toThrow('You must define sendMessage method!')
+  })
+})

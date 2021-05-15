@@ -47,5 +47,7 @@ export default class OpenedChat {
     this.chat.update({ active: value })
   }
 
-  sendMessage(message) {}
+  sendMessage(message) {
+    throw new Error('You must define sendMessage method!')
+  }
 }
