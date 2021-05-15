@@ -8,10 +8,6 @@ export default class OpenedOperatorsChat extends AbstractOpenedChat {
     const { channelName, user } = options
 
     super({ channelName, user })
-
-    this.chat = {
-      active: 0
-    }
   }
 
   sendMessage(message) {
