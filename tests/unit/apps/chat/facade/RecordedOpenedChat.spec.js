@@ -1,4 +1,4 @@
-import { user, chatRequest } from './testCase'
+import { user, chatRequest, message } from './testCase'
 import isEmpty from '@/js/lib/isEmpty'
 
 // Facades
@@ -10,6 +10,7 @@ import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 import ChatRequest from '@/apps/chat/js/models/ChatRequest'
 import Chat from '@/apps/chat/js/models/Chat'
 import Client from '@/js/models/Client'
+import * as httpMessage from '@/apps/chat/js/http/message'
 
 function createModel(data) {
   if (isEmpty(data)) {
@@ -48,5 +49,22 @@ describe('fields', () => {
       client: expect.any(Client),
       messages: expect.any(MessageCollection)
     }))
+  })
+})
+
+describe('sendMessage', () => {
+  test('calls storeMessage', () => {
+    const recordedOpenedChat = createModel()
+    const spy = jest.spyOn(httpMessage, 'storeMessage')
+
+    recordedOpenedChat.sendMessage(message.text)
+
+    expect(spy).lastCalledWith({
+      user: user,
+      message: message.text,
+      chat_request_id: chatRequest.id
+    })
+
+    spy.mockRestore()
   })
 })
