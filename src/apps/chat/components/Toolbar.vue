@@ -48,7 +48,7 @@ import TicketForm from '@/components/ticket/TicketForm'
 import { mapActions, mapGetters } from 'vuex'
 import channelTitle from '@/apps/chat/js/filters/channelTitle'
 import isEmpty from '@/js/lib/isEmpty'
-import OpenedRecordedChat from '@/apps/chat/js/facade/OpenedRecordedChat'
+import RecordedOpenedChat from '@/apps/chat/js/facade/RecordedOpenedChat'
 
 export default {
   name: 'ChatToolbar',
@@ -96,7 +96,7 @@ export default {
 
         ticketFormActivator.disabled = val.chatRequest === undefined
         this.fetchTickets().then(() => {
-          if (val instanceof OpenedRecordedChat) this.setTicketFormDefaultValues()
+          if (val instanceof RecordedOpenedChat) this.setTicketFormDefaultValues()
 
           this.loading.ticketForm = false
         })

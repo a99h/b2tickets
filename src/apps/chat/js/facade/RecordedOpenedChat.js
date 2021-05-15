@@ -9,13 +9,15 @@ import Chat from '@/apps/chat/js/models/Chat'
 import ChatRequest from '@/apps/chat/js/models/ChatRequest'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 
-export default class OpenedRecordedChat extends AbstractOpenedChat {
+export default class RecordedOpenedChat extends AbstractOpenedChat {
 
   #LAST_MESSAGE_READ = 'last-message-read'
   typingMessage = {};
 
   constructor(options) {
     const { channelName, chatRequest, user } = options
+
+    if (!chatRequest) throw new Error('chatRequest must be defined!')
 
     super({ channelName, user })
 

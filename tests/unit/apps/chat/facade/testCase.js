@@ -51,9 +51,40 @@ const message = {
   },
   timestamp: 1621026592000
 }
+const chatRequest = {
+  id: 7,
+  message: null,
+  channel_name: 'e44eaf57-41f2-4a78-8013-9a43183cd00a22',
+  operators_online: 1,
+  user: {
+    id: 22,
+    name: 'cl1ex',
+    email: 'cle@ex.com',
+    created_at: '2021-05-15T13:28:06.000000Z',
+    updated_at: '2021-05-15T13:28:06.000000Z',
+    userRoles: [],
+    userSettings: null
+  },
+  chat: {
+    id: 6,
+    chat_request_id: 7,
+    active: 1,
+    chatClient: {
+      id: 22,
+      name: 'cl1ex',
+      email: 'cle@ex.com',
+      app_user_id: null,
+      created_at: '2021-05-15T13:28:06.000000Z',
+      updated_at: '2021-05-15T13:28:06.000000Z'
+    },
+    created_at: '2021-05-15T13:28:07.000000Z',
+    updated_at: '2021-05-15T13:32:38.000000Z'
+  }
+}
 
 export {
   user,
   newUser,
-  message
+  message,
+  chatRequest
 }

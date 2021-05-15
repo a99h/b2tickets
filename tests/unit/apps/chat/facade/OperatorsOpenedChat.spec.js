@@ -1,6 +1,6 @@
 import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
-import OpenedOperatorsChat from '@/apps/chat/js/facade/OpenedOperatorsChat'
-import { user, message } from './OpenedChatTestCase'
+import OperatorsOpenedChat from '@/apps/chat/js/facade/OperatorsOpenedChat'
+import { user, message } from './testCase'
 import isEmpty from '@/js/lib/isEmpty'
 import messageService from '@/apps/chat/js/services/echoMessageService'
 
@@ -10,12 +10,12 @@ function createModel(data) {
     user: user
   }
 
-  return new OpenedOperatorsChat(data)
+  return new OperatorsOpenedChat(data)
 }
 
-describe('Class OpenedOperatorsChat', () => {
+describe('Class OperatorsOpenedChat', () => {
   test('new works', () => {
-    expect(createModel()).toBeInstanceOf(OpenedOperatorsChat)
+    expect(createModel()).toBeInstanceOf(OperatorsOpenedChat)
   })
   test('extends AbstractOpenedChat class', () => {
     expect(createModel()).toBeInstanceOf(AbstractOpenedChat)
@@ -26,7 +26,7 @@ describe('sendMessage method', () => {
   const operatorsChat = createModel()
 
   test('called with prepareMessageData', () => {
-    const spy = jest.spyOn(OpenedOperatorsChat.prototype, 'prepareMessageData')
+    const spy = jest.spyOn(OperatorsOpenedChat.prototype, 'prepareMessageData')
 
     operatorsChat.sendMessage(message.text)
 
@@ -38,7 +38,7 @@ describe('sendMessage method', () => {
 
   test('called with messageService.whisperMessage', () => {
     const spyWhisperMessage = jest.spyOn(messageService, 'whisperMessage')
-    const spyPrepareMessageData = jest.spyOn(OpenedOperatorsChat.prototype, 'prepareMessageData')
+    const spyPrepareMessageData = jest.spyOn(OperatorsOpenedChat.prototype, 'prepareMessageData')
     const eventName = 'operators-message'
 
     operatorsChat.sendMessage(message.text)
@@ -53,7 +53,7 @@ describe('sendMessage method', () => {
   })
 
   test('message is recorded', () => {
-    const spy = jest.spyOn(OpenedOperatorsChat.prototype, 'prepareMessageData')
+    const spy = jest.spyOn(OperatorsOpenedChat.prototype, 'prepareMessageData')
 
     operatorsChat.sendMessage(message.text)
     const preparedMessageData = spy.mock.results[0].value.message

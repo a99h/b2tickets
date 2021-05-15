@@ -1,7 +1,7 @@
 import AbstractOpenedChat from './AbstractOpenedChat'
 import { messageService } from '../services'
 
-export default class OpenedOperatorsChat extends AbstractOpenedChat {
+export default class OperatorsOpenedChat extends AbstractOpenedChat {
   #eventName = 'operators-message'
 
   constructor(options) {

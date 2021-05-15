@@ -101,7 +101,7 @@ import UserMetaTab from '@/components/user/tabs/UserMetaTab'
 import ChatMetaTab from '@/apps/chat/components/tabs/ChatMetaTab'
 import ChannelMessage from '@/apps/chat/components/ChannelMessage'
 import { mapActions, mapGetters } from 'vuex'
-import OpenedRecordedChat from '@/apps/chat/js/facade/OpenedRecordedChat'
+import RecordedOpenedChat from '@/apps/chat/js/facade/RecordedOpenedChat'
 import { showChatRequest } from '@/apps/chat/js/http/chatRequest'
 
 export default {
@@ -193,7 +193,7 @@ export default {
       })
     },
     createChat(options) {
-      this.chatInstance = new OpenedRecordedChat(options)
+      this.chatInstance = new RecordedOpenedChat(options)
     },
     async fetchChatRequest(chat_request_id) {
       await showChatRequest(chat_request_id).then((res) => {

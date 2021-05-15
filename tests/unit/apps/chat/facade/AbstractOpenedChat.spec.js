@@ -3,9 +3,9 @@ import isEmpty from '@/js/lib/isEmpty'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 import Operator from '@/js/models/Operator'
 import Client from '@/js/models/Client'
-import { user, newUser, message } from './OpenedChatTestCase'
+import { user, newUser, message } from './testCase'
 
-class OpenedChat extends AbstractOpenedChat{}
+class OpenedChat extends AbstractOpenedChat {}
 
 function createModel(data) {
   if (isEmpty(data)) data = {
