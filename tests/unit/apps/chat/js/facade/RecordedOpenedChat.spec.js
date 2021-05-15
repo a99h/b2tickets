@@ -1,4 +1,4 @@
-import { user, chatRequest, message } from './testCase'
+import { user, chatRequest, message } from '../../testCase'
 import isEmpty from '@/js/lib/isEmpty'
 
 // Facades
@@ -16,7 +16,7 @@ import * as httpChat from '@/apps/chat/js/http/chat'
 function createModel(data) {
   if (isEmpty(data)) {
     data = {
-      channelName: 'general',
+      channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest
     }

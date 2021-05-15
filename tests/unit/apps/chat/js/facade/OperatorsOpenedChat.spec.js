@@ -1,6 +1,6 @@
 import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
 import OperatorsOpenedChat from '@/apps/chat/js/facade/OperatorsOpenedChat'
-import { user, message } from './testCase'
+import { user, message } from '../../testCase'
 import isEmpty from '@/js/lib/isEmpty'
 import messageService from '@/apps/chat/js/services/echoMessageService'
 

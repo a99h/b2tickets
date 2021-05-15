@@ -1,26 +1,12 @@
 import isEmpty from '@/js/lib/isEmpty'
+import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
 
 export default {
-  addTypingMessage(openedChat, data) {
-    const typingMessageKey = Symbol('typing')
-    const { user, message, typing } = data
-
-    const filteredMessage = {
-      id: typingMessageKey,
-      user: user,
-      text: typing ? message : ''
-    }
-
-    if (isEmpty(openedChat.typingMessage)) {
-      openedChat.typingMessage = filteredMessage
-      openedChat.addMessage(openedChat.typingMessage)
-    }
-    else {
-      openedChat.messages.update(openedChat.typingMessage.id, filteredMessage)
-    }
-  },
   setTyping(openedChat, data) {
     const { user, typing } = data
+
+    if (typing === undefined) throw new Error('typing property must be defined in data!')
+    if (isEmpty(user)) throw new Error('user property must be defined in data!')
 
     if (typing) this.addTypingMessage(openedChat, data)
     else {
@@ -40,6 +26,26 @@ export default {
 
       return false
     })
+  },
+  addTypingMessage(openedChat, data) {
+    if (!(openedChat instanceof AbstractOpenedChat)) throw new Error('openedChat must be instance of AbstractOpenedChat')
+
+    const typingMessageKey = Symbol('typing')
+    const { user, message, typing } = data
+
+    const filteredMessage = {
+      id: typingMessageKey,
+      user: user,
+      text: typing ? message : ''
+    }
+
+    if (isEmpty(openedChat.typingMessage)) {
+      openedChat.typingMessage = filteredMessage
+      openedChat.addMessage(openedChat.typingMessage)
+    }
+    else {
+      openedChat.messages.update(openedChat.typingMessage.id, filteredMessage)
+    }
   },
   removeTypingMessage(openedChat) {
     if (!isEmpty(openedChat.typingMessage)) {
