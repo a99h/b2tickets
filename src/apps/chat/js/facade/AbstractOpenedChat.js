@@ -2,13 +2,17 @@ import Operator from '@/js/models/Operator'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 import Chat from '@/apps/chat/js/models/Chat'
 
-export default class OpenedChat {
+export default class AbstractOpenedChat {
   messages = {};
   participants = [];
   backendErrors = [];
   unreadMessagesCount = 0;
 
   constructor(data = {}) {
+    if (this.constructor === AbstractOpenedChat) {
+      throw new Error('Abstract classes can\'t be instantiated.')
+    }
+
     const { channelName, user } = data
 
     if (user === undefined) throw new Error('User must be defined')

@@ -1,4 +1,4 @@
-import OpenedChat from './OpenedChat'
+import AbstractOpenedChat from './AbstractOpenedChat'
 import { showChat, updateChat } from '../http/chat'
 import { getMessages, storeMessage } from '../http/message'
 import { messageService } from '../services'
@@ -9,7 +9,7 @@ import Chat from '@/apps/chat/js/models/Chat'
 import ChatRequest from '@/apps/chat/js/models/ChatRequest'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 
-export default class OpenedRecordedChat extends OpenedChat {
+export default class OpenedRecordedChat extends AbstractOpenedChat {
 
   #LAST_MESSAGE_READ = 'last-message-read'
   typingMessageKey = Symbol('typing');

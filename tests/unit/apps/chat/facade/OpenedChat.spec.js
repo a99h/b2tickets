@@ -1,4 +1,4 @@
-import OpenedChat from '@/apps/chat/js/facade/OpenedChat'
+import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
 import isEmpty from '@/js/lib/isEmpty'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 import Operator from '@/js/models/Operator'
@@ -52,6 +52,8 @@ const message = {
   timestamp: 1621026592000
 }
 
+class OpenedChat extends AbstractOpenedChat{}
+
 function createModel(data) {
   if (isEmpty(data)) data = {
     channelName: 'general',
@@ -61,9 +63,20 @@ function createModel(data) {
   return new OpenedChat(data)
 }
 
+describe('Abstract class', () => {
+  test('throws error if created', () => {
+    expect(() => {
+      new AbstractOpenedChat({
+        channelName: 'general',
+        user: user
+      })
+    }).toThrow('Abstract classes can\'t be instantiated')
+  })
+})
+
 describe('Class OpenedChat', () => {
   test('new works', () => {
-    expect(createModel()).toBeInstanceOf(OpenedChat)
+    expect(createModel()).toBeInstanceOf(AbstractOpenedChat)
   })
 
   test('Throws error if no user', () => {
@@ -156,7 +169,7 @@ describe('addMessage method', () => {
 
 describe('toggleActive method', () => {
   test('toggle works', () => {
-    const spy = jest.spyOn(OpenedChat.prototype, 'setActive')
+    const spy = jest.spyOn(AbstractOpenedChat.prototype, 'setActive')
     const openedChat = createModel()
 
     expect(openedChat.participants.length).toBe(1)

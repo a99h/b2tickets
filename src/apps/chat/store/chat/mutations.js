@@ -1,18 +1,18 @@
-import OpenedChat from '@/apps/chat/js/facade/OpenedChat'
+import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
 
 export default {
   ADD_OPENED_CHAT(state, value) {
-    if (value instanceof OpenedChat) state.openedChats.push(value)
+    if (value instanceof AbstractOpenedChat) state.openedChats.push(value)
   },
   UPDATE_OPENED_CHAT(state, value) {
     const index = state.openedChats.indexOf(value)
 
-    if (value instanceof OpenedChat && index > -1) state.openedChats[index] = value
+    if (value instanceof AbstractOpenedChat && index > -1) state.openedChats[index] = value
   },
   REMOVE_OPENED_CHAT(state, value) {
     const index = state.openedChats.indexOf(value)
 
-    if (value instanceof OpenedChat && index > -1) state.openedChats.splice(index,1)
+    if (value instanceof AbstractOpenedChat && index > -1) state.openedChats.splice(index,1)
   },
   FLUSH_OPENED_CHATS(state) {
     state.openedChats = []

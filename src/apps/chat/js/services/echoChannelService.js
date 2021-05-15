@@ -1,5 +1,5 @@
 import Echo from '@/plugins/echo'
-import OpenedChat from '@/apps/chat/js/facade/OpenedChat'
+import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
 import typingMessageService from '@/apps/chat/js/services/typingMessageService'
 
 export default {
@@ -30,7 +30,7 @@ export default {
     Echo.leave('App.User.' + chat.channelName)
   },
   subscribeChannel(chat) {
-    if (!(chat instanceof OpenedChat)) return
+    if (!(chat instanceof AbstractOpenedChat)) return
 
     Echo.private('App.User.' + chat.channelName)
       .listen('MessageSent', (event) => {
@@ -66,7 +66,7 @@ export default {
       })
   },
   unsubscribeChannel(chat) {
-    if (!(chat instanceof OpenedChat)) return
+    if (!(chat instanceof AbstractOpenedChat)) return
 
     this.unwatchParticipants(chat)
   }
