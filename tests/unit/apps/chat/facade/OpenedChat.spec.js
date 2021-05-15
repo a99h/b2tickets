@@ -21,6 +21,23 @@ const user = {
     }]
   }]
 }
+const newUser = {
+  id: 7,
+  name: 'Getters and setters test operator',
+  email: 'operator2@example.com',
+  email_verified_at: '2021-05-13T19:15:10.000000Z',
+  created_at: '2021-05-13T19:15:10.000000Z',
+  updated_at: '2021-05-13T19:15:10.000000Z',
+  userRoles: [{
+    id: 2,
+    name: 'operator',
+    hasPermissions: [{
+      name: 'show users',
+      guard_name: 'api',
+      created_at: '2021-05-13T19:15:10.000000Z'
+    }]
+  }]
+}
 
 function createModel(data) {
   if (isEmpty(data)) data = {
@@ -80,23 +97,6 @@ describe('fields', () => {
 
 describe('getters and setters', () => {
   const openedChat = createModel()
-  const newUser = {
-    id: 6,
-    name: 'Getters and setters test operator',
-    email: 'operator1@example.com',
-    email_verified_at: '2021-05-13T19:15:10.000000Z',
-    created_at: '2021-05-13T19:15:10.000000Z',
-    updated_at: '2021-05-13T19:15:10.000000Z',
-    userRoles: [{
-      id: 2,
-      name: 'operator',
-      hasPermissions: [{
-        name: 'show users',
-        guard_name: 'api',
-        created_at: '2021-05-13T19:15:10.000000Z'
-      }]
-    }]
-  }
   const newClient = {
     id: Date.now(),
     name: 'Ethyl Sanford',
@@ -154,3 +154,31 @@ describe('addMessage method', () => {
     expect(openedChat.unreadMessagesCount).toBe(1)
   })
 })
+
+describe('toggleActive method', () => {
+  test('toggle works', () => {
+    const spy = jest.spyOn(OpenedChat.prototype, 'setActive')
+    const openedChat = createModel()
+
+    expect(openedChat.participants.length).toBe(1)
+
+    openedChat.toggleActive()
+
+    expect(spy).lastCalledWith(0)
+
+    openedChat.participants.push(newUser)
+
+    expect(openedChat.participants.length).toBe(2)
+
+    openedChat.toggleActive()
+
+    expect(spy).lastCalledWith(1)
+
+    spy.mockRestore()
+  })
+})
+
+// describe('setActive', () => {
+//   expect(openedChat.chat.show().active).toBe(0)
+//   expect(openedChat.chat.show().active).toBe(1)
+// })

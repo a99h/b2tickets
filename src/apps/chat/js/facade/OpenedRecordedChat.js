@@ -42,16 +42,13 @@ export default class OpenedRecordedChat extends OpenedChat {
   }
 
   setActive(value) {
-    showChat(this.chat.show().id).then((res) => {
-      if (res.data.active !== value)
-        updateChat({
-          ...res.data,
-          active: value
-        }).then((resp) => {
-          this.chat.update(resp.data)
-        }).catch((e) => {
-          this.backendErrors.push(e)
-        })
+    updateChat({
+      id: this.chat.show().id,
+      active: value
+    }).then((resp) => {
+      this.chat.update(resp.data)
+    }).catch((e) => {
+      this.backendErrors.push(e)
     })
   }
 

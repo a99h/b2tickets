@@ -1,5 +1,6 @@
 import Operator from '@/js/models/Operator'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
+import Chat from '@/apps/chat/js/models/Chat'
 
 export default class OpenedChat {
   messages = {};
@@ -17,6 +18,9 @@ export default class OpenedChat {
     this.user = new Operator({ data: user })
     this.participants.push(this.user)
     this.messages = new MessageCollection({ data: [] })
+    this.chat = new Chat({ data: {
+      active: 0
+    } })
   }
 
   set user(value) {
@@ -39,7 +43,9 @@ export default class OpenedChat {
     Object.values(this.participants).length > 1 ? this.setActive(1) : this.setActive(0)
   }
 
-  setActive(value) {}
+  setActive(value) {
+    this.chat.update({ active: value })
+  }
 
   sendMessage(message) {}
 }

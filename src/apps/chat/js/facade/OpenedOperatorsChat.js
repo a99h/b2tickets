@@ -34,8 +34,4 @@ export default class OpenedOperatorsChat extends OpenedChat {
       }
     }
   }
-
-  setActive(value) {
-    this.chat.active = value
-  }
 }
