@@ -1,6 +1,7 @@
 import typingMessageService from '@/apps/chat/js/services/typingMessageService'
 import RecordedOpenedChat from '@/apps/chat/js/facade/RecordedOpenedChat'
 import { user, chatRequest, message } from '../../testCase'
+import MessageCollection from "@/apps/chat/js/models/MessageCollection";
 
 const typingTrueData = {
   typing: true,
@@ -12,7 +13,7 @@ const typingFalseData = {
   user: message.user
 }
 
-describe('setTyping', () => {
+describe('setTyping method', () => {
   test('throws error if typing is undefined', () => {
     const recordedOpenedChat = new RecordedOpenedChat({
       channelName: 'some-secret-string',
@@ -114,7 +115,7 @@ describe('setTyping', () => {
     addTypingMessageSpy.mockRestore()
   })
 })
-describe('addTypingMessage', () => {
+describe('addTypingMessage method', () => {
   test('throws error if openedChat arg is not instance of AbstractOpenedChat', () => {
     expect(() => {
       typingMessageService.addTypingMessage('invalid data', {})
@@ -127,7 +128,7 @@ describe('addTypingMessage', () => {
       chatRequest: chatRequest
     })
 
-    typingMessageService.setTyping(recordedOpenedChat, typingTrueData)
+    typingMessageService.addTypingMessage(recordedOpenedChat, typingTrueData)
 
     expect(recordedOpenedChat.typingMessage).toEqual(expect.objectContaining({
       id: expect.anything(),
@@ -152,13 +153,47 @@ describe('addTypingMessage', () => {
       user: message.user
     }
 
-    typingMessageService.setTyping(recordedOpenedChat, typingTrueData)
-    typingMessageService.setTyping(recordedOpenedChat, newMessageData)
+    typingMessageService.addTypingMessage(recordedOpenedChat, typingTrueData)
+    typingMessageService.addTypingMessage(recordedOpenedChat, newMessageData)
 
     expect(recordedOpenedChat.typingMessage).toEqual(expect.objectContaining({
       id: expect.anything(),
       user: newMessageData.user,
       text: newMessageData.message
     }))
+  })
+})
+describe('removeTypingMessage method', () => {
+  test('removes typingMessage if it is not empty', () => {
+    const recordedOpenedChat = new RecordedOpenedChat({
+      channelName: 'some-secret-string',
+      user: user,
+      chatRequest: chatRequest
+    })
+
+    typingMessageService.addTypingMessage(recordedOpenedChat, typingTrueData)
+    const typingMessageId = recordedOpenedChat.typingMessage.id
+
+    typingMessageService.removeTypingMessage(recordedOpenedChat)
+
+    expect(recordedOpenedChat.typingMessage).toEqual({})
+    expect(recordedOpenedChat.messages.find(typingMessageId)).toBeNull()
+  })
+})
+describe('removeTypingMessage method', () => {
+  test('don\' remove typingMessage if it is empty', () => {
+    const recordedOpenedChat = new RecordedOpenedChat({
+      channelName: 'some-secret-string',
+      user: user,
+      chatRequest: chatRequest
+    })
+    const spy = jest.spyOn(MessageCollection.prototype, 'delete')
+
+    typingMessageService.removeTypingMessage(recordedOpenedChat)
+
+    expect(recordedOpenedChat.typingMessage).toEqual({})
+    expect(spy).toBeCalledTimes(0)
+
+    spy.mockRestore()
   })
 })
