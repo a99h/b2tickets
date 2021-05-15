@@ -1,19 +1,18 @@
 import typingMessageService from '@/apps/chat/js/services/typingMessageService'
-import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
 import RecordedOpenedChat from '@/apps/chat/js/facade/RecordedOpenedChat'
 import { user, chatRequest, message } from '../../testCase'
 
-describe('setTyping', () => {
-  const typingTrueData = {
-    typing: true,
-    message: message.text,
-    user: message.user
-  }
-  const typingFalseData = {
-    typing: false,
-    user: message.user
-  }
+const typingTrueData = {
+  typing: true,
+  message: message.text,
+  user: message.user
+}
+const typingFalseData = {
+  typing: false,
+  user: message.user
+}
 
+describe('setTyping', () => {
   test('throws error if typing is undefined', () => {
     const recordedOpenedChat = new RecordedOpenedChat({
       channelName: 'some-secret-string',
@@ -121,7 +120,45 @@ describe('addTypingMessage', () => {
       typingMessageService.addTypingMessage('invalid data', {})
     }).toThrow('openedChat must be instance of AbstractOpenedChat')
   })
-  test('typingMessageKey must be type of Symbol', () => {
+  test('adds typingMessage if it is empty', () => {
+    const recordedOpenedChat = new RecordedOpenedChat({
+      channelName: 'some-secret-string',
+      user: user,
+      chatRequest: chatRequest
+    })
 
+    typingMessageService.setTyping(recordedOpenedChat, typingTrueData)
+
+    expect(recordedOpenedChat.typingMessage).toEqual(expect.objectContaining({
+      id: expect.anything(),
+      user: typingTrueData.user,
+      text: typingTrueData.message
+    }))
+    expect(recordedOpenedChat.messages.all()[recordedOpenedChat.messages.all().length - 1]).toEqual(expect.objectContaining({
+      id: expect.anything(),
+      user: typingTrueData.user,
+      text: typingTrueData.message
+    }))
+  })
+  test('updates typingMessage if it is not empty', () => {
+    const recordedOpenedChat = new RecordedOpenedChat({
+      channelName: 'some-secret-string',
+      user: user,
+      chatRequest: chatRequest
+    })
+    const newMessageData = {
+      typing: true,
+      message: 'new message',
+      user: message.user
+    }
+
+    typingMessageService.setTyping(recordedOpenedChat, typingTrueData)
+    typingMessageService.setTyping(recordedOpenedChat, newMessageData)
+
+    expect(recordedOpenedChat.typingMessage).toEqual(expect.objectContaining({
+      id: expect.anything(),
+      user: newMessageData.user,
+      text: newMessageData.message
+    }))
   })
 })
