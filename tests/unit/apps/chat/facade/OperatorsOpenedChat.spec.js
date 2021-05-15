@@ -23,9 +23,8 @@ describe('Class OperatorsOpenedChat', () => {
 })
 
 describe('sendMessage method', () => {
-  const operatorsChat = createModel()
-
   test('called with prepareMessageData', () => {
+    const operatorsChat = createModel()
     const spy = jest.spyOn(OperatorsOpenedChat.prototype, 'prepareMessageData')
 
     operatorsChat.sendMessage(message.text)
@@ -37,6 +36,7 @@ describe('sendMessage method', () => {
   })
 
   test('called with messageService.whisperMessage', () => {
+    const operatorsChat = createModel()
     const spyWhisperMessage = jest.spyOn(messageService, 'whisperMessage')
     const spyPrepareMessageData = jest.spyOn(OperatorsOpenedChat.prototype, 'prepareMessageData')
     const eventName = 'operators-message'
@@ -53,6 +53,7 @@ describe('sendMessage method', () => {
   })
 
   test('message is recorded', () => {
+    const operatorsChat = createModel()
     const spy = jest.spyOn(OperatorsOpenedChat.prototype, 'prepareMessageData')
 
     operatorsChat.sendMessage(message.text)

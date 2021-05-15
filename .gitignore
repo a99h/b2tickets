@@ -22,3 +22,6 @@ yarn-error.log*
 
 # Backend routes
 /src/backend/routes/routes.json
+
+# Jest
+/coverage
