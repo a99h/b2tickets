@@ -17,10 +17,8 @@ const showChat = (id) => {
 }
 
 const updateChat = (chat) => {
-  chat._method = 'put'
-
   return new Promise((resolve, reject) => {
-    axios.post(route('api.ticketsystem.chat.chat.update',chat.id), chat)
+    axios.post(route('api.ticketsystem.chat.chat.update', chat.id), { ...chat, _method: 'put' })
       .then((response) => resolve(response.data))
       .catch((err) => reject(err))
   })

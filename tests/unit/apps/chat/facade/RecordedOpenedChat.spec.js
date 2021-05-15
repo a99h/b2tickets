@@ -11,6 +11,7 @@ import ChatRequest from '@/apps/chat/js/models/ChatRequest'
 import Chat from '@/apps/chat/js/models/Chat'
 import Client from '@/js/models/Client'
 import * as httpMessage from '@/apps/chat/js/http/message'
+import * as httpChat from '@/apps/chat/js/http/chat'
 
 function createModel(data) {
   if (isEmpty(data)) {
@@ -63,6 +64,22 @@ describe('sendMessage', () => {
       user: user,
       message: message.text,
       chat_request_id: chatRequest.id
+    })
+
+    spy.mockRestore()
+  })
+})
+
+describe('setActive', () => {
+  test('calls updateChat', () => {
+    const recordedOpenedChat = createModel()
+    const spy = jest.spyOn(httpChat, 'updateChat')
+
+    recordedOpenedChat.setActive(0)
+
+    expect(spy).lastCalledWith({
+      id: chatRequest.chat.id,
+      active: 0
     })
 
     spy.mockRestore()
