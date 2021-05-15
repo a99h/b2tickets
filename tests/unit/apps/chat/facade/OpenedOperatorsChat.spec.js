@@ -63,3 +63,25 @@ describe('sendMessage method', () => {
     spy.mockRestore()
   })
 })
+
+describe('prepareMessageData method', () => {
+  const operatorsChat = createModel()
+
+  test('returns what expected', () => {
+    expect(operatorsChat.prepareMessageData(message.text)).toEqual(expect.objectContaining({
+      message: {
+        id: expect.any(Number),
+        text: message.text,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          userSettings: {
+            avatar: user.userSettings.avatar
+          }
+        },
+        timestamp: expect.any(Number)
+      }
+    }))
+  })
+})
