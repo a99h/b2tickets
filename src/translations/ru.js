@@ -264,7 +264,9 @@ export default {
         'active': 'Активен',
         'client': 'Клиент'
       },
-      'actions': 'Начать чат',
+      'actions': {
+        'enter': 'Начать чат'
+      },
       'form': {
         'show': 'Информация о чате',
         'create': 'Новый чат',

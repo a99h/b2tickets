@@ -265,7 +265,9 @@ export default {
         active: 'Active',
         client: 'Client'
       },
-      actions: 'Start chat',
+      actions: {
+        enter: 'Start chat'
+      },
       form: {
         show: 'Chat info',
         create: 'New chat',
