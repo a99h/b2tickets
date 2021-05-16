@@ -22,6 +22,7 @@
     </v-dialog>
 
     <v-dialog
+      v-if="dialog"
       v-model="dialog"
       persistent
       width="80vw"

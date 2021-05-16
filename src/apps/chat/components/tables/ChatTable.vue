@@ -48,7 +48,7 @@
                     ></v-text-field>
                     <v-spacer></v-spacer>
 
-                    <ChatInfo ref="chatInfo" :activator-hidden="true" :chat="currentItem"></ChatInfo>
+                    <ChatInfo ref="chatInfo" :activator-hidden="true" :chat="currentItem" />
 
                   </v-toolbar>
                 </template>
@@ -79,9 +79,13 @@
                     <v-btn
                       :dark="!$vuetify.theme.dark"
                       small
+                      min-width="50"
                       @click="showItem(item)"
                     >
-                      {{ $t('b2tickets.chat.form.show') }}
+                      <div v-if="loading.chatInfo === item.id" class="mx-auto">
+                        <v-progress-circular indeterminate color="primary" size="20" class="flex-grow-0 flex-shrink-0"></v-progress-circular>
+                      </div>
+                      <span v-if="loading.chatInfo !== item.id">{{ $t('b2tickets.chat.form.show') }}</span>
                     </v-btn>
                   </div>
                 </template>
@@ -100,7 +104,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import ChatInfo from '@/apps/chat/components/ChatInfo/ChatInfo'
-import { showChat } from '@/apps/chat/js/http/chat'
 import { showChatRequest } from '@/apps/chat/js/http/chatRequest'
 
 export default {
@@ -109,7 +112,8 @@ export default {
   data: () => ({
     loading: {
       dataTable: 'info',
-      chatBtn: -1
+      chatBtn: -1,
+      chatInfo: -1
     },
     backendErrors: null,
     search: '',
@@ -153,20 +157,14 @@ export default {
       this.backendErrors = null
     },
     showItem(item) {
+      this.loading.chatInfo = item.id
       showChatRequest(item.chat_request_id).then((res) => {
         this.currentItem = { ...item, chatRequest: res.data }
 
-        this.$refs.chatInfo.dialogLoader = true
-      })
-    },
-    async editItem(item) {
-      this.backendErrors = null
-      await showChat(item.id).then((response) => {
-        Object.assign(this.chats[this.chats.indexOf(item)], response.data)
-        this.$refs.dialog.edit(this.chats[this.chats.indexOf(item)])
-      }).catch((err) => {
-        this.$refs.dialog.dialogInitialize()
-        this.backendErrors = err.response.data.message
+        this.loading.chatInfo = -1
+        this.$refs.chatInfo.dialog = true
+      }).catch(() => {
+        this.loading.chatInfo = -1
       })
     },
     addChatByChatRequest(chatRequestId) {
