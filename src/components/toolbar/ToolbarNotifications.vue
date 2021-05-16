@@ -95,7 +95,8 @@
 import Echo from '@/plugins/echo'
 import axios from '@/plugins/axios'
 import { mapGetters } from 'vuex'
-// import VueSocketIO from '@/plugins/vueSocketIO'
+// Don't remove!
+import VueSocketIO from '@/plugins/vueSocketIO'
 
 /*
 |---------------------------------------------------------------------
@@ -141,7 +142,6 @@ export default {
   },
   created() {
     this.initialize()
-    // this.interval = setInterval(() => this.$forceUpdate(), 1000 * 60)
 
     this.$socket.emit('new-operator', this.user)
   },
@@ -160,7 +160,6 @@ export default {
     },
     emitNewChatRequest(chatRequest) {
       // $socket is socket.io-client instance
-      // if (this.user.id === 6)
       this.$socket.emit('new-chat-request', chatRequest.id)
     },
     joinEcho() {

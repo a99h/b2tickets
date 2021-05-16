@@ -8,7 +8,7 @@ const options = {
 } //Options object to pass into SocketIO
 
 const socketInstance = new VueSocketIO({
-  debug: true,
+  debug: false,
   connection: SocketIO(process.env.VUE_APP_CHAT_MANAGER_HOST, options), //options object is Optional
   vuex: {
     store,
