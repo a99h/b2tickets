@@ -60,7 +60,9 @@
 
 <script>
 import { showChatRequest } from '@/apps/chat/js/http/chatRequest'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import channelService from '@/apps/chat/js/services/echoChannelService'
+import RecordedChat from '@/apps/chat/js/facade/RecordedChat'
 
 export default {
   name: 'ChatRequestAlert',
@@ -77,7 +79,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: 'auth/getUser'
+      user: 'auth/getUser',
+      openedChats: 'chat/getOpenedChats'
     })
   },
   sockets: {
@@ -85,7 +88,6 @@ export default {
       if (data.operatorId !== this.user.id) return
 
       showChatRequest(data.chatRequestId).then((res) => {
-        console.log(res.data)
         this.chatRequestAlerts.push({
           active: true,
           timeout: data.operatorTimeout,
@@ -119,6 +121,10 @@ export default {
     })
   },
   methods: {
+    ...mapActions({
+      storeOpenedChat: 'chat/addOpenedChat',
+      setCurrentChat: 'chat/setCurrentChat'
+    }),
     startTimer(chatRequestId) {
       const alert = this.alertByChatRequestId(chatRequestId)
 
@@ -140,12 +146,24 @@ export default {
     removeAlert(alert) {
       this.chatRequestAlerts.splice(this.chatRequestAlerts.indexOf(alert),1)
 
-      console.log(this.chatRequestAlerts.length)
-
       if (this.chatRequestAlerts.length === 0) this.chatRequestAlert = false
     },
     openChat(chatRequestId) {
-      console.log(chatRequestId)
+      showChatRequest(chatRequestId).then((res) => {
+        const recordedChat = new RecordedChat({
+          user: this.user,
+          chatRequest: res.data,
+          channelName: res.data.channel_name
+        })
+
+        channelService.subscribeChannel(recordedChat)
+
+        this.storeOpenedChat(recordedChat)
+
+        this.setCurrentChat(this.openedChats.indexOf(recordedChat))
+
+        this.$router.push({ name: 'apps-chat-channel', params: { id: recordedChat.channelName } })
+      })
     },
     acceptChatRequest(chatRequestId) {
       this.alertByChatRequestId(chatRequestId).loading = true
