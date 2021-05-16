@@ -68,7 +68,6 @@
                 :hint="$t('b2tickets.ticket.select.ticketChatRequests')"
                 clearable
                 deletable-chips
-                :disabled="$route.name === 'apps-chat-channel'"
                 eager
                 multiple
                 persistent-hint
@@ -374,7 +373,7 @@ export default {
       if (ticketOperators !== []) Object.assign(filteredData, { ticketOperators: data.ticketOperators.map((item) => item.id) })
       if (ticketStatus) Object.assign(filteredData, { ticketStatus: data.ticketStatus.id })
 
-      if (!isEmpty(this.currentChat)) Object.assign(filteredData, { ticketChat: this.chatId })
+      if (!isEmpty(this.currentChat)) Object.assign(filteredData, { ticketChat: this.currentChat.chat.show().id })
 
       return filteredData
     }

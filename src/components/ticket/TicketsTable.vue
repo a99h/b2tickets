@@ -23,7 +23,7 @@
               <v-data-table
                 v-if="!loading.dataTable"
                 :headers="headers"
-                :items="getTickets"
+                :items="tickets"
                 :loading="loading.dataTable"
                 :search="search"
                 fixed
@@ -174,9 +174,16 @@ export default {
       this.loading.dataTable = 'info'
 
       await this.fetchTickets().then(() => {
-        // this.tickets = this.$route.params.chatId !== undefined
-        //   ? this.filterTickets(this.getTickets, { chatId: this.$route.params.chatId })
-        //   : this.getTickets
+        if (this.$route.params.chatId !== undefined) {
+          this.tickets = this.getTickets.filter((ticket) => {
+            const { ticketChat } = ticket
+
+            return ticketChat ? ticketChat.id === this.$route.params.chatId : false
+          })
+          console.log(this.tickets)
+        }
+        else this.tickets = this.getTickets
+
         this.loading.dataTable = false
         this.backendErrors = null
       })
@@ -194,6 +201,7 @@ export default {
       this.backendErrors = null
     },
     async showItem(item) {
+      console.log(item)
       this.backendErrors = null
       await this.showTicket(item).then((response) => {
         this.$refs.dialog.show(response.data)
