@@ -219,6 +219,8 @@ export default {
 
         this.deleteOpenedChat(chat)
 
+        this.$socket.emit('toggle-up-priority', { operatorId: this.user.id, priority: 3 })
+
         this.changeChannel(this.openedChats[0])
       } else alert('You cannot leave default channels')
     },
