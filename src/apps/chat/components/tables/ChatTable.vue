@@ -19,6 +19,7 @@
               >
                 {{ backendErrors.message }}
               </v-alert>
+              <AppLoading :loading="loading.dataTable"/>
               <v-data-table
                 v-if="!loading.dataTable"
                 :headers="headers"
