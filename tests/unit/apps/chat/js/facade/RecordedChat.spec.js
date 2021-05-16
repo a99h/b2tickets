@@ -2,8 +2,8 @@ import { user, chatRequest, message } from '../../testCase'
 import isEmpty from '@/js/lib/isEmpty'
 
 // Facades
-import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
-import RecordedOpenedChat from '@/apps/chat/js/facade/RecordedOpenedChat'
+import AbstractChatFacade from '@/apps/chat/js/facade/AbstractChatFacade'
+import RecordedChat from '@/apps/chat/js/facade/RecordedChat'
 
 // Models
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
@@ -22,19 +22,19 @@ function createModel(data) {
     }
   }
 
-  return new RecordedOpenedChat(data)
+  return new RecordedChat(data)
 }
 
-describe('Class RecordedOpenedChat', () => {
+describe('Class RecordedChat', () => {
   test('new works', () => {
-    expect(createModel()).toBeInstanceOf(RecordedOpenedChat)
+    expect(createModel()).toBeInstanceOf(RecordedChat)
   })
-  test('extends AbstractOpenedChat class', () => {
-    expect(createModel()).toBeInstanceOf(AbstractOpenedChat)
+  test('extends AbstractChatFacade class', () => {
+    expect(createModel()).toBeInstanceOf(AbstractChatFacade)
   })
   test('throws error if no chatRequest', () => {
     expect(() => {
-      new RecordedOpenedChat({
+      new RecordedChat({
         channelName: 'general',
         user: user
       })
@@ -43,7 +43,7 @@ describe('Class RecordedOpenedChat', () => {
 })
 
 describe('fields', () => {
-  test('RecordedOpenedChat structure', () => {
+  test('RecordedChat structure', () => {
     expect(createModel()).toEqual(expect.objectContaining({
       chatRequest: expect.any(ChatRequest),
       chat: expect.any(Chat),

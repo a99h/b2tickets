@@ -2,14 +2,14 @@ import Operator from '@/js/models/Operator'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 import Chat from '@/apps/chat/js/models/Chat'
 
-export default class AbstractOpenedChat {
+export default class AbstractChatFacade {
   messages = {};
   participants = [];
   backendErrors = [];
   unreadMessagesCount = 0;
 
   constructor(data = {}) {
-    if (this.constructor === AbstractOpenedChat) {
+    if (this.constructor === AbstractChatFacade) {
       throw new Error('Abstract classes can\'t be instantiated.')
     }
 

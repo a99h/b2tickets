@@ -12,11 +12,15 @@
 </template>
 
 <script>
+import channelService from '@/apps/chat/js/services/echoChannelService'
+import { mapActions, mapGetters } from 'vuex'
+import RecordedChat from '@/apps/chat/js/facade/RecordedChat'
+
 export default {
   name: 'InfoActionsCard',
   props: {
-    chatId: {
-      type: Number,
+    recordedChat: {
+      type: RecordedChat,
       required: true
     },
     channelName: {
@@ -45,12 +49,32 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      openedChats: 'chat/getOpenedChats',
+      currentChat: 'chat/getCurrentChat'
+    })
+  },
   mounted() {
     console.log(this.channelName)
   },
   methods: {
+    ...mapActions({
+      storeOpenedChat: 'chat/addOpenedChat',
+      setCurrentChat: 'chat/setCurrentChat'
+    }),
     onClickActionHook(item) {
-      if (item.to.name === 'apps-chat-list') this.$emit('close-dialog')
+      if (item.to.name === 'apps-chat-channel') {
+        this.openChat(this.recordedChat)
+      }
+      this.$emit('close-dialog')
+    },
+    openChat(recordedChat) {
+      channelService.subscribeChannel(recordedChat)
+
+      this.storeOpenedChat(recordedChat)
+
+      this.setCurrentChat(this.openedChats.indexOf(recordedChat))
     }
   }
 }

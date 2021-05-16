@@ -1,5 +1,5 @@
 import typingMessageService from '@/apps/chat/js/services/typingMessageService'
-import RecordedOpenedChat from '@/apps/chat/js/facade/RecordedOpenedChat'
+import RecordedChat from '@/apps/chat/js/facade/RecordedChat'
 import { user, chatRequest, message } from '../../testCase'
 import MessageCollection from "@/apps/chat/js/models/MessageCollection";
 
@@ -15,7 +15,7 @@ const typingFalseData = {
 
 describe('setTyping method', () => {
   test('throws error if typing is undefined', () => {
-    const recordedOpenedChat = new RecordedOpenedChat({
+    const recordedOpenedChat = new RecordedChat({
       channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest
@@ -26,7 +26,7 @@ describe('setTyping method', () => {
     }).toThrow('typing property must be defined in data!')
   })
   test('throws error if user is undefined', () => {
-    const recordedOpenedChat = new RecordedOpenedChat({
+    const recordedOpenedChat = new RecordedChat({
       channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest
@@ -39,7 +39,7 @@ describe('setTyping method', () => {
     }).toThrow('user property must be defined in data!')
   })
   test('calls addTypingMessage if typing arg is true', () => {
-    const recordedOpenedChat = new RecordedOpenedChat({
+    const recordedOpenedChat = new RecordedChat({
       channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest
@@ -53,7 +53,7 @@ describe('setTyping method', () => {
     spy.mockRestore()
   })
   test('calls removeTypingMessage if typing is false', () => {
-    const recordedOpenedChat = new RecordedOpenedChat({
+    const recordedOpenedChat = new RecordedChat({
       channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest
@@ -68,7 +68,7 @@ describe('setTyping method', () => {
     spy.mockRestore()
   })
   test('don\'t call removeTypingMessage if typingMessage isEmpty', () => {
-    const recordedOpenedChat = new RecordedOpenedChat({
+    const recordedOpenedChat = new RecordedChat({
       channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest
@@ -85,7 +85,7 @@ describe('setTyping method', () => {
     addTypingMessageSpy.mockRestore()
   })
   test('don\'t call removeTypingMessage if user is different', () => {
-    const recordedOpenedChat = new RecordedOpenedChat({
+    const recordedOpenedChat = new RecordedChat({
       channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest
@@ -116,13 +116,13 @@ describe('setTyping method', () => {
   })
 })
 describe('addTypingMessage method', () => {
-  test('throws error if openedChat arg is not instance of AbstractOpenedChat', () => {
+  test('throws error if openedChat arg is not instance of AbstractChatFacade', () => {
     expect(() => {
       typingMessageService.addTypingMessage('invalid data', {})
-    }).toThrow('openedChat must be instance of AbstractOpenedChat')
+    }).toThrow('openedChat must be instance of AbstractChatFacade')
   })
   test('adds typingMessage if it is empty', () => {
-    const recordedOpenedChat = new RecordedOpenedChat({
+    const recordedOpenedChat = new RecordedChat({
       channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest
@@ -142,7 +142,7 @@ describe('addTypingMessage method', () => {
     }))
   })
   test('updates typingMessage if it is not empty', () => {
-    const recordedOpenedChat = new RecordedOpenedChat({
+    const recordedOpenedChat = new RecordedChat({
       channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest
@@ -165,7 +165,7 @@ describe('addTypingMessage method', () => {
 })
 describe('removeTypingMessage method', () => {
   test('removes typingMessage if it is not empty', () => {
-    const recordedOpenedChat = new RecordedOpenedChat({
+    const recordedOpenedChat = new RecordedChat({
       channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest
@@ -182,7 +182,7 @@ describe('removeTypingMessage method', () => {
 })
 describe('removeTypingMessage method', () => {
   test('don\' remove typingMessage if it is empty', () => {
-    const recordedOpenedChat = new RecordedOpenedChat({
+    const recordedOpenedChat = new RecordedChat({
       channelName: 'some-secret-string',
       user: user,
       chatRequest: chatRequest

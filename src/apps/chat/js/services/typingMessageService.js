@@ -1,5 +1,5 @@
 import isEmpty from '@/js/lib/isEmpty'
-import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
+import AbstractChatFacade from '@/apps/chat/js/facade/AbstractChatFacade'
 
 export default {
   setTyping(openedChat, data) {
@@ -28,7 +28,7 @@ export default {
     })
   },
   addTypingMessage(openedChat, data) {
-    if (!(openedChat instanceof AbstractOpenedChat)) throw new Error('openedChat must be instance of AbstractOpenedChat')
+    if (!(openedChat instanceof AbstractChatFacade)) throw new Error('openedChat must be instance of AbstractChatFacade')
 
     const typingMessageKey = Symbol('typing')
     const { user, message, typing } = data

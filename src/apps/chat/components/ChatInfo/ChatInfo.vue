@@ -26,7 +26,7 @@
 
           <v-col cols="6" class="general-info-section">
             <v-card class="card scroll">
-              <InfoActionsCard :chat-id="chat.id" :channel-name="chat.chatRequest.channel_name" @close-dialog="dialog = false"/>
+              <InfoActionsCard :recorded-chat="recordedChat" :channel-name="chat.chatRequest.channel_name" @close-dialog="dialog = false"/>
 
               <AccountCard :user="chat.chatClient"/>
 
@@ -53,10 +53,10 @@
                   <transition-group name="list">
 
                     <ChannelMessage
-                      v-for="message in openedRecordedChat.messages.all()"
+                      v-for="message in recordedChat.messages.all()"
                       :key="message.id"
                       :message="message"
-                      :user="openedRecordedChat.user"
+                      :user="recordedChat.user"
                       class="my-1 d-flex"
                       :loading="loading.chat"
                     />
@@ -79,7 +79,7 @@ import UserMetaTab from '@/components/user/tabs/UserMetaTab'
 import ChatMetaTab from '@/apps/chat/components/tabs/ChatMetaTab'
 import ChannelMessage from '@/apps/chat/components/ChannelMessage'
 import { mapGetters } from 'vuex'
-import RecordedOpenedChat from '@/apps/chat/js/facade/RecordedOpenedChat'
+import RecordedChat from '@/apps/chat/js/facade/RecordedChat'
 
 export default {
   name: 'ChatInfo',
@@ -108,7 +108,7 @@ export default {
         tickets: true,
         chat: true
       },
-      openedRecordedChat: {},
+      recordedChat: {},
       backendErrors: []
     }
   },
@@ -128,7 +128,7 @@ export default {
     initialize() {
       this.loading.chat = true
 
-      this.openedRecordedChat = new RecordedOpenedChat({
+      this.recordedChat = new RecordedChat({
         chatRequest: this.chat.chatRequest,
         channelName: this.chat.chatRequest.channel_name,
         user: this.user

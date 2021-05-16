@@ -1,5 +1,5 @@
-import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
-import OperatorsOpenedChat from '@/apps/chat/js/facade/OperatorsOpenedChat'
+import AbstractChatFacade from '@/apps/chat/js/facade/AbstractChatFacade'
+import OperatorsChat from '@/apps/chat/js/facade/OperatorsChat'
 import { user, message } from '../../testCase'
 import isEmpty from '@/js/lib/isEmpty'
 import messageService from '@/apps/chat/js/services/echoMessageService'
@@ -10,22 +10,22 @@ function createModel(data) {
     user: user
   }
 
-  return new OperatorsOpenedChat(data)
+  return new OperatorsChat(data)
 }
 
-describe('Class OperatorsOpenedChat', () => {
+describe('Class OperatorsChat', () => {
   test('new works', () => {
-    expect(createModel()).toBeInstanceOf(OperatorsOpenedChat)
+    expect(createModel()).toBeInstanceOf(OperatorsChat)
   })
-  test('extends AbstractOpenedChat class', () => {
-    expect(createModel()).toBeInstanceOf(AbstractOpenedChat)
+  test('extends AbstractChatFacade class', () => {
+    expect(createModel()).toBeInstanceOf(AbstractChatFacade)
   })
 })
 
 describe('sendMessage method', () => {
   test('called with prepareMessageData', () => {
     const operatorsChat = createModel()
-    const spy = jest.spyOn(OperatorsOpenedChat.prototype, 'prepareMessageData')
+    const spy = jest.spyOn(OperatorsChat.prototype, 'prepareMessageData')
 
     operatorsChat.sendMessage(message.text)
 
@@ -38,7 +38,7 @@ describe('sendMessage method', () => {
   test('called with messageService.whisperMessage', () => {
     const operatorsChat = createModel()
     const spyWhisperMessage = jest.spyOn(messageService, 'whisperMessage')
-    const spyPrepareMessageData = jest.spyOn(OperatorsOpenedChat.prototype, 'prepareMessageData')
+    const spyPrepareMessageData = jest.spyOn(OperatorsChat.prototype, 'prepareMessageData')
     const eventName = 'operators-message'
 
     operatorsChat.sendMessage(message.text)
@@ -54,7 +54,7 @@ describe('sendMessage method', () => {
 
   test('message is recorded', () => {
     const operatorsChat = createModel()
-    const spy = jest.spyOn(OperatorsOpenedChat.prototype, 'prepareMessageData')
+    const spy = jest.spyOn(OperatorsChat.prototype, 'prepareMessageData')
 
     operatorsChat.sendMessage(message.text)
     const preparedMessageData = spy.mock.results[0].value.message

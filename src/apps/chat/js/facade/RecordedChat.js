@@ -1,4 +1,4 @@
-import AbstractOpenedChat from './AbstractOpenedChat'
+import AbstractChatFacade from './AbstractChatFacade'
 import { showChat, updateChat } from '../http/chat'
 import { getMessages, storeMessage } from '../http/message'
 import { messageService } from '../services'
@@ -9,7 +9,7 @@ import Chat from '@/apps/chat/js/models/Chat'
 import ChatRequest from '@/apps/chat/js/models/ChatRequest'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 
-export default class RecordedOpenedChat extends AbstractOpenedChat {
+export default class RecordedChat extends AbstractChatFacade {
 
   #LAST_MESSAGE_READ = 'last-message-read'
   typingMessage = {};

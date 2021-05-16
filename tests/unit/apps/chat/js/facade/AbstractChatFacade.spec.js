@@ -1,11 +1,11 @@
-import AbstractOpenedChat from '@/apps/chat/js/facade/AbstractOpenedChat'
+import AbstractChatFacade from '@/apps/chat/js/facade/AbstractChatFacade'
 import isEmpty from '@/js/lib/isEmpty'
 import MessageCollection from '@/apps/chat/js/models/MessageCollection'
 import Operator from '@/js/models/Operator'
 import Client from '@/js/models/Client'
 import { user, newUser, message } from '../../testCase'
 
-class OpenedChat extends AbstractOpenedChat {}
+class OpenedChat extends AbstractChatFacade {}
 
 function createModel(data) {
   if (isEmpty(data)) data = {
@@ -19,7 +19,7 @@ function createModel(data) {
 describe('Abstract class', () => {
   test('throws error if created', () => {
     expect(() => {
-      new AbstractOpenedChat({
+      new AbstractChatFacade({
         channelName: 'general',
         user: user
       })
@@ -29,7 +29,7 @@ describe('Abstract class', () => {
 
 describe('Class OpenedChat', () => {
   test('new works', () => {
-    expect(createModel()).toBeInstanceOf(AbstractOpenedChat)
+    expect(createModel()).toBeInstanceOf(AbstractChatFacade)
   })
 
   test('Throws error if no user', () => {
@@ -46,7 +46,7 @@ describe('Class OpenedChat', () => {
 })
 
 describe('fields', () => {
-  test('OpenedChat structure', () => {
+  test('ChatFacade structure', () => {
     expect(createModel()).toEqual(expect.objectContaining({
       channelName: expect.any(String),
       user: expect.objectContaining({
@@ -122,7 +122,7 @@ describe('addMessage method', () => {
 
 describe('toggleActive method', () => {
   test('toggle works', () => {
-    const spy = jest.spyOn(AbstractOpenedChat.prototype, 'setActive')
+    const spy = jest.spyOn(AbstractChatFacade.prototype, 'setActive')
     const openedChat = createModel()
 
     expect(openedChat.participants.length).toBe(1)
