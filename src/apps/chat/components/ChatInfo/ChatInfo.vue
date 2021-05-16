@@ -1,27 +1,6 @@
 <template>
   <div class="text-center">
     <v-dialog
-      v-model="dialogLoader"
-      persistent
-      :width="300"
-      transition="scale-transition"
-    >
-      <v-card
-        v-if="loadingDialog"
-        color="surface"
-      >
-        <v-card-text>
-          {{ $t('b2tickets.common.loading') }}
-          <v-progress-linear
-            indeterminate
-            color="white"
-            class="mb-0"
-          ></v-progress-linear>
-        </v-card-text> 
-      </v-card>
-    </v-dialog>
-
-    <v-dialog
       v-if="dialog"
       v-model="dialog"
       persistent
@@ -64,24 +43,22 @@
           <v-col cols="6" class="chat-section section">
             <v-card class="card pa-1">
               <v-progress-linear
-                v-if="loadingMessages"
+                v-if="loading.chat"
                 color="deep-purple accent-4"
                 indeterminate
                 rounded
-                height="6"
               ></v-progress-linear>
-              <div v-if="!loadingMessages" class="chat scroll">
+              <div v-if="!loading.chat" class="chat scroll">
                 <div id="messages" ref="messages" class="messages">
                   <transition-group name="list">
 
                     <ChannelMessage
-                      v-for="message in chatInstance.messages"
+                      v-for="message in openedRecordedChat.messages.all()"
                       :key="message.id"
-                      v-model="chatInstance.messages"
                       :message="message"
-                      :user="chatInstance.user"
+                      :user="openedRecordedChat.user"
                       class="my-1 d-flex"
-                      :loading="loadingMessages"
+                      :loading="loading.chat"
                     />
 
                   </transition-group>
@@ -101,9 +78,8 @@ import InfoActionsCard from '@/apps/chat/components/ChatInfo/InfoActionsCard'
 import UserMetaTab from '@/components/user/tabs/UserMetaTab'
 import ChatMetaTab from '@/apps/chat/components/tabs/ChatMetaTab'
 import ChannelMessage from '@/apps/chat/components/ChannelMessage'
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import RecordedOpenedChat from '@/apps/chat/js/facade/RecordedOpenedChat'
-import { showChatRequest } from '@/apps/chat/js/http/chatRequest'
 
 export default {
   name: 'ChatInfo',
@@ -128,80 +104,37 @@ export default {
     return {
       panel: [0,1],
       dialog: false,
-      dialogLoader: false,
-      loadingDialog: false,
-      loadingMessages: false,
-      loadingTickets: true,
-      notifications: false,
-      sound: true,
-      widgets: false,
-      chatInstance: {},
-      backendErrors: [],
-      chatRequest: {}
+      loading: {
+        tickets: true,
+        chat: true
+      },
+      openedRecordedChat: {},
+      backendErrors: []
     }
   },
   computed: {
     ...mapGetters({
-      whoAmI: 'auth/getUser'
+      user: 'auth/getUser'
     })
   },
   watch: {
-    dialogLoader (val) {
-      if (!val) return
-
-      this.initialize()
-      this.dialog = true
-    },
-    dialog (val) {
+    chat (val) {
       if (val) {
-        document.documentElement.style.overflow = 'hidden'
+        this.initialize()
       }
-
-      else {
-        document.documentElement.removeAttribute('style')
-        this.dialogLoader = val
-      }
-    },
-    loadingDialog (val) {
-      if (val) return
-
-      console.log(this.chat)
-
-      this.dialog = true
     }
   },
-  mounted() {
-    // this.initialize()
-    console.log(this.chat)
-  },
-
   methods: {
-    ...mapActions({
-      getMessages: 'message/fetchMessages'
-    }),
     initialize() {
-      this.loadingDialog = true
+      this.loading.chat = true
 
-      this.fetchChatRequest(this.chat.chat_request_id).then(() => {
-        this.createChat({
-          chatRequest: this.chatRequest,
-          channelName: this.chatRequest.channelName,
-          user: this.whoAmI
-        })
-        this.loadingDialog = false
-      }).catch(() => {
-        this.loadingDialog = false
+      this.openedRecordedChat = new RecordedOpenedChat({
+        chatRequest: this.chat.chatRequest,
+        channelName: this.chat.chatRequest.channel_name,
+        user: this.user
       })
-    },
-    createChat(options) {
-      this.chatInstance = new RecordedOpenedChat(options)
-    },
-    async fetchChatRequest(chat_request_id) {
-      await showChatRequest(chat_request_id).then((res) => {
-        this.chatRequest = res.data
-      }).catch((e) => {
-        this.backendErrors.push(e)
-      })
+
+      this.loading.chat = false
     }
   }
 }
