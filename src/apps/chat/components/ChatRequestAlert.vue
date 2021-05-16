@@ -162,6 +162,8 @@ export default {
 
         this.setCurrentChat(this.openedChats.indexOf(recordedChat))
 
+        this.$socket.emit('toggle-down-priority', { operatorId: this.user.id, priority: 7 })
+
         this.$router.push({ name: 'apps-chat-channel', params: { id: recordedChat.channelName } })
       })
     },
