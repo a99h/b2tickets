@@ -17,6 +17,11 @@ const getters = {
   },
   getBackendErrors(state) {
     return state.backendErrors
+  },
+  userCan: (state) => (permissionName) => {
+    return state.User.show().userRoles.some((role) => {
+      return role.hasPermissions.some((permission) => permission.name === permissionName)
+    })
   }
 }
 

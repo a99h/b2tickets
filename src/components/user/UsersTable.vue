@@ -62,7 +62,7 @@
                     <v-spacer></v-spacer>
 
                     <UserForm
-                      v-if="users"
+                      v-if="users && userCan('create operator')"
                       ref="dialog"
                       :users="users"
                       @closeDialog="onCloseDialog"
@@ -89,6 +89,7 @@
                 </template>
                 <template v-slot:item.actions="{ item }">
                   <v-icon
+                    v-if="(filterBy === 'operators' ? userCan('show operator') : userCan('show client'))"
                     small
                     class="mr-2"
                     @click="showItem(item)"
@@ -96,7 +97,7 @@
                     mdi-eye
                   </v-icon>
                   <v-icon
-                    v-if="filterBy === 'operators'"
+                    v-if="filterBy === 'operators' && userCan('edit operator')"
                     small
                     class="mr-2"
                     @click="editItem(item)"
@@ -137,6 +138,8 @@ export default {
   }),
   computed: {
     ...mapGetters({
+      user: 'auth/getUser',
+      userCan: 'auth/userCan',
       getOperators: 'operator/getOperators',
       getClients: 'client/getClients'
     }),
