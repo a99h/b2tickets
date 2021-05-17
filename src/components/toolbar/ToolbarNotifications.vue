@@ -142,8 +142,6 @@ export default {
   },
   created() {
     this.initialize()
-
-    this.$socket.emit('new-operator', this.user)
   },
   beforeDestroy() {
     clearInterval(this.interval)

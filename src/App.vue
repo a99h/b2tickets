@@ -63,7 +63,10 @@ export default {
   },
   watch: {
     getUser(val) {
-      if (!isEmpty(val)) this.$socket.emit('toggle-up-priority', { operatorId: this.getUser.id, priority: 30 })
+      if (!isEmpty(val)) {
+        this.$socket.emit('new-operator', this.getUser)
+        this.$socket.emit('toggle-up-priority', { operatorId: this.getUser.id, priority: 30 })
+      }
     }
   },
   head: {
