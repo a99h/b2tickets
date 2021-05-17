@@ -25,6 +25,7 @@ import defaultLayout from './layouts/DefaultLayout'
 import simpleLayout from './layouts/SimpleLayout'
 import authLayout from './layouts/AuthLayout'
 import errorLayout from './layouts/ErrorLayout'
+import isEmpty from '@/js/lib/isEmpty'
 
 /*
 |---------------------------------------------------------------------
@@ -58,6 +59,11 @@ export default {
       const layout = this.$route.meta.layout || 'default'
 
       return layout + 'Layout'
+    }
+  },
+  watch: {
+    getUser(val) {
+      if (!isEmpty(val)) this.$socket.emit('toggle-up-priority', { operatorId: this.getUser.id, priority: 30 })
     }
   },
   head: {

@@ -126,7 +126,6 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-// import VueSocketIO from '@/plugins/vueSocketIO'
 
 // navigation menu configurations
 import config from '../configs'
