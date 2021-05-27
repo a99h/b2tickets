@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // Routes
-import AppsRoutes from './apps.routes'
-import PagesRoutes from './pages.routes'
+import appsRoutes from './apps.routes'
+import pagesRoutes from './pages.routes'
 
 // Middlewares
 import auth from './middleware/auth'
@@ -12,30 +12,33 @@ import store from '@/store'
 
 Vue.use(Router)
 
-export const routes = [{
-  path: '/',
-  name: 'home',
-  redirect: '/dashboard/analytics'
-}, {
-  path: '/dashboard/analytics',
-  name: 'dashboard-analytics',
-  component: () => import(/* webpackChunkName: "dashboard" */ '@/pages/dashboard/DashboardPage.vue')
-},
-...AppsRoutes,
-...PagesRoutes,
-{
-  path: '/blank',
-  name: 'blank',
-  component: () => import(/* webpackChunkName: "blank" */ '@/pages/BlankPage.vue')
-},
-{
-  path: '*',
-  name: 'error',
-  component: () => import(/* webpackChunkName: "error" */ '@/pages/error/NotFoundPage.vue'),
-  meta: {
-    layout: 'error'
+export const routes = [
+  {
+    path: '/',
+    name: 'home',
+    redirect: '/apps/chat'
+  },
+  // {
+  //   path: '/dashboard/analytics',
+  //   name: 'dashboard-analytics',
+  //   component: () => import(/* webpackChunkName: "dashboard" */ '@/pages/dashboard/DashboardPage.vue')
+  // },
+  ...appsRoutes,
+  ...pagesRoutes,
+  // {
+  //   path: '/blank',
+  //   name: 'blank',
+  //   component: () => import(/* webpackChunkName: "blank" */ '@/pages/BlankPage.vue')
+  // },
+  {
+    path: '*',
+    name: 'error',
+    component: () => import(/* webpackChunkName: "error" */ '@/pages/error/NotFoundPage.vue'),
+    meta: {
+      layout: 'error'
+    }
   }
-}]
+]
 
 const router = new Router({
   mode: 'history',
