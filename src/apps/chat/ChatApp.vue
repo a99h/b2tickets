@@ -177,7 +177,7 @@ export default {
     },
     changeChannel(chat) {
       this.setCurrentChat(this.openedChats.indexOf(chat))
-      if (this.$route.params.id !== chat.channelName) this.$router.push(`/apps/chat/channel/${chat.channelName}`)
+      // if (this.$route.params.id !== chat.channelName) this.$router.push(`/chat/channel/${chat.channelName}`)
     },
     // Add and join the channel on creation
     addOpenedChat(data) {

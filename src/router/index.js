@@ -16,7 +16,7 @@ export const routes = [
   {
     path: '/',
     name: 'home',
-    redirect: '/apps/chat'
+    redirect: '/chat/chats'
   },
   // {
   //   path: '/dashboard/analytics',

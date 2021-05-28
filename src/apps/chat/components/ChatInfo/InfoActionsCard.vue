@@ -42,7 +42,7 @@ export default {
         },{
           title: 'Выйти',
           icon: 'mdi-exit-run',
-          to: { name: 'apps-chat-list' }
+          to: { name: 'apps-chat-chats' }
         }],
         spanColor: 'accent--text',
         iconColor: 'accent'

@@ -73,7 +73,7 @@ export default {
         {
           text: this.$t('b2tickets.chat.chatHistory'),
           disabled: false,
-          to: { name: 'apps-chat-list' }
+          to: { name: 'apps-chat-chats' }
         }, {
           text: this.$t('b2tickets.ticket.actions.createTicket'),
           disabled: true,

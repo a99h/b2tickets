@@ -3,7 +3,7 @@ export default [
     icon: 'mdi-history',
     key: 'b2tickets.chat.chatHistory',
     text: 'Chat history',
-    link: '/apps/chat/chats'
+    link: '/chat/chats'
   },
   {
     icon: 'mdi-card-bulleted-settings',
