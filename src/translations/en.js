@@ -11,6 +11,7 @@ export default {
     save: 'Save',
     search: 'Search',
     takeMeBack: 'Take me back',
+    takeMeHome: 'Take me home',
     title: 'Title',
     tos: 'Terms of Service',
     welcome: 'Welcome!',

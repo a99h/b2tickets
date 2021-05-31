@@ -17,7 +17,7 @@
       <!-- Navigation menu info -->
       <template v-slot:prepend>
         <div class="pa-2">
-          <div class="title font-weight-bold text-uppercase primary--text">{{ product.name }}</div>
+          <a class="title font-weight-bold text-uppercase primary--text" @click="redirectHome">{{ product.name }}</a>
         </div>
       </template>
 
@@ -165,6 +165,9 @@ export default {
   methods: {
     onKeyup(e) {
       this.$refs.search.focus()
+    },
+    redirectHome() {
+      this.$router.push({ name: 'home' })
     }
   }
 }

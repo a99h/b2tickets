@@ -11,6 +11,7 @@ export default {
     'save': 'Salvar',
     'search': 'Procurar',
     'takeMeBack': 'Me leve de volta',
+    'takeMeHome': 'Voltar ao início',
     'title': 'Título',
     'tos': 'Termos do serviço',
     'welcome': 'Bem-vinda'

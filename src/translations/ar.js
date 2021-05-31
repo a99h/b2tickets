@@ -11,6 +11,7 @@ export default {
     'save': 'حفظ',
     'search': 'بحث',
     'takeMeBack': 'اعدني',
+    'takeMeHome': 'خذني للمنزل',
     'title': 'العنوان',
     'tos': 'شروط الخدمة',
     'welcome': 'أهلا بك!'
