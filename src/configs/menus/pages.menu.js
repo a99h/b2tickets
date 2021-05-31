@@ -15,7 +15,7 @@ export default [
     icon: 'mdi-account-multiple',
     key: 'menu.users',
     text: 'Users',
-    link: '/users/list'
+    link: '/users'
   }/* ,
   { icon: 'mdi-file-lock-outline', key: 'menu.auth', text: 'Auth Pages', regex: /^\/auth/,
     items: [

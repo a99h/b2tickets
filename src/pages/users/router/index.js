@@ -1,9 +1,6 @@
 export default [{
   path: '/users',
-  redirect: 'users-list'
-}, {
-  path: '/users/list',
-  name: 'users-list',
+  name: 'users',
   component: () => import(/* webpackChunkName: "users-list" */ '@/pages/users/UsersPage.vue')
 }, {
   path: '/users/edit',

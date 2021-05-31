@@ -1,5 +1,5 @@
 export default [{
-  path: '/tickets/:chatId?',
+  path: '/tickets',
   name: 'ticket-list',
   component: () => import(/* webpackChunkName: "tickets-list" */ '@/pages/tickets/TicketsPage.vue')
 }]

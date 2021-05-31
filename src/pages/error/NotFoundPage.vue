@@ -5,8 +5,8 @@
     <div class="mt-3 mb-6">{{ $t('error.notFoundDesc') }}</div>
     <v-text-field solo :placeholder="$t('common.search')" large></v-text-field>
     <div class="d-flex justify-space-between ">
-      <v-btn class='redirect-item' large color="primary" @click="redirectBack">{{ $t('common.takeMeBack') }}</v-btn>
-      <v-btn class='redirect-item' large color="primary" @click="redirectHome">{{ $t('common.takeMeHome') }}</v-btn>
+      <v-btn class="redirect-item" large color="primary" @click="redirectBack">{{ $t('common.takeMeBack') }}</v-btn>
+      <v-btn class="redirect-item" large color="primary" @click="redirectHome">{{ $t('common.takeMeHome') }}</v-btn>
     </div>
   </v-card>
 </template>

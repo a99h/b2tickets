@@ -6,7 +6,6 @@
           {{ product.name }}
         </div>
         <div class="title my-2">{{ $t('b2tickets.common.description') }}</div>
-        <v-btn to="/" class="my-4">{{ $t('common.takeMeBack') }}</v-btn>
       </div>
       <img class="w-full" src="/images/illustrations/signin-illustration.svg" />
     </v-sheet>
