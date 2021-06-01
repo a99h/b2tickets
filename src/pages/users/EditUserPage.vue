@@ -36,12 +36,12 @@
       </div>
     </div>
 
-    <v-tabs v-model="tab" :show-arrows="false" background-color="transparent">
+    <!-- <v-tabs v-model="tab" :show-arrows="false" background-color="transparent">
       <v-tab to="#tabs-account">{{ $t('menu.account') }}</v-tab>
-    </v-tabs>
+    </v-tabs> -->
 
-    <v-tabs-items v-model="tab">
-      <v-tab-item value="tabs-account">
+    <!-- <v-tabs-items v-model="tab">
+      <v-tab-item value="tabs-account"> -->
 
         <v-container>
 
@@ -74,17 +74,17 @@
 
         </v-container>
 
-      </v-tab-item>
+      <!-- </v-tab-item> -->
 
-      <v-tab-item value="tabs-information">
-        <InformationTab :user="user" />
-      </v-tab-item>
-    </v-tabs-items>
+      <!-- <v-tab-item value="tabs-information"> -->
+        <!-- <InformationTab :user="user" /> -->
+      <!-- </v-tab-item> -->
+    <!-- </v-tabs-items> -->
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import CopyLabel from '../../components/common/CopyLabel'
 import AccountCard from '@/components/user/AccountCard'
 import UserMetaTab from '@/components/user/tabs/UserMetaTab'
