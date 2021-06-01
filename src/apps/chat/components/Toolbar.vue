@@ -37,9 +37,9 @@
     >
       <v-icon color="error">mdi-exit-run</v-icon>
     </v-btn>
-    <v-btn class="mx-1" icon @click.stop="usersDrawer = !usersDrawer">
+    <!-- <v-btn class="mx-1" icon @click.stop="usersDrawer = !usersDrawer">
       <v-icon>mdi-account-group-outline</v-icon>
-    </v-btn>
+    </v-btn> -->
   </v-app-bar>
 </template>
 
