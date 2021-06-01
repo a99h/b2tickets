@@ -88,14 +88,14 @@
                   </v-chip>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                  <v-icon
+                  <!-- <v-icon
                     v-if="(filterBy === 'operators' ? userCan('show operator') : userCan('show client'))"
                     small
                     class="mr-2"
                     @click="showItem(item)"
                   >
                     mdi-eye
-                  </v-icon>
+                  </v-icon> -->
                   <v-icon
                     v-if="filterBy === 'operators' && userCan('edit operator')"
                     small
