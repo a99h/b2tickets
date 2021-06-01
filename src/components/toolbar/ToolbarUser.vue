@@ -36,7 +36,7 @@
 
       <v-divider class="my-1"></v-divider>
 
-      <v-list-item to="/auth/signin">
+      <v-list-item to="/auth/logout">
         <v-list-item-icon>
           <v-icon small>mdi-logout-variant</v-icon>
         </v-list-item-icon>
