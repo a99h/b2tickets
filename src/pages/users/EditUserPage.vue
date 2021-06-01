@@ -133,7 +133,7 @@ export default {
       case 'operator':
         return 'mdi-account'
 
-      case 'ADMIN':
+      case 'admin':
         return 'mdi-security'
 
       default:
