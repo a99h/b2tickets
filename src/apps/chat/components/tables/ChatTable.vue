@@ -80,7 +80,7 @@
                     <v-btn
                       :dark="!$vuetify.theme.dark"
                       small
-                      min-width="50"
+                      width="150"
                       @click="showItem(item)"
                     >
                       <div v-if="loading.chatInfo === item.id" class="mx-auto">
@@ -125,15 +125,8 @@ export default {
       getChats: 'chat/getChats'
     }),
     headers() { return [
-      {
-        text: 'ID',
-        align: 'start',
-        value: 'id'
-      },
-      {
-        text: this.$t('b2tickets.chat.actions.enter'),
-        value: 'chat_request_id'
-      },
+      { text: 'ID', value: 'id', align: 'start' },
+      { text: this.$t('b2tickets.chat.actions.enter'), value: 'chat_request_id', sortable: false },
       { text: this.$t('b2tickets.chat.fields.client'), value: 'chatClient.email' },
       { text: this.$t('b2tickets.chat.fields.active'), value: 'active' },
       { text: this.$t('b2tickets.common.fields.updated_at'), value: 'updated_at' },

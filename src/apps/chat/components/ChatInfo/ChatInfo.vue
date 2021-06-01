@@ -3,8 +3,9 @@
     <v-dialog
       v-if="dialog"
       v-model="dialog"
+      width="800px"
+      max-width="90%"
       persistent
-      width="80vw"
       transition="scale-transition"
     >
       <v-card>
@@ -42,14 +43,14 @@
 
           <v-col cols="6" class="chat-section section">
             <v-card class="card pa-1">
-              <v-progress-linear
-                v-if="loading.chat"
-                color="deep-purple accent-4"
-                indeterminate
-                rounded
-              ></v-progress-linear>
-              <div v-if="!loading.chat" class="chat scroll">
-                <div id="messages" ref="messages" class="messages">
+              <div class="chat scroll">
+                <v-progress-circular
+                  v-if="loading.chat"
+                  color="deep-purple accent-4"
+                  indeterminate
+                  rounded
+                ></v-progress-circular>
+                <div v-else id="messages" ref="messages" class="messages">
                   <transition-group name="list">
 
                     <ChannelMessage
@@ -155,7 +156,7 @@ export default {
 .card,
 .scroll,
 .chat {
-  height: 100%;
+  min-height: 100%;
 }
 
 .scroll {
