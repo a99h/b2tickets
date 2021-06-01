@@ -54,7 +54,7 @@
         <div class="d-flex flex-grow-1 align-center">
 
           <!-- search input mobile -->
-          <v-text-field
+          <!-- <v-text-field
             v-if="showSearch"
             append-icon="mdi-close"
             placeholder="Search"
@@ -64,15 +64,15 @@
             flat
             autofocus
             @click:append="showSearch = false"
-          ></v-text-field>
+          ></v-text-field> -->
 
-          <div v-else class="d-flex flex-grow-1 align-center">
+          <div class="d-flex flex-grow-1 align-center">
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
-            <v-spacer class="d-none d-lg-block"></v-spacer>
+            <v-spacer></v-spacer>
 
             <!-- search input desktop -->
-            <v-text-field
+            <!-- <v-text-field
               ref="search"
               class="mx-1 hidden-xs-only"
               :placeholder="$t('menu.search')"
@@ -81,13 +81,13 @@
               filled
               rounded
               dense
-            ></v-text-field>
+            ></v-text-field> -->
 
             <v-spacer class="d-block d-sm-none"></v-spacer>
 
-            <v-btn class="d-block d-sm-none" icon @click="showSearch = true">
+            <!-- <v-btn class="d-block d-sm-none" icon @click="showSearch = true">
               <v-icon>mdi-magnify</v-icon>
-            </v-btn>
+            </v-btn> -->
 
             <toolbar-language />
 
