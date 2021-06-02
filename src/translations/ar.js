@@ -32,7 +32,8 @@ export default {
     'online': 'المستخدمون المتصلون ({عدد})',
     'addChannel': 'أضف قناة',
     'channel': 'القناة | القنوات',
-    'message': 'الرسالة'
+    'message': 'الرسالة',
+    'noMessages': 'لا رسائل'
   },
   'email': {
     'compose': 'إنشاء بريد إلكتروني',

@@ -32,7 +32,8 @@ export default {
     'online': 'Usuarios en línea ({count})',
     'addChannel': 'Agregar canal',
     'channel': 'Canal | Canales',
-    'message': 'Mensaje'
+    'message': 'Mensaje',
+    'noMessages': 'No hay mensajes'
   },
   'email': {
     'compose': 'Redactar correo electrónico',

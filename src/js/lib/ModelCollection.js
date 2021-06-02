@@ -4,6 +4,7 @@ export default class ModelCollection {
 
     this.$collection = []
     this.$options = Object.assign({ primaryKey: 'id' }, options)
+    this.$isLoaded = false
 
     if (data.length)
       this.record(data)

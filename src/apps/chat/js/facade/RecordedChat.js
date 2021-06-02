@@ -27,6 +27,7 @@ export default class RecordedChat extends AbstractChatFacade {
 
     getMessages(this.chatRequest.show().id).then((res) => {
       this.messages = new MessageCollection({ data: res.data })
+      this.messages.$isLoaded = true
     }).catch((e) => {
       this.backendErrors.push(e)
     })

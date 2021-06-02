@@ -33,7 +33,8 @@ export default {
     'online': 'Пользователи Онлайн ({count})',
     'addChannel': 'Добавить канал',
     'channel': 'Канал | Каналы',
-    'message': 'Сообщение'
+    'message': 'Сообщение',
+    'noMessages': 'Нет сообщений'
   },
   'email': {
     'compose': 'Собрать почту',

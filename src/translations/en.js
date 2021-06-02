@@ -33,7 +33,8 @@ export default {
     online: 'Users Online ({count})',
     addChannel: 'Add Channel',
     channel: 'Channel | Channels',
-    message: 'Message'
+    message: 'Message',
+    noMessages: 'No messages'
   },
   email: {
     compose: 'Compose Email',

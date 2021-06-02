@@ -16,7 +16,7 @@
           <v-btn
             icon
             dark
-            @click="dialog = false"
+            @click="closeDialog()"
           >
             <v-icon x-large>mdi-close</v-icon>
           </v-btn>
@@ -43,16 +43,21 @@
 
           <v-col cols="6" class="chat-section section">
             <v-card class="card pa-1">
-              <div class="chat scroll">
-                <v-progress-circular
-                  v-if="loading.chat"
-                  color="deep-purple accent-4"
-                  indeterminate
-                  rounded
-                ></v-progress-circular>
-                <div v-else id="messages" ref="messages" class="messages">
-                  <transition-group name="list">
-
+              <v-progress-circular
+                v-if="loading.chat"
+                class="loader"
+                :size="70"
+                :width="5"
+                color="deep-purple accent-4"
+                indeterminate
+                value="Loading"
+              ></v-progress-circular>
+              <div v-else class="chat scroll">
+                <div ref="messages" class="messages">
+                  <transition-group
+                    v-if="recordedChat.messages.all().length"
+                    name="list"
+                  >
                     <ChannelMessage
                       v-for="message in recordedChat.messages.all()"
                       :key="message.id"
@@ -61,8 +66,15 @@
                       class="my-1 d-flex"
                       :loading="loading.chat"
                     />
-
                   </transition-group>
+
+                  <div
+                    v-else
+                    class="no-messages"
+                  >
+                    <v-icon color="green" size="50">mdi-emoticon-cool</v-icon>
+                    <p>{{ $t('chat.noMessages') }}</p>
+                  </div>
                 </div>
               </div>
             </v-card>
@@ -123,19 +135,25 @@ export default {
       if (val) {
         this.initialize()
       }
+    },
+    'recordedChat.messages.$isLoaded': {
+      handler(value) {
+        if (value) this.loading.chat = false
+      },
+      deep: true
     }
   },
   methods: {
     initialize() {
-      this.loading.chat = true
-
       this.recordedChat = new RecordedChat({
         chatRequest: this.chat.chatRequest,
         channelName: this.chat.chatRequest.channel_name,
         user: this.user
       })
-
-      this.loading.chat = false
+    },
+    closeDialog() {
+      this.dialog = false
+      this.loading.chat = true
     }
   }
 }
@@ -157,6 +175,16 @@ export default {
 .scroll,
 .chat {
   min-height: 100%;
+}
+
+.loader, .no-messages {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
 }
 
 .scroll {
