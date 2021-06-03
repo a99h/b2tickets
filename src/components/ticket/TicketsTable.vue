@@ -154,14 +154,13 @@ export default {
         value: 'ticketChatRequests'
       },
       { text: this.$t('b2tickets.ticket.fields.ticketOperators'), value: 'ticketOperators' },
-      { text: this.$t('b2tickets.ticketStatus.status'), value: 'ticketStatus' },
+      { text: this.$t('b2tickets.ticketStatus.status'), value: 'ticketStatus', sort: (a, b) => a.id - b.id },
       { text: this.$t('b2tickets.ticket.fields.createdAt'), value: 'created_at' },
-      { text: '', value: 'actions', sortable: false }
+      { text: '', value: 'actions', sortable: false, width: 150 }
     ]}
   },
   mounted() {
     this.dataTableInitialize()
-    console.log(this.$route.params)
   },
   methods: {
     ...mapActions({
@@ -180,7 +179,6 @@ export default {
 
             return ticketChat ? ticketChat.id === this.$route.params.chatId : false
           })
-          console.log(this.tickets)
         }
         else this.tickets = this.getTickets
 
