@@ -220,6 +220,10 @@ export default {
       this.backendErrors = null
       confirm('Are you sure you want to delete this item?') &&
       await this.deleteTicket(item)
+
+      const itemIndex = this.tickets.indexOf(item)
+
+      this.tickets.splice(itemIndex, 1)
     }
   }
 }
