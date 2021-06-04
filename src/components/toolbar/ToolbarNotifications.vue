@@ -1,6 +1,8 @@
 <template>
   <v-menu
     v-model="menu"
+    min-width="500px"
+    max-width="500px"
     :close-on-content-click="false"
     close-on-click
     offset-y
@@ -46,45 +48,91 @@
         three-line
         dense
         max-height="400"
+        min-height="200"
         class="overflow-y-auto"
       >
-        <div v-for="(item, index) in items" :key="index">
-          <v-divider v-if="index > 0 && index < items.length" inset></v-divider>
+        <v-progress-circular
+          v-if="loading.notifications"
+          class="loader"
+          indeterminate
+          color="primary"
+          size="50"
+        ></v-progress-circular>
 
-          <v-list-item>
-            <v-list-item-avatar size="32" :color="chatRequestNotificationsSettings.color">
-              <v-icon dark small>{{ chatRequestNotificationsSettings.icon }}</v-icon>
-            </v-list-item-avatar>
+        <div v-else>
+          <div v-if="items.length">
+            <div v-for="(item, index) in items" :key="index">
+              <v-divider v-if="index > 0 && index < items.length" inset></v-divider>
 
-            <v-checkbox
-              v-model="checkedItems"
-              color="error"
-              dense
-              :value="item"
-              hide-details
-            ></v-checkbox>
+              <div class="notification-wrapper">
 
-            <v-list-item-content>
-              <v-list-item-title v-text="$t('b2tickets.notifications.chatRequest.title')"></v-list-item-title>
-              <v-list-item-subtitle class="caption">
-                {{ $tc('b2tickets.user.title', 1) + ' ' + item.chat_request.user.email + ' ' + $t('b2tickets.notifications.chatRequest.waitingOperator') }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-            <v-list-item-action class="align-self-center">
-              <v-chip
-                small
-                color="error"
-                class="mb-2"
-                @click="softDeleteNotification(item)"
-              >{{ $t('b2tickets.notifications.chatRequest.markRead') }}</v-chip>
-              <v-list-item-action-text>{{ new Date(item.chat_request.created_at) | fromNow() }}</v-list-item-action-text>
-            </v-list-item-action>
-          </v-list-item>
+                <v-progress-circular
+                  v-if="item.disabled"
+                  class="loader"
+                  indeterminate
+                  color="primary"
+                  size="30"
+                ></v-progress-circular>
+
+                <v-list-item :disabled="item.disabled" :class="item.disabled ? 'notification disabled' : 'notification'">
+                  <v-list-item-avatar size="32" :color="chatRequestNotificationsSettings.color">
+                    <v-icon dark small>{{ chatRequestNotificationsSettings.icon }}</v-icon>
+                  </v-list-item-avatar>
+
+                  <v-checkbox
+                    v-model="checkedItems"
+                    color="error"
+                    dense
+                    :value="item"
+                    hide-details
+                  ></v-checkbox>
+
+                  <v-list-item-content>
+                    <v-list-item-title v-text="$t('b2tickets.notifications.chatRequest.title')"></v-list-item-title>
+                    <v-list-item-subtitle class="caption">
+                      {{ $tc('b2tickets.user.title', 1) + ' ' + item.chat_request.user.email + ' ' + $t('b2tickets.notifications.chatRequest.waitingOperator') }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action class="align-self-center">
+                    <v-chip
+                      small
+                      color="error"
+                      class="mb-2"
+                      @click="softDeleteNotification(item)"
+                    >{{ $t('b2tickets.notifications.chatRequest.markRead') }}</v-chip>
+                    <v-list-item-action-text>{{ new Date(item.chat_request.created_at) | fromNow() }}</v-list-item-action-text>
+                  </v-list-item-action>
+                </v-list-item>
+              </div>
+            </div>
+          </div>
+
+          <div v-else class="text-center no-notifications">
+            <v-icon color="green" size="50">mdi-emoticon-cool</v-icon>
+            <div>{{ $t('b2tickets.notifications.chatRequest.noNotifications') }}</div>
+          </div>
+
         </div>
       </v-list>
+      <div v-if="items.length" class="surface d-flex justify-center tools">
+        <v-btn
+          class="ma-1"
+          :color="selectedAll ? 'warning' : 'success'"
+          small
+          @click="softMarkAllNotifications()"
+        >
+          {{ $t('b2tickets.notifications.chatRequest.selectAll') }}
+        </v-btn>
 
-      <div class="text-center py-2">
-        <v-btn color="error" small @click="softDeleteAllNotifications(checkedItems)">{{ $t('b2tickets.notifications.chatRequest.markAll') }} </v-btn>
+        <v-btn
+          class="ma-1"
+          color="error"
+          :disabled="checkedItems.length === 0 "
+          small
+          @click="softDeleteSelectedNotifications()"
+        >
+          {{ $t('b2tickets.notifications.chatRequest.markSelected') }}
+        </v-btn>
       </div>
     </v-card>
 
@@ -116,11 +164,14 @@ export default {
       interval: null,
       items: [],
       checkedItems: [],
-      muted: true,
+      muted: false,
       chatRequestNotificationsSettings: {
         title: 'New chat request',
         color: 'primary',
         icon: 'mdi-forum-outline'
+      },
+      loading: {
+        notifications: false
       }
     }
   },
@@ -136,8 +187,11 @@ export default {
     currentLocale() {
       return this.$i18n.locales.find((i) => i.code === this.$i18n.locale)
     },
-    availableLocales () {
+    availableLocales() {
       return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
+    },
+    selectedAll() {
+      return this.checkedItems.length === this.items.length
     }
   },
   created() {
@@ -171,32 +225,48 @@ export default {
           }
         })
     },
-    getNotifications() {
-      axios.get(route('api.ticketsystem.chat.notifications.index')).then((response) => {
-        this.items = response.data.data
-      }).catch((e) => {
-        console.log(e)
-      })
+    async getNotifications() {
+      this.loading.notifications = true
+      await axios.get(route('api.ticketsystem.chat.notifications.index'))
+        .then((response) => this.items = response.data.data)
+        .catch((e) => console.log(e))
+      this.loading.notifications = false
     },
+
     softDeleteNotification(notification) {
-      axios.post(route('api.ticketsystem.chat.notifications.softdelete',notification.id), { _method: 'delete' })
+      notification.disabled = true
+      this.$forceUpdate()
+
+      axios.post(route('api.ticketsystem.chat.notifications.softdelete', notification.id), { _method: 'delete' })
         .then(() => {
           this.items.splice(this.items.indexOf(notification), 1)
-          this.checkedItems.splice(this.checkedItems.indexOf(notification), 1)
+
+          const checkedItemIndex = this.checkedItems.indexOf(notification)
+
+          if (checkedItemIndex !== 1) {
+            this.checkedItems.splice(checkedItemIndex, 1)
+          }
         })
     },
-    softDeleteAllNotifications(notifications) {
-      notifications.forEach((notification) => {
-        axios.post(route('api.ticketsystem.chat.notifications.softdelete',notification.id), { _method: 'delete' })
-          .then(() => {
-            this.items.splice(this.items.indexOf(notification), 1)
-            this.checkedItems.splice(this.checkedItems.indexOf(notification), 1)
-          })
-      })
+
+    softDeleteSelectedNotifications() {
+      this.checkedItems.forEach((item) => this.softDeleteNotification(item))
     },
+
+    softMarkAllNotifications() {
+      if (this.items.length > this.checkedItems.length) {
+        this.checkedItems = [...this.items]
+      }
+
+      else {
+        this.checkedItems = []
+      }
+    },
+
     playSound () {
       this.audio.play()
     },
+
     setLocale(locale) {
       this.$i18n.locale = locale
       this.$vuetify.lang.current = locale
@@ -206,3 +276,26 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+.loader, .no-notifications {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.notification-wrapper {
+  position: relative;
+}
+
+.notification.disabled {
+  background: lightgray;
+  opacity: 0.2;
+}
+
+</style>

@@ -304,8 +304,10 @@ export default {
       chatRequest:{
         muteTooltip: 'Click to turn sound OFF',
         unmuteTooltip: 'Click to turn sound ON',
+        noNotifications: 'No notifications',
         markRead: 'Mark Read',
-        markAll: 'Mark selected as read',
+        selectAll: 'Select all',
+        markSelected: 'Mark selected as read',
         title: 'New chat request',
         waitingOperator: 'is waiting for operator!'
       },

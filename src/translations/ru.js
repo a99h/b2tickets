@@ -303,8 +303,10 @@ export default {
       'chatRequest':{
         'muteTooltip': 'Нажмите, чтобы выключить звук',
         'unmuteTooltip': 'Нажмите, чтобы включить звук',
+        'noNotifications': 'Нет уведомлений',
         'markRead': 'Отметить как прочитанное',
-        'markAll': 'Отметить выбранное как прочитанное',
+        'selectAll': 'Выбрать все',
+        'markSelected': 'Отметить выбранное как прочитанное',
         'title': 'Новый запрос на чат',
         'waitingOperator': 'ожидает оператора!'
       },
