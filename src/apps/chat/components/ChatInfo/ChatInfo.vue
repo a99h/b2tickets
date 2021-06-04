@@ -29,7 +29,7 @@
             <v-card class="card scroll">
               <InfoActionsCard :recorded-chat="recordedChat" :channel-name="chat.chatRequest.channel_name" @close-dialog="dialog = false"/>
 
-              <AccountCard :user="chat.chatClient"/>
+              <AccountCard :active="true" :user="chat.chatClient"/>
 
               <v-expansion-panels v-model="panel" multiple class="my-1.5">
 

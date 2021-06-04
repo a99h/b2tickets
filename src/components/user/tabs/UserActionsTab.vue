@@ -21,11 +21,12 @@
             :rules="[rules.required]"
             :error="errorNewPassword"
             :error-messages="errorNewPasswordMessage"
-            name="newPassword"
             :label="$t('check.newpassword')"
-            hide-details
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             :type="showPassword ? 'text' : 'password'"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :disabled="disabled"
+            name="newPassword"
+            hide-details
             @change="resetErrors"
             @click:append="showPassword = !showPassword"
           ></v-text-field>
@@ -34,11 +35,12 @@
             :rules="[rules.required]"
             :error="errorNewPassword"
             :error-messages="errorNewPasswordMessage"
-            name="newPassword"
             :label="$t('check.confpassword')"
-            hide-details
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             :type="showPassword ? 'text' : 'password'"
+            :disabled="disabled"
+            name="newPassword"
+            hide-details
             @change="resetErrors"
             @keyup.enter="confirmPasswordReset"
             @click:append="showPassword = !showPassword"
@@ -104,6 +106,10 @@ export default {
     user: {
       type: Object,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

@@ -45,11 +45,13 @@
           v-model="user.name"
           :label=" $t('b2tickets.user.fields.name') "
           placeholder="Name"
+          :readonly="active"
         ></v-text-field>
         <v-text-field
           v-model="user.email"
           :label=" $t('b2tickets.user.fields.email') "
           hide-details
+          :readonly="active"
         ></v-text-field>
       </v-card-text>
     </div>
@@ -70,6 +72,10 @@ export default {
     user: {
       type: Object,
       required: true
+    },
+    active: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

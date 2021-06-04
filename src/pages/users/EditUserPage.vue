@@ -67,7 +67,7 @@
         <AccountCard :user="user" />
 
         <v-expansion-panels v-model="panel" multiple class="mt-3">
-          <UserActionsTab :user="user" />
+          <UserActionsTab :disabled="true" :user="user" />
           <UserMetaTab :user="user" />
         </v-expansion-panels>
       </v-sheet>
