@@ -64,7 +64,7 @@
           </v-card-actions>
         </v-card>
 
-        <AccountCard :user="user" />
+        <AccountCard :user="user" :disabled="true" />
 
         <v-expansion-panels v-model="panel" multiple class="mt-3">
           <UserActionsTab :disabled="true" :user="user" />

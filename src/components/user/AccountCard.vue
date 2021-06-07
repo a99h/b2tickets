@@ -11,6 +11,7 @@
           class="mt-1"
           small
           max-width="100"
+          :disabled="disabled"
           @click="dialog.avatar = true"
         >{{ $t('b2tickets.user.pages.editUser.editAvatar') }}
         </v-btn>
@@ -44,19 +45,21 @@
         <v-text-field
           v-model="user.name"
           :label=" $t('b2tickets.user.fields.name') "
+          :disabled="disabled"
           placeholder="Name"
           :readonly="active"
         ></v-text-field>
         <v-text-field
           v-model="user.email"
           :label=" $t('b2tickets.user.fields.email') "
+          :disabled="disabled"
           hide-details
           :readonly="active"
         ></v-text-field>
       </v-card-text>
     </div>
     <v-card-actions v-if="checkUserRole(user, 'operator')" class="justify-end">
-      <v-btn color="success" @click>{{ $t('common.save') }}</v-btn>
+      <v-btn color="success" :disabled="disabled" @click>{{ $t('common.save') }}</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -74,6 +77,10 @@ export default {
       required: true
     },
     active: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     }

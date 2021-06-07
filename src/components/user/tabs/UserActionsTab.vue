@@ -12,6 +12,7 @@
             v-model="user.password"
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             :type="showPassword ? 'text' : 'password'"
+            :disabled="disabled"
             :label="$t('check.oldPassword')"
             hide-details
             @click:append="showPassword = !showPassword"
@@ -48,7 +49,7 @@
         </div>
         <div class="subtitle mb-2"></div>
         <div>
-          <v-btn color="primary" class="mb-2" @click>
+          <v-btn color="primary" class="mb-2" :disabled="disabled">
             {{ $t('b2tickets.user.pages.editUser.changePassword') }}
           </v-btn>
         </div>
@@ -73,7 +74,7 @@
           >
             <v-icon left small>mdi-security</v-icon>{{ $t('b2tickets.user.pages.editUser.setUser') }}
           </v-btn>
-          <v-btn v-else color="primary" @click="user.role = 'ADMIN'">
+          <v-btn v-else color="primary" :disabled="disabled" @click="user.role = 'ADMIN'">
             <v-icon left small>mdi-security</v-icon>{{ $t('b2tickets.user.pages.editUser.setUserAdmin') }}
           </v-btn>
         </div>
@@ -86,11 +87,12 @@
         <div class="my-2">
           <v-btn
             color="warning"
+            :disabled="disabled"
             @click=""
           >
             <v-icon left small>mdi-account-check</v-icon> {{ $t('b2tickets.user.pages.editUser.userEnable') }}
           </v-btn>
-          <v-btn color="warning" @click="disableDialog = true">
+          <v-btn color="warning" :disabled="disabled" @click="disableDialog = true">
             <v-icon left small>mdi-cancel</v-icon>{{ $t('b2tickets.user.pages.editUser.userDisable') }}
           </v-btn>
         </div>
