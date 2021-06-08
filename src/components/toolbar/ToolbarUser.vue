@@ -36,7 +36,7 @@
 
       <v-divider class="my-1"></v-divider>
 
-      <v-list-item to="/auth/logout">
+      <v-list-item @click="signOut()">
         <v-list-item-icon>
           <v-icon small>mdi-logout-variant</v-icon>
         </v-list-item-icon>
@@ -50,6 +50,7 @@
 
 <script>
 import config from '../../configs'
+import { mapActions } from 'vuex'
 /*
 |---------------------------------------------------------------------
 | Toolbar User Component
@@ -62,6 +63,16 @@ export default {
   data() {
     return {
       menu: config.toolbar.user
+    }
+  },
+  methods: {
+    ...mapActions({
+      logout: 'auth/signOut'
+    }),
+    async signOut() {
+      await this.logout().then(() => {
+        this.$router.push({ name: 'auth-signin' })
+      })
     }
   }
 }

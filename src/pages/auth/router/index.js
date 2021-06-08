@@ -32,20 +32,20 @@ export default [{
 //   layout: 'auth'
 // }
 // },
-// {
-// path: '/forgot-password',
-// name: 'auth-forgot',
-// component: () => import(/* webpackChunkName: "auth-forgot" */ '@/pages/auth/ForgotPage.vue'),
-// meta: {
-//   layout: 'auth'
-// }
-// },
 {
-  path: '/reset-password',
-  name: 'auth-reset',
-  component: () => import(/* webpackChunkName: "auth-reset" */ '@/pages/auth/ResetPage.vue'),
+  path: '/forgot-password',
+  name: 'auth-forgot',
+  component: () => import(/* webpackChunkName: "auth-forgot" */ '@/pages/auth/ForgotPage.vue'),
   meta: {
     layout: 'auth'
   }
 }
+// {
+//   path: '/reset-password',
+//   name: 'auth-reset',
+//   component: () => import(/* webpackChunkName: "auth-reset" */ '@/pages/auth/ResetPage.vue'),
+//   meta: {
+//     layout: 'auth'
+//   }
+// }
 ]
