@@ -34,7 +34,7 @@
     </v-card>
 
     <div class="text-center mt-6">
-      <router-link to="/auth/signin">
+      <router-link to="/signin">
         {{ $t('forgot.backtosign') }}
       </router-link>
     </div>

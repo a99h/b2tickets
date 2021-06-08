@@ -70,7 +70,7 @@
 
     <div class="text-center mt-6">
       {{ $t('register.account') }}
-      <router-link to="/auth/signin" class="font-weight-bold">
+      <router-link to="/signin" class="font-weight-bold">
         {{ $t('register.signin') }}
       </router-link>
     </div>
