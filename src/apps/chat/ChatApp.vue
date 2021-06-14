@@ -147,22 +147,6 @@ export default {
       currentChat: 'chat/getCurrentChat'
     })
   },
-  watch: {
-    '$route.params.id'() {
-      const chat = this.openedChats.find((chat) => chat.channelName === `${this.$route.params.id}`)
-
-      if (chat) {
-        this.changeChannel(chat)
-      }
-    },
-
-    currentChat() {
-      const route = this.$route
-
-      if (route.params.id !== this.currentChat.channelName && route.name === 'apps-chat-channel')
-        this.$router.push(`/chat/channel/${this.currentChat.channelName}`)
-    }
-  },
   created() {
     this.addDefaultChannels(this.defaultChannels)
   },
@@ -180,7 +164,12 @@ export default {
         this.addOpenedChat({ channelName: channelName, user: this.user })
       })
 
-      this.setCurrentChat(this.openedChats.indexOf(this.openedChats[0]))
+      const routeId = this.$route.params.id
+      const currentChatIndex = this.openedChats.findIndex((item) => item.channelName === routeId)
+
+      if (currentChatIndex >= 0) {
+        this.setCurrentChat(currentChatIndex)
+      }
     },
     newChat() {
       this.addChatAndEnter({ channelName: this.newChannel, user: this.user })
@@ -193,6 +182,8 @@ export default {
     },
     changeChannel(chat) {
       this.setCurrentChat(this.openedChats.indexOf(chat))
+
+      if (this.$route.params.id !== chat.channelName) this.$router.push(`/chat/channel/${chat.channelName}`)
     },
     // Add and join the channel on creation
     addOpenedChat(data) {
