@@ -150,9 +150,6 @@ export default {
   created() {
     this.addDefaultChannels(this.defaultChannels)
   },
-  mounted() {
-    this.changeChannel(this.currentChat)
-  },
   methods: {
     ...mapActions({
       storeOpenedChat: 'chat/addOpenedChat',
@@ -163,13 +160,6 @@ export default {
       defaultChannels.forEach((channelName) => {
         this.addOpenedChat({ channelName: channelName, user: this.user })
       })
-
-      const routeId = this.$route.params.id
-      const currentChatIndex = this.openedChats.findIndex((item) => item.channelName === routeId)
-
-      if (currentChatIndex >= 0) {
-        this.setCurrentChat(currentChatIndex)
-      }
     },
     newChat() {
       this.addChatAndEnter({ channelName: this.newChannel, user: this.user })
