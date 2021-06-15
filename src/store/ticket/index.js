@@ -1,9 +1,10 @@
 import actions from './actions'
 import mutations from './mutations'
+import TicketCollection from '@/js/models/TicketCollection'
 
 // state initial values
 const state = {
-  TicketCollection: {},
+  TicketCollection: new TicketCollection(),
   backendErrors: null
 }
 

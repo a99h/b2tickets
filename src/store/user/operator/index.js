@@ -1,9 +1,10 @@
 import actions from './actions'
 import mutations from './mutations'
+import OperatorCollection from '@/js/models/OperatorCollection'
 
 // state initial values
 const state = {
-  OperatorCollection: {},
+  OperatorCollection: new OperatorCollection(),
   backendErrors: []
 }
 

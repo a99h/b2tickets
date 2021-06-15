@@ -1,9 +1,10 @@
 import actions from './actions'
 import mutations from './mutations'
+import ChatCollection from '@/apps/chat/js/models/ChatCollection'
 
 // state initial values
 const state = {
-  ChatCollection: {},
+  ChatCollection: new ChatCollection(),
   openedChats: [],
   currentChatIndex: -1,
   backendErrors: null

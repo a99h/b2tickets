@@ -1,9 +1,10 @@
 import actions from './actions'
 import mutations from './mutations'
+import ChatRequestCollection from '@/apps/chat/js/models/ChatRequestCollection'
 
 // state initial values
 const state = {
-  ChatRequestCollection: {}
+  ChatRequestCollection: new ChatRequestCollection()
 }
 
 const getters = {

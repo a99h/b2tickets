@@ -1,9 +1,10 @@
 import actions from './actions'
 import mutations from './mutations'
+import ClientCollection from '@/js/models/ClientCollection'
 
 // state initial values
 const state = {
-  ClientCollection: {},
+  ClientCollection: new ClientCollection(),
   backendErrors: []
 }
 
