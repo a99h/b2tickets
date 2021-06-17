@@ -12,16 +12,16 @@
     ></v-progress-linear>
     <div v-if="currentChat" class="channel-page">
       <div id="messages" ref="messages" class="messages mx-2">
-        <transition-group name="list">
-          <channel-message
-            v-for="message in currentChat.messages.all()"
-            :key="message.id"
-            :message="message"
-            :user="user"
-            class="my-4 d-flex"
-            :loading="loading.messages"
-          />
-        </transition-group>
+        <!-- <transition-group name="list"> -->
+        <channel-message
+          v-for="message in currentChat.messages.all()"
+          :key="message.id"
+          :message="message"
+          :user="user"
+          class="my-4 d-flex"
+          :loading="loading.messages"
+        />
+        <!-- </transition-group> -->
       </div>
 
       <div class="input-box pa-2">
