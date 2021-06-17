@@ -14,6 +14,7 @@
           >
             <div class="font-weight-bold">
               <v-badge
+                class="badge__message"
                 bottom
                 offset-x="40"
                 offset-y="-5"
@@ -89,3 +90,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.badge__message {
+  overflow-wrap: anywhere;
+}
+</style>
