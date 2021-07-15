@@ -34,7 +34,8 @@ export default {
     'addChannel': 'Добавить канал',
     'channel': 'Канал | Каналы',
     'message': 'Сообщение',
-    'noMessages': 'Нет сообщений'
+    'noMessages': 'Нет сообщений',
+    'typing': 'печатает...'
   },
   'email': {
     'compose': 'Собрать почту',

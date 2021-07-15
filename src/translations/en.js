@@ -34,7 +34,8 @@ export default {
     addChannel: 'Add Channel',
     channel: 'Channel | Channels',
     message: 'Message',
-    noMessages: 'No messages'
+    noMessages: 'No messages',
+    typing: 'typing...'
   },
   email: {
     compose: 'Compose Email',

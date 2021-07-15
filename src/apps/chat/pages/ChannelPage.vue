@@ -120,7 +120,6 @@ export default {
   },
   mounted() {
     this.startChannel(this.$route.params.id)
-    // this.chat.watchReadAt()
     this.loading.messages = false
   },
   beforeDestroy() {
@@ -154,9 +153,14 @@ export default {
       this.currentChat.sendMessage(messageText)
       this.scrollToBottom()
     },
+    watchReadAt() {
+      this.currentChat.watchReadAt()
+    },
     scrollToBottom() {
       this.$nextTick(() => {
-        this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight
+        const current = this.$refs.messages
+
+        current.scrollTo(0, current.scrollHeight)
       })
     },
     sendTyping(typing) {
@@ -164,6 +168,12 @@ export default {
     },
     updateUsersDrawer() {
       this.$forceUpdate()
+      // this.watchReadAt()
+      const current = this.$refs.messages
+      
+      if (current.scrollHeight - current.scrollTop < current.clientHeight + 100 ) {
+        this.scrollToBottom()
+      }
     }
   }
 }

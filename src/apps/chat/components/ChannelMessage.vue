@@ -2,7 +2,7 @@
   <div class="d-flex flex-grow-1" :class="{ 'flex-row-reverse': isOwnMessage}">
     <user-avatar :user="message.user" />
 
-    <div class="mx-2">
+    <div class="mx-2" >
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-card
@@ -14,7 +14,7 @@
           >
             <div class="font-weight-bold">
               <v-badge
-                class="badge__message"
+                class="badge_message"
                 bottom
                 offset-x="40"
                 offset-y="-5"
@@ -22,8 +22,8 @@
               >
                 <template v-slot:badge="" >
                   <span class="caption">{{ message.timestamp | getTime }}</span>
-                  <v-icon 
-                    v-if="isOwnMessage" 
+                  <v-icon
+                    v-if="isOwnMessage"
                     medium
                   >
                     {{ message.read_at >= message.timestamp ? 'mdi-check-all' : 'mdi-check' }}
@@ -92,7 +92,8 @@ export default {
 </script>
 
 <style scoped>
-.badge__message {
+
+.badge_message {
   overflow-wrap: anywhere;
 }
 </style>
