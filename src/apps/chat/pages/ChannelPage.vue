@@ -45,7 +45,7 @@
           <v-list-item-content>
             <v-list-item-title :class="{ 'primary--text': item.email === user.email }">{{ item.name }}</v-list-item-title>
             <v-list-item-action-text>
-              <v-chip v-if="item.typing" class="primary" x-small>печатает...</v-chip>
+              <v-chip v-if="item.typing" class="primary" x-small>{{ $t('chat.typing') }}</v-chip>
             </v-list-item-action-text>
           </v-list-item-content>
         </v-list-item>
@@ -152,6 +152,7 @@ export default {
     sendMessage(messageText) {
       this.currentChat.sendMessage(messageText)
       this.scrollToBottom()
+
     },
     watchReadAt() {
       this.currentChat.watchReadAt()
@@ -170,7 +171,7 @@ export default {
       this.$forceUpdate()
       // this.watchReadAt()
       const current = this.$refs.messages
-      
+
       if (current.scrollHeight - current.scrollTop < current.clientHeight + 100 ) {
         this.scrollToBottom()
       }
