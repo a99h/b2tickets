@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-grow-1" ref="typing" :class="{ 'flex-row-reverse': isOwnMessage}">
+  <div ref="typing" class="d-flex flex-grow-1" :class="{ 'flex-row-reverse': isOwnMessage}">
     <user-avatar :user="message.user" />
 
     <div class="mx-2" >
@@ -79,9 +79,6 @@ export default {
       default: () => ({})
     }
   },
-  mounted() {
-    this.typingVisible()
-  },
   computed: {
     // Check if it's a message from the logged user
     isOwnMessage() {
@@ -90,6 +87,9 @@ export default {
     isTypingMessage() {
       return typeof this.message.id === 'symbol'
     }
+  },
+  mounted() {
+    this.typingVisible()
   },
   methods: {
     typingVisible() {

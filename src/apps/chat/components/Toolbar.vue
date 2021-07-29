@@ -33,7 +33,7 @@
       v-if="$route.name === 'apps-chat-channel'"
       class="mx-1"
       icon
-      :disabled="disableLeaveBtn()"
+      :disabled="isDefaultChannelActive"
       @click.stop="leaveChannel()"
     >
       <v-icon color="error">mdi-exit-run</v-icon>
@@ -87,7 +87,14 @@ export default {
     ...mapGetters({
       getTickets: 'ticket/getTickets',
       currentChat: 'chat/getCurrentChat'
-    })
+    }),
+    isDefaultChannelActive() {
+      if (this.currentChat.channelName === 'general' || this.currentChat.channelName === 'restroom') {
+        return true
+      }
+
+      return false
+    }
   },
   watch: {
     currentChat(val) {
@@ -132,11 +139,6 @@ export default {
     },
     isCreateTicketBtn(item) {
       return item.text === this.$t('b2tickets.ticket.actions.createTicket')
-    },
-    disableLeaveBtn() {
-      if ((this.currentChat.channelName === 'general') || (this.currentChat.channelName = 'restroom')) {
-        return true
-      } else return false
     }
   }
 }
