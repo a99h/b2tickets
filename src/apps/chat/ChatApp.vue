@@ -32,7 +32,7 @@
             @click="changeChannel(chat)"
           >
             <v-list-item-avatar>
-              <v-icon :color="chat.chat.$fields.active ? 'primary' : 'error' ">mdi-radiobox-marked</v-icon>
+              <v-icon :color="currentChat.channelName === chat.channelName ? 'primary' : 'error' ">mdi-radiobox-marked</v-icon>
             </v-list-item-avatar>
 
             <v-list-item-content>
