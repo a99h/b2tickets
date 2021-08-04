@@ -1,9 +1,10 @@
+import isEmpty from '@/js/lib/isEmpty'
 import Echo from '@/plugins/echo'
 import AbstractChatFacade from '@/apps/chat/js/facade/AbstractChatFacade'
 import typingMessageService from '@/apps/chat/js/services/typingMessageService'
 
 export default {
-  watchParticipants(chat) {
+  watchParticipants(chat) { // отслеживание участников чата по WS
     Echo.join('App.User.' + chat.channelName)
       .here((users) => {
         chat.participants = users
@@ -11,7 +12,7 @@ export default {
         chat.toggleActive()
       })
       .joining((user) => {
-        if (!(chat.participants.some((us) => us.email === user.email))) chat.addParticipant.push(user)
+        if (!(chat.participants.some((us) => us.email === user.email))) chat.participants.push(user)
 
         chat.toggleActive()
       })
@@ -26,11 +27,20 @@ export default {
         })
       })
   },
-  unwatchParticipants(chat) {
+
+  unwatchParticipants(chat) { // выход из чата
     Echo.leave('App.User.' + chat.channelName)
   },
-  subscribeChannel(chat) {
+
+  subscribeChannel(chat) { // подписка на канал
     if (!(chat instanceof AbstractChatFacade)) return
+
+    function updateTyping(isTyping, user) {
+      const authorIndex = chat.participants.findIndex((p) => p.id === user.id)
+
+      chat.participants[authorIndex].typing = isTyping
+      chat.participants = [...chat.participants]
+    }
 
     Echo.private('App.User.' + chat.channelName)
       .listen('MessageSent', (event) => {
@@ -41,31 +51,37 @@ export default {
         // }
 
         chat.addMessage(message)
-
-        typingMessageService.setTyping(chat, {
-          user: event.message.user,
-          message: event.message,
-          typing: false
-        })
       })
 
       .listenForWhisper('operators-message', (event) => {
         chat.addMessage(event.message)
-        typingMessageService.setTyping(chat,{
-          user: event.message.user,
-          typing: false
-        })
       })
-      
+
+      .listenForWhisper('operators-typing', (data) => {
+        updateTyping(true, data.user)
+        setTimeout(() => updateTyping(false, data.user), 1000)
+      })
+
       .listenForWhisper('typing', (data) => {
-        const { typing } = data
+        const { user, message } = data
 
-        if (typing === undefined) data.typing = true
+        updateTyping(true, data.user)
+        setTimeout(() => updateTyping(false, data.user), 1000)
 
-        typingMessageService.setTyping(chat, data)
+        const filteredMessage = {
+          id: Symbol('typing'),
+          user: user,
+          text: message,
+          timestamp: isEmpty(chat.typingMessage) ? Date.now() : chat.typingMessage.timestamp
+        }
+
+        if (isEmpty(chat.typingMessage)) typingMessageService.addTypingMessage(chat, filteredMessage)
+        else if (message === null) typingMessageService.removeTypingMessage(chat)
+        else typingMessageService.updateTypingMessage(chat, filteredMessage)
       })
   },
-  unsubscribeChannel(chat) {
+
+  unsubscribeChannel(chat) { // выход из чата
     if (!(chat instanceof AbstractChatFacade)) return
 
     this.unwatchParticipants(chat)

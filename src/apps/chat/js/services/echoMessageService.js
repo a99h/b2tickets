@@ -2,7 +2,7 @@ import Echo from '@/plugins/echo'
 
 export default {
   sendTyping(channelName, user, typing) {
-    Echo.private('App.User.' + channelName).whisper('typing', {
+    Echo.private('App.User.' + channelName).whisper('operators-typing', {
       user: user,
       typing: typing
     })

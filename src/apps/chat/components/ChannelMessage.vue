@@ -87,18 +87,6 @@ export default {
     isTypingMessage() {
       return typeof this.message.id === 'symbol'
     }
-  },
-  mounted() {
-    this.typingVisible()
-  },
-  methods: {
-    typingVisible() {
-      if (this.isTypingMessage && this.message.text.length <= 1 ) {
-        this.$refs.typing.style.cssText = 'display: none !important'
-      } else {
-        this.$refs.typing.style.cssText = ''
-      }
-    }
   }
 }
 </script>
