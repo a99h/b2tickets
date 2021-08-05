@@ -11,7 +11,12 @@
       height="6"
     ></v-progress-linear>
     <div v-if="currentChat" class="channel-page">
-      <div id="messages" ref="messages" class="messages mx-2">
+      <div
+        id="messages"
+        ref="messages"
+        class="messages mx-2"
+        @scroll="setScrollOnBottom()"
+      >
         <!-- <transition-group name="list"> -->
         <channel-message
           v-for="message in currentChat.messages.all()"
@@ -95,6 +100,8 @@ export default {
         tickets: true
       },
 
+      isScrollOnBottom: true,
+
       // users online drawer
       usersDrawer: true,
 
@@ -108,7 +115,10 @@ export default {
   computed: {
     ...mapGetters({
       currentChat: 'chat/getCurrentChat'
-    })
+    }),
+    messagesCollection: function() {
+      return JSON.stringify(this.currentChat.messages.$collection)
+    }
   },
   watch: {
     '$route.params.id'() {
@@ -116,11 +126,24 @@ export default {
     },
     currentChat(val) {
       if (val) this.loading.messages = false
+    },
+    messagesCollection: function(newValue, oldValue) {
+      const newMessages = JSON.parse(newValue)
+      const oldMessages = JSON.parse(oldValue)
+
+      const isLastMessageByMe = newMessages[newMessages.length - 1].user.id === this.user.id
+
+      if (newMessages.length === oldMessages.length) return // если typing сообщение удалено
+
+      if (this.isScrollOnBottom || isLastMessageByMe) {
+        this.scrollToBottom()
+      }
     }
   },
   mounted() {
     this.startChannel(this.$route.params.id)
     this.loading.messages = false
+    this.scrollToBottom()
   },
   beforeDestroy() {
     this.unregisterListeners()
@@ -151,30 +174,27 @@ export default {
     // Send message to channel
     sendMessage(messageText) {
       this.currentChat.sendMessage(messageText)
-      this.scrollToBottom()
-
     },
     watchReadAt() {
       this.currentChat.watchReadAt()
     },
     scrollToBottom() {
-      this.$nextTick(() => {
-        const current = this.$refs.messages
+      const current = this.$refs.messages
 
-        current.scrollTo(0, current.scrollHeight)
-      })
+      this.$nextTick(() => current.scrollTo(0, current?.scrollHeight - current?.clientHeight))
+    },
+    setScrollOnBottom() {
+      const current = this.$refs.messages
+
+      if (current?.clientHeight + 50 > current?.scrollHeight - current?.scrollTop && !this.isScrollOnBottom) this.isScrollOnBottom = true
+      if (current?.clientHeight + 50 < current?.scrollHeight - current?.scrollTop && this.isScrollOnBottom) this.isScrollOnBottom = false
     },
     sendTyping(typing) {
       messageService.sendTyping(this.currentChat.channelName, this.currentChat.user, typing)
     },
     updateUsersDrawer() {
       this.$forceUpdate()
-      // this.watchReadAt()
-      const current = this.$refs.messages
-
-      if (current.scrollHeight - current.scrollTop < current.clientHeight + 100 ) {
-        this.scrollToBottom()
-      }
+      this.watchReadAt()
     }
   }
 }
@@ -223,6 +243,7 @@ export default {
 
   .messages {
     padding-bottom: 0px;
+    scroll-behavior: smooth;
   }
 
   .input-box {
