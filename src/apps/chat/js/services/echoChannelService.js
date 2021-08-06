@@ -46,9 +46,9 @@ export default {
       .listen('MessageSent', (event) => {
         const message = { ...event.message }
 
-        // if (chat.user.id === event.message.user.id) {
-        //   message.read_at = null
-        // }
+        if (chat.user.id === event.message.user.id) {
+          message.read_at = null
+        }
 
         chat.addMessage(message)
       })

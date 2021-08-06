@@ -56,7 +56,7 @@ export default class RecordedChat extends AbstractChatFacade {
 
   watchReadAt() {
     messageService.listenLastMessageRead(this.channelName, this.#LAST_MESSAGE_READ, (e) => {
-      this.messages.map((message) => {
+      this.messages?.$collection.map((message) => {
         if (message.read_at === null) message.read_at = e.read_at
       })
     })

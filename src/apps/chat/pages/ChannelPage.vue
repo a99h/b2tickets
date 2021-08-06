@@ -69,6 +69,8 @@ import channelTitle from '@/apps/chat/js/filters/channelTitle'
 import { mapActions, mapGetters } from 'vuex'
 import { messageService, channelService } from '@/apps/chat/js/services'
 
+import RecordedChat from '@/apps/chat/js/facade/RecordedChat'
+
 /*
 |---------------------------------------------------------------------
 | Chat Channel Page Component
@@ -144,6 +146,10 @@ export default {
     this.startChannel(this.$route.params.id)
     this.loading.messages = false
     this.scrollToBottom()
+
+    if (this.currentChat instanceof RecordedChat) {
+      this.currentChat.watchReadAt()
+    }
   },
   beforeDestroy() {
     this.unregisterListeners()
