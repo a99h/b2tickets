@@ -13,7 +13,7 @@ export default {
   },
 
   removeTypingMessage(openedChat) {
-    openedChat.messages.delete(openedChat.typingMessage.id)
+    openedChat.deleteMessage(openedChat.typingMessage.id)
     openedChat.typingMessage = {}
   }
 }

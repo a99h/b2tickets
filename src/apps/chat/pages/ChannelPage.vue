@@ -135,11 +135,12 @@ export default {
 
       const isLastMessageByMe = newMessages[newMessages.length - 1].user.id === this.user.id
 
-      if (newMessages.length === oldMessages.length) return // если typing сообщение удалено
-
       if (this.isScrollOnBottom || isLastMessageByMe) {
         this.scrollToBottom()
       }
+    },
+    isScrollOnBottom() {
+      this.currentChat.unreadMessagesCount = 0
     }
   },
   mounted() {

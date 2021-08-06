@@ -22,15 +22,18 @@ export default class AbstractChatFacade {
     this.user = new Operator({ data: user })
     this.participants.push(this.user)
     this.messages = new MessageCollection({ data: [] })
-    this.chat = new Chat({ data: {
-      active: 0
-    } })
+    this.chat = new Chat({
+      data: {
+        active: 0
+      }
+    })
   }
 
   set user(value) {
     if (!(value instanceof Operator)) throw new Error('User must be instance of Operator')
     this._user = value
   }
+
   get user() {
     return this._user.show()
   }
@@ -39,8 +42,17 @@ export default class AbstractChatFacade {
     if (value) {
       this.messages.record([value])
 
-      if ((value.user !== this.user) && (typeof value.id === 'number')) this.unreadMessagesCount = this.unreadMessagesCount + 1
+      if (value.user.id !== this.user.id) {
+        this.unreadMessagesCount = this.unreadMessagesCount + 1
+      }
     }
+  }
+  
+  deleteMessage(id) {
+    if (id) {
+      this.messages.delete(id)
+    }
+    this.unreadMessagesCount = this.unreadMessagesCount - 1
   }
 
   toggleActive() {

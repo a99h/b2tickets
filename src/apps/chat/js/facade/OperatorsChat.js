@@ -28,10 +28,10 @@ export default class OperatorsChat extends AbstractChatFacade {
         user: {
           id: this.user.id,
           name: this.user.name,
-          email: this.user.email,
-          userSettings: {
-            avatar: this.user.userSettings.avatar
-          }
+          email: this.user.email
+          // userSettings: {
+          //   avatar: this.user.userSettings.avatar
+          // }
         },
         timestamp: (new Date()).getTime()
       }
