@@ -135,18 +135,21 @@ export default {
 
       const isLastMessageByMe = newMessages[newMessages.length - 1].user.id === this.user.id
 
-      if (this.isScrollOnBottom || isLastMessageByMe) {
+      if (this.isScrollOnBottom || isLastMessageByMe && newMessages.length !== oldMessages.length) {
         this.scrollToBottom()
       }
     },
-    isScrollOnBottom() {
-      this.currentChat.unreadMessagesCount = 0
+    isScrollOnBottom(val) {
+      if (val) this.currentChat.unreadMessagesCount = 0
+      if (this.currentChat.typingMessage !== null) this.currentChat.typingMessage.read_at = Date.now()
+      this.currentChat.isScrollOnBottom = val
     }
   },
   mounted() {
     this.startChannel(this.$route.params.id)
     this.loading.messages = false
     this.scrollToBottom()
+    this.currentChat.isScrollOnBottom = true
 
     if (this.currentChat instanceof RecordedChat) {
       this.currentChat.watchReadAt()

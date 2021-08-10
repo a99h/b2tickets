@@ -39,7 +39,7 @@
               <v-list-item-title>
                 {{ chat | channelTitle }}
                 <v-avatar
-                  v-if="chat.unreadMessagesCount > 0"
+                  v-if="chat.unreadMessagesCount > 0 && !chat.isScrollOnBottom"
                   color="success"
                   size="18"
                 >

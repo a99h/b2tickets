@@ -38,16 +38,37 @@ export default class AbstractChatFacade {
     return this._user.show()
   }
 
-  addMessage(value) {
-    if (value) {
-      this.messages.record([value])
+  insertMessage(message) {
+    const typingMessageIndex = this.messages.$collection.findIndex((item) => item.id === this.typingMessage?.id)
 
-      if (value.user.id !== this.user.id) {
+    if (typingMessageIndex >= 0 && message.user.id === this.typingMessage?.user.id) {
+      this.replaceMessage(message, typingMessageIndex)
+      this.typingMessage = null
+    }
+
+    else {
+      this.addMessage(message)
+    }
+  }
+
+  replaceMessage(message, typingMessageIndex) {
+    this.messages.replace(message, typingMessageIndex)
+
+    if (this.typingMessage.read_at) {
+      this.unreadMessagesCount = this.unreadMessagesCount + 1
+    }
+  }
+
+  addMessage(message) {
+    if (message) {
+      this.messages.record([message])
+
+      if (message.user.id !== this.user.id) {
         this.unreadMessagesCount = this.unreadMessagesCount + 1
       }
     }
   }
-  
+
   deleteMessage(id) {
     if (id) {
       this.messages.delete(id)

@@ -51,4 +51,9 @@ export default class ModelCollection {
 
     return true
   }
+  replace(message, typingMessageIndex) {
+    this.$collection[typingMessageIndex] = message
+    this.$collection.sort((a, b) => a.timestamp - b.timestamp)
+    this.$collection = [...this.$collection]
+  }
 }

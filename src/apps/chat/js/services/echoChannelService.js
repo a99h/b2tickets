@@ -50,7 +50,7 @@ export default {
           message.read_at = null
         }
 
-        chat.addMessage(message)
+        chat.insertMessage(message)
       })
 
       .listenForWhisper('operators-message', (event) => {
