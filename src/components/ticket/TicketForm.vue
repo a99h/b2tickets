@@ -168,6 +168,10 @@ export default {
     activatorHidden: {
       type: Boolean,
       required: false
+    },
+    editedTicket: {
+      type: Object,
+      required: false
     }
   },
   validations: {
@@ -185,14 +189,7 @@ export default {
       dialogForm: 'accent'
     },
     editedIndex: -1,
-    editedItem: {
-      issue: '',
-      description: '',
-      ticketChatRequests: [],
-      ticketOperators: [],
-      ticketStatus: {},
-      ticketChat: null
-    },
+    editedItem: {},
     defaultItem: {
       issue: '',
       description: '',
@@ -286,11 +283,21 @@ export default {
   },
   watch: {
     dialog(val) {
-      val || this.closeDialog()
+      if (val) this.copyEditedTicket()
+      else this.closeDialog()
+    },
+
+    editedTicket: {
+      deep: true,
+      handler: function(val) {
+        console.log('val', val)
+        if (val) this.editedItem = { ...val }
+      }
     }
   },
   mounted() {
-    this.dialogInitialize()
+    this.dialogInitialize(),
+    this.copyEditedTicket()
   },
   methods: {
     ...mapActions({
@@ -300,6 +307,9 @@ export default {
       createTicket: 'ticket/storeTicket',
       updateTicket: 'ticket/updateTicket'
     }),
+    copyEditedTicket() {
+      this.editedItem = { ...this.editedTicket }
+    },
     async dialogInitialize() {
       this.loading.dialogForm = 'accent'
       await this.fetchChatRequests().then(() => {

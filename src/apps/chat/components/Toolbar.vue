@@ -21,6 +21,7 @@
     <TicketForm
       v-if="!loading.ticketForm"
       ref="ticketForm"
+      :editedTicket="editedTicket"
       :tickets="getTickets"
       :activator-hidden="true"
       @closeDialog="backendErrors = null"
@@ -80,7 +81,16 @@ export default {
           disabled: true,
           to: { name: 'apps-chat-channel-create-ticket', params: { id: this.currentChat ? this.currentChat.channelName : 'general' } }
         }
-      ]
+      ],
+
+      editedTicket: {
+        issue: '',
+        description: '',
+        ticketChatRequests: [],
+        ticketOperators: [],
+        ticketStatus: {},
+        ticketChat: null
+      }
     }
   },
   computed: {
@@ -104,7 +114,11 @@ export default {
 
         ticketFormActivator.disabled = val.chatRequest === undefined
         this.fetchTickets().then(() => {
-          if (val instanceof RecordedChat) this.setTicketFormDefaultValues()
+          if (val instanceof RecordedChat) {
+            this.editedTicket.ticketChatRequests = [this.currentChat.chatRequest.show()]
+            this.editedTicket.ticketOperators = [this.currentChat.user]
+            this.editedTicket = { ...this.editedTicket }
+          }
 
           this.loading.ticketForm = false
         })
@@ -129,12 +143,6 @@ export default {
     breadcrumbsOnClick(item) {
       if (item.text === this.$t('b2tickets.ticket.actions.createTicket')) {
         this.$refs.ticketForm.dialog = true
-      }
-    },
-    setTicketFormDefaultValues() {
-      if (this.$refs.ticketForm) {
-        this.$refs.ticketForm.editedItem.ticketChatRequests = [this.currentChat.chatRequest.show()]
-        this.$refs.ticketForm.editedItem.ticketOperators = [this.currentChat.user]
       }
     },
     isCreateTicketBtn(item) {
